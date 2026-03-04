@@ -157,3 +157,23 @@ def complete_profile(details: ProfileDetails, current_user: User = Depends(get_c
         session.commit()
         session.refresh(user)
         return user
+
+@router.get("/profile/{user_id}")
+def get_profile(user_id: int):
+    with Session(engine) as session:
+        user = session.get(User, user_id)
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        # Return only public information
+        return {
+            "id": user.id,
+            "name": user.name,
+            "picture": user.picture,
+            "department": user.department,
+            "graduation_year": user.graduation_year,
+            "skills": user.skills,
+            "bio": user.bio,
+            "linkedin_url": user.linkedin_url,
+            "github_url": user.github_url,
+            "reward_points": user.reward_points
+        }
