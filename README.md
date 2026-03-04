@@ -9,8 +9,10 @@ BaapCollab is a premium collaboration platform designed for students and institu
   1. **Login**: Initial authentication.
   2. **Branch Verification**: Strict keyword-based institution matching to ensure association.
   3. **Profile Completion**: Personal and academic data capture (Name, Dept, Skills, Bio).
+- **Comprehensive Profile System**: Full profile synchronization that globally replaces generic handles with actual user names across the platform.
 - **Dynamic Dashboard**: Personalized view with interactive tabs for Projects, Forum, and Leaderboards.
-- **Premium UI**: Modern, glassmorphism-inspired design with smooth transitions and micro-animations.
+- **Helper of the Week**: A point-based contribution system that dynamically highlights top community contributors by their synchronized platform profiles.
+- **Premium UI**: Modern, glassmorphism-inspired design with smooth transitions, dynamic staggered loading animations, and micro-animations.
 
 ## 🏗️ Project Structure
 

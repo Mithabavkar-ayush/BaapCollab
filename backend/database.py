@@ -2,7 +2,7 @@ from typing import Optional, List
 from sqlmodel import Field, Relationship, SQLModel, create_engine, Session, select
 import os
 
-sqlite_url = "sqlite:///backend/baap_collab.db"
+sqlite_url = "sqlite:///baap_collab.db"
 engine = create_engine(sqlite_url, echo=True)
 
 class Branch(SQLModel, table=True):
@@ -19,6 +19,8 @@ class UserBase(SQLModel):
     graduation_year: Optional[int] = None
     skills: Optional[str] = None
     bio: Optional[str] = None
+    linkedin_url: Optional[str] = None
+    github_url: Optional[str] = None
     reward_points: int = Field(default=0)
     is_first_login: bool = Field(default=True)
 

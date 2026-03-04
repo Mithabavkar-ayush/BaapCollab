@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select
-from ..database import engine, User, Branch
-from ..auth_utils import create_access_token, get_current_user
+from database import engine, User, Branch
+from auth_utils import create_access_token, get_current_user
 from typing import Optional
 from pydantic import BaseModel
 from datetime import timedelta
@@ -79,12 +79,63 @@ def select_institute(branch_id: int, current_user: User = Depends(get_current_us
         session.refresh(user)
         return user
 
+class ProfileUpdate(BaseModel):
+    name: Optional[str] = None
+    department: Optional[str] = None
+    graduation_year: Optional[int] = None
+    skills: Optional[str] = None
+    bio: Optional[str] = None
+    linkedin_url: Optional[str] = None
+    github_url: Optional[str] = None
+
+@router.patch("/profile")
+def update_profile(details: ProfileUpdate, current_user: User = Depends(get_current_user)):
+    with Session(engine) as session:
+        user = session.exec(select(User).where(User.email == current_user.email)).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        if details.name is not None:
+            user.name = details.name
+        if details.department is not None:
+            user.department = details.department
+        if details.graduation_year is not None:
+            user.graduation_year = details.graduation_year
+        if details.skills is not None:
+            user.skills = details.skills
+        if details.bio is not None:
+            user.bio = details.bio
+        if details.linkedin_url is not None:
+            user.linkedin_url = details.linkedin_url
+        if details.github_url is not None:
+            user.github_url = details.github_url
+            
+        session.add(user)
+        session.commit()
+        session.refresh(user)
+        return user
+
+@router.post("/guide-complete")
+def complete_guide(current_user: User = Depends(get_current_user)):
+    with Session(engine) as session:
+        user = session.exec(select(User).where(User.email == current_user.email)).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        user.is_first_login = False
+        session.add(user)
+        session.commit()
+        session.refresh(user)
+        return {"status": "success"}
+
 class ProfileDetails(BaseModel):
     name: Optional[str] = None
     department: str
     graduation_year: int
     skills: str
     bio: str
+    linkedin_url: Optional[str] = None
+    github_url: Optional[str] = None
 
 @router.post("/onboarding/details")
 def complete_profile(details: ProfileDetails, current_user: User = Depends(get_current_user)):
@@ -99,7 +150,9 @@ def complete_profile(details: ProfileDetails, current_user: User = Depends(get_c
         user.graduation_year = details.graduation_year
         user.skills = details.skills
         user.bio = details.bio
-        user.is_first_login = True # Ensure guide shows up
+        user.linkedin_url = details.linkedin_url
+        user.github_url = details.github_url
+        user.is_first_login = True # Ensure guide shows up initially
         session.add(user)
         session.commit()
         session.refresh(user)

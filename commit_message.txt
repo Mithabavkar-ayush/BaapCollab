@@ -1,0 +1,9 @@
+feat: implement Google Auth login, profile system, and global UI refinement
+
+Added staggered "Welcome" animation for dynamic profile names.
+
+Refactored Dashboard grid to occupy full width.
+
+Applied global "Hairline" colored borders and bottom-weighted shadows.
+
+Swapped Gmail account handles for Platform Usernames in Helper section.

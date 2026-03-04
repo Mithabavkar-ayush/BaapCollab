@@ -1,13 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .database import create_db_and_tables
+from database import create_db_and_tables
 from dotenv import load_dotenv
 import os
 
 # Load environment variables at the very start
 load_dotenv()
 
-from .routers import auth, posts, rewards
+from routers import auth, posts, rewards
 
 app = FastAPI(title="BaapCollab API")
 

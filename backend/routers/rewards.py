@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select, desc
-from ..database import engine, User, RewardLog, Comment
+from database import engine, User, RewardLog, Comment
 from typing import List
 
 router = APIRouter()

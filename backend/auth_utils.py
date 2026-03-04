@@ -6,7 +6,7 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-from .database import engine, User
+from database import engine, User
 from sqlmodel import Session, select
 
 # Secret key for JWT signing
