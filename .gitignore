@@ -33,6 +33,10 @@ frontend/.env.production
 
 # Databases and OS files
 baap_collab.db
+pgsql_portable/data/
+data/
+pgsql_portable/logfile
+postgresql.zip
 .DS_Store
 *.pem
 
