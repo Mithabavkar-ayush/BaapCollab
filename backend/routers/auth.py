@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Response
 from sqlmodel import Session, select
 from database import engine, User, Branch
 from auth_utils import create_access_token, get_current_user
@@ -22,7 +22,7 @@ class GoogleLoginRequest(BaseModel):
     credential: str
 
 @router.post("/google")
-def google_auth(request: GoogleLoginRequest):
+def google_auth(request: GoogleLoginRequest, response: Response):
     try:
         # Verify the ID token
         idinfo = id_token.verify_oauth2_token(request.credential, requests.Request(), GOOGLE_CLIENT_ID)
@@ -48,6 +48,16 @@ def google_auth(request: GoogleLoginRequest):
         access_token_expires = timedelta(minutes=60 * 24 * 7)  # 7 days
         access_token = create_access_token(
             data={"sub": user.email}, expires_delta=access_token_expires
+        )
+        
+        # Set HttpOnly cookie - Production Ready
+        response.set_cookie(
+            key="access_token",
+            value=access_token,
+            httponly=True,
+            max_age=60 * 60 * 24 * 7, # 7 days
+            samesite="none", # Required for cross-site cookies
+            secure=True,     # Required for samesite="none"
         )
         
         return {
@@ -114,6 +124,19 @@ def update_profile(details: ProfileUpdate, current_user: User = Depends(get_curr
         session.commit()
         session.refresh(user)
         return user
+
+@router.post("/welcome-seen")
+def complete_welcome(current_user: User = Depends(get_current_user)):
+    with Session(engine) as session:
+        user = session.exec(select(User).where(User.email == current_user.email)).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        user.has_seen_welcome = True
+        session.add(user)
+        session.commit()
+        session.refresh(user)
+        return {"status": "success", "user": user}
 
 @router.post("/guide-complete")
 def complete_guide(current_user: User = Depends(get_current_user)):
