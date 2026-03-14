@@ -12,6 +12,9 @@ from routers import auth, posts, rewards
 
 app = FastAPI(title="BaapCollab API")
 
+# DISABLE strict slashes to prevent 307 redirects that downgrade to HTTP
+app.router.redirect_slashes = False
+
 @app.middleware("http")
 async def log_requests(request, call_next):
     print(f"\n--- REQUEST: {request.method} {request.url.path} ---")
