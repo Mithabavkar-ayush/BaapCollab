@@ -1,0 +1,204 @@
+@import "tailwindcss";
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #F8FAFC;
+  color: #111827;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+.premium-shadow {
+  /* Deep bottom-weighted shadow */
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.05),
+    0 10px 15px -3px rgba(0, 0, 0, 0.08),
+    0 25px 50px -12px rgba(0, 0, 0, 0.15);
+}
+
+.ultra-slim-border-hover {
+  border: 1px solid transparent;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ultra-slim-border-hover:hover {
+  border-color: #A7F3D0;
+  /* Mint green */
+  box-shadow:
+    0 30px 60px -12px rgba(0, 0, 0, 0.2),
+    0 18px 36px -18px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.premium-bottom-border {
+  border-bottom: 1.5px solid rgba(0, 0, 0, 0.02);
+}
+
+.premium-hover {
+  transition: box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.premium-hover:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.12);
+}
+
+.premium-heading {
+  letter-spacing: -0.025em;
+  font-weight: 700;
+}
+
+@keyframes slideFadeRight {
+  from {
+    opacity: 0;
+    transform: translateX(-15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-welcome-part {
+  opacity: 0;
+  animation: slideFadeRight 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  display: inline-block;
+}
+
+.delay-400 {
+  animation-delay: 400ms;
+}
+
+.delay-800 {
+  animation-delay: 800ms;
+}
+
+.premium-spacing {
+  letter-spacing: 0.01em;
+}
+
+.hairline-border-projects {
+  border: 0.5px solid rgba(99, 102, 241, 0.4);
+}
+
+.hairline-border-forum {
+  border: 0.5px solid rgba(59, 130, 246, 0.4);
+}
+
+.hairline-border-helper {
+  border: 0.5px solid rgba(16, 185, 129, 0.4);
+}
+
+@keyframes slowFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modal-slow-fade {
+  animation: slowFadeIn 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes overlayFade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.overlay-fade {
+  animation: overlayFade 0.5s ease forwards;
+}
+
+.thread-guide-line {
+  border-left: 2px solid #A7F3D0;
+  margin-left: 19px;
+  padding-left: 16px;
+}
+
+.hairline-mint {
+  border: 0.5px solid rgba(16, 185, 129, 0.4);
+  transition: border-color 0.2s ease;
+}
+
+.hairline-mint:focus {
+  border-color: rgba(16, 185, 129, 0.8);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+/* Responsive Leaderboard Widths */
+.leaderboard-item {
+  width: 100% !important;
+  min-width: 280px;
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@media (min-width: 768px) {
+  .leaderboard-item {
+    width: var(--staggered-width, 100%);
+  }
+}
+
+.forum-card {
+  width: 100%;
+  border-radius: 24px;
+  background: white;
+  border: 0.5px solid rgba(16, 185, 129, 0.2);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.04),
+    0 10px 15px -3px rgba(0, 0, 0, 0.07),
+    0 20px 40px -10px rgba(0, 0, 0, 0.12);
+  transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+}
+
+.forum-card:hover {
+  border-color: rgba(16, 185, 129, 0.5);
+  box-shadow:
+    0 8px 12px -2px rgba(0, 0, 0, 0.06),
+    0 20px 30px -5px rgba(0, 0, 0, 0.1),
+    0 35px 60px -15px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+input,
+textarea,
+select {
+  transition: all 0.2s ease-in-out;
+}
+
+button {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Scrollbar Hide Utility */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
