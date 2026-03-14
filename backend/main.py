@@ -30,19 +30,20 @@ frontend_url = os.getenv("FRONTEND_URL", "")
 origins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-    # Production Vercel URLs
-    "https://baapcollab-frontend.vercel.app",
-    "https://baapcollab-frontend-ayushs-projects-1c3d55f9.vercel.app",
+    "http://localhost:8000",
     "https://baapcollab.vercel.app",
+    "https://baapcollab-frontend.vercel.app",
+    "https://baapcollab-backend-production.up.railway.app",
 ]
 
+# Add any dynamic Vercel preview URLs
 if frontend_url and frontend_url not in origins:
     origins.append(frontend_url)
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
-    allow_origin_regex=r"https://.*\.vercel\.app|https://baapcollab\.vercel\.app.*", 
+    allow_origin_regex=r"https://baapcollab\.vercel\.app.*|https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
