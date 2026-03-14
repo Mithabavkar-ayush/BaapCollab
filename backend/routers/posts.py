@@ -7,6 +7,14 @@ from pydantic import BaseModel
 
 router = APIRouter()
 
+def get_display_name(user) -> str:
+    """Return the user's name or a clean display name derived from their email."""
+    if not user:
+        return "Unknown"
+    if user.name:
+        return user.name
+    return user.email.split("@")[0].replace(".", " ").title()
+
 class PostCreate(BaseModel):
     title: str
     content: str
@@ -43,7 +51,7 @@ def get_posts(type: Optional[str] = None, current_user_id: Optional[int] = None)
         posts_with_authors = []
         for post in results:
             post_dict = post.model_dump()
-            post_dict["author_name"] = post.author.name if post.author else "Unknown"
+            post_dict["author_name"] = get_display_name(post.author)
             post_dict["author_picture"] = post.author.picture if post.author else None
             post_dict["comment_count"] = len(post.comments) if post.comments else 0
             
@@ -94,7 +102,7 @@ def get_comments(post_id: int, current_user_id: Optional[int] = None):
         for comment in comments:
             comment_dict = comment.model_dump()
             author = session.get(User, comment.author_id)
-            comment_dict["author_name"] = author.name if author else "Unknown"
+            comment_dict["author_name"] = get_display_name(author)
             comment_dict["author_picture"] = author.picture if author else None
 
             # Upvote data
@@ -127,7 +135,7 @@ def create_comment(post_id: int, comment_data: CommentCreate, current_user: User
         session.refresh(db_comment)
 
         comment_dict = db_comment.model_dump()
-        comment_dict["author_name"] = current_user.name or "Unknown"
+        comment_dict["author_name"] = get_display_name(current_user)
         comment_dict["author_picture"] = current_user.picture or None
         comment_dict["upvote_count"] = 0
         comment_dict["user_has_upvoted"] = False
@@ -151,7 +159,7 @@ def update_comment(post_id: int, comment_id: int, comment_data: CommentUpdate, c
         
         # Return same structure as create_comment
         comment_dict = comment.model_dump()
-        comment_dict["author_name"] = current_user.name or "Unknown"
+        comment_dict["author_name"] = get_display_name(current_user)
         comment_dict["author_picture"] = current_user.picture or None
         
         upvotes = session.exec(select(CommentUpvote).where(CommentUpvote.comment_id == comment_id)).all()
@@ -222,7 +230,14 @@ def toggle_upvote(post_id: int, comment_id: int, current_user: User = Depends(ge
             author = session.get(User, comment.author_id)
             if author and author.reward_points >= 5:
                 author.reward_points -= 5
+                # Log the deduction for the leaderboard INNER JOIN
+                log = RewardLog(
+                    user_id=author.id,
+                    points=-5,
+                    reason=f"Upvote removed from comment #{comment_id}"
+                )
                 session.add(author)
+                session.add(log)
             upvoted = False
         else:
             # Upvote: add vote and give +5 points to comment author

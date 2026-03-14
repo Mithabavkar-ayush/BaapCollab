@@ -1,0 +1,7 @@
+uvicorn
+sqlmodel
+google-auth
+python-dotenv
+psycopg2-binary
+python-jose[cryptography]
+requests

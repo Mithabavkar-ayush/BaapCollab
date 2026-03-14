@@ -1,0 +1,778 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20260313105633
+Username: AYUSH\intel
+RunAs User: AYUSH\intel
+Configuration Name: 
+Machine: AYUSH (Microsoft Windows NT 10.0.26200.0)
+Host Application: C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe -noexit -command try { . "c:\Users\intel\AppData\Local\Programs\Antigravity\resources\app\out\vs\workbench\contrib\terminal\common\scripts\shellIntegration.ps1" } catch {}
+Process ID: 5124
+PSVersion: 5.1.26100.7920
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.7920
+BuildVersion: 10.0.26100.7920
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+Transcript started, output file is transcript.log
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway init
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway up
+
+]633;D;1]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway logs
+
+]633;D;1]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway status
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway service
+ers\intel\.vscode\coding\vibe\anti
+gravity\backend'
+PS C:\Users\intel\.vscode\coding\v
+ibe\antigravity\backend> railway s
+ervice
+> Select a service baapcollab-bac
+end
+Linked service baapcollab-backend
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway logs
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway logs --json -n 100 > logs_json.txt; type logs_json.txt
+PS>ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:20.166855502Z","message":"  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:20.166861743Z","message":"  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:20.166868546Z","message":"  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"  File \"<frozen importlib._bootstrap_external>\", line 1023, in exec_module","timestamp":"2026-03-13T05:46:20.166875967Z","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"level":"error","message":"  File \"<frozen importlib._bootstrap>\", line 488, in _call_with_frames_removed","timestamp":"2026-03-13T05:46:20.166882672Z"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:20.166887686Z","message":"  File \"/app/main.py\", line 11, in <module>","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"level":"error","message":"    from routers import auth, posts, rewards","timestamp":"2026-03-13T05:46:20.166894879Z"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:20.167191449Z","level":"error","message":"    await self._serve(sockets)"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"  File \"/app/.venv/lib/python3.13/site-packages/uvicorn/server.py\", line 86, in _serve","timestamp":"2026-03-13T05:46:20.167198225Z","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"level":"error","timestamp":"2026-03-13T05:46:20.167204077Z","message":"    config.load()"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:20.167209554Z","message":"    ~~~~~~~~~~~^^","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"level":"error","message":"  File \"/app/.venv/lib/python3.13/site-packages/uvicorn/config.py\", line 441, in load","timestamp":"2026-03-13T05:46:20.167214907Z"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:20.167228756Z","level":"error","message":"    self.loaded_app = import_from_string(self.app)"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"                      ~~~~~~~~~~~~~~~~~~^^^^^^^^^^","timestamp":"2026-03-13T05:46:20.167235005Z","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"level":"error","message":"  File \"/app/.venv/lib/python3.13/site-packages/uvicorn/importer.py\", line 19, in import_from_string","timestamp":"2026-03-13T05:46:20.167242246Z"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:20.167249586Z","level":"error","message":"    module = importlib.import_module(module_str)"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"  File \"/mise/installs/python/3.13.12/lib/python3.13/importlib/__init__.py\", line 88, in import_module","timestamp":"2026-03-13T05:46:20.167258153Z","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:20.167265643Z","level":"error","message":"    return _bootstrap._gcd_import(name[level:], package, level)"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"  File \"/app/routers/auth.py\", line 10, in <module>","level":"error","timestamp":"2026-03-13T05:46:20.178905026Z"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:20.178910370Z","level":"error","message":"    from google.auth.transport import requests"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:20.178915426Z","level":"error","message":"  File \"/app/.venv/lib/python3.13/site-packages/google/auth/transport/requests.py\", line 29, in <module>"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"level":"error","message":"    raise ImportError(","timestamp":"2026-03-13T05:46:20.178921579Z"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"\"The requests library is not installed from please install the requests package to use the requests transport.\"","timestamp":"2026-03-13T05:46:20.178929538Z","level":"info"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:20.178934336Z","message":"    ) from caught_exc","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"ImportError: The requests library is not installed from please install the requests package to use the requests transport.","level":"error","timestamp":"2026-03-13T05:46:20.178939038Z"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:21.492224345Z","message":"--- DATABASE CONNECTION ---","level":"info"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"SUCCESS: CONNECTING TO POSTGRESQL -> postgres.railway.internal:5432/railway","timestamp":"2026-03-13T05:46:21.492236745Z","level":"info"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"    import requests","timestamp":"2026-03-13T05:46:22.202387333Z","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:22.202402089Z","message":"ModuleNotFoundError: No module named 'requests'","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:22.202410811Z","message":"","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:22.202419911Z","message":"The above exception was the direct cause of the following exception:","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"Traceback (most recent call last):","timestamp":"2026-03-13T05:46:22.202429328Z","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:22.202434638Z","message":"","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"  File \"/app/.venv/bin/uvicorn\", line 7, in <module>","level":"error","timestamp":"2026-03-13T05:46:22.202440220Z"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"    sys.exit(main())","timestamp":"2026-03-13T05:46:22.202446869Z","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"             ~~~~^^","level":"error","timestamp":"2026-03-13T05:46:22.202454040Z"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"  File \"/app/.venv/lib/python3.13/site-packages/click/core.py\", line 1485, in __call__","timestamp":"2026-03-13T05:46:22.202467441Z","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:22.202477893Z","message":"    return self.main(*args, **kwargs)","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:22.202486083Z","message":"           ~~~~~~~~~^^^^^^^^^^^^^^^^^","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"  File \"/app/.venv/lib/python3.13/site-packages/click/core.py\", line 1406, in main","timestamp":"2026-03-13T05:46:22.202493675Z","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"    rv = self.invoke(ctx)","timestamp":"2026-03-13T05:46:22.202503000Z","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"level":"error","message":"  File \"/app/.venv/lib/python3.13/site-packages/click/core.py\", line 1269, in invoke","timestamp":"2026-03-13T05:46:22.202511305Z"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"level":"error","message":"    return ctx.invoke(self.callback, **ctx.params)","timestamp":"2026-03-13T05:46:22.202523115Z"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"           ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^","timestamp":"2026-03-13T05:46:22.202532042Z","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:22.202540348Z","level":"error","message":"  File \"/app/.venv/lib/python3.13/site-packages/click/core.py\", line 824, in invoke"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:22.202548946Z","level":"error","message":"    return callback(*args, **kwargs)"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:22.202558794Z","level":"error","message":"  File \"/app/.venv/lib/python3.13/site-packages/uvicorn/main.py\", line 433, in main"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"    run(","timestamp":"2026-03-13T05:46:22.202566695Z","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"level":"error","timestamp":"2026-03-13T05:46:22.202758481Z","message":"Traceback (most recent call last):"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"level":"error","message":"  File \"/app/.venv/lib/python3.13/site-packages/google/auth/transport/requests.py\", line 27, in <module>","timestamp":"2026-03-13T05:46:22.202765262Z"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:22.202979316Z","level":"error","message":"           ~~~~~~~~~~~~~^^"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"  File \"/app/.venv/lib/python3.13/site-packages/uvicorn/server.py\", line 79, in serve","level":"error","timestamp":"2026-03-13T05:46:22.202987211Z"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:22.202999166Z","level":"error","message":"  File \"/mise/installs/python/3.13.12/lib/python3.13/asyncio/runners.py\", line 118, in run"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"level":"error","message":"    return self._loop.run_until_complete(task)","timestamp":"2026-03-13T05:46:22.203007017Z"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^","timestamp":"2026-03-13T05:46:22.203015289Z","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"level":"error","message":"  File \"/mise/installs/python/3.13.12/lib/python3.13/asyncio/base_events.py\", line 725, in run_until_complete","timestamp":"2026-03-13T05:46:22.203023792Z"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"    return future.result()","level":"error","timestamp":"2026-03-13T05:46:22.203032638Z"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:22.203058709Z","level":"error","message":"    ~~~^"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"        app,","level":"error","timestamp":"2026-03-13T05:46:22.203065504Z"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"level":"error","message":"        ^^^^","timestamp":"2026-03-13T05:46:22.203079904Z"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"level":"error","message":"    ...<47 lines>...","timestamp":"2026-03-13T05:46:22.203086685Z"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:22.203094360Z","message":"        h11_max_incomplete_event_size=h11_max_incomplete_event_size,","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:22.203101150Z","message":"        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"    )","timestamp":"2026-03-13T05:46:22.203107247Z","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"    ^","level":"error","timestamp":"2026-03-13T05:46:22.203113076Z"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:22.203118892Z","level":"error","message":"  File \"/app/.venv/lib/python3.13/site-packages/uvicorn/main.py\", line 606, in run"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"    server.run()","timestamp":"2026-03-13T05:46:22.203125063Z","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"level":"error","message":"    ~~~~~~~~~~^^","timestamp":"2026-03-13T05:46:22.203132673Z"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"  File \"/app/.venv/lib/python3.13/site-packages/uvicorn/server.py\", line 75, in run","timestamp":"2026-03-13T05:46:22.203159136Z","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"level":"error","message":"    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())","timestamp":"2026-03-13T05:46:22.203165863Z"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"  File \"/mise/installs/python/3.13.12/lib/python3.13/asyncio/runners.py\", line 195, in run","timestamp":"2026-03-13T05:46:22.203172297Z","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"level":"error","message":"    return runner.run(main)","timestamp":"2026-03-13T05:46:22.203178091Z"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"           ~~~~~~~~~~^^^^^^","level":"error","timestamp":"2026-03-13T05:46:22.203184911Z"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"level":"error","message":"    await self._serve(sockets)","timestamp":"2026-03-13T05:46:22.212068382Z"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:22.212075768Z","message":"  File \"/app/.venv/lib/python3.13/site-packages/uvicorn/server.py\", line 86, in _serve","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"    config.load()","timestamp":"2026-03-13T05:46:22.212123845Z","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"    ~~~~~~~~~~~^^","timestamp":"2026-03-13T05:46:22.212131473Z","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:22.212136627Z","level":"error","message":"  File \"/app/.venv/lib/python3.13/site-packages/uvicorn/config.py\", line 441, in load"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"    self.loaded_app = import_from_string(self.app)","timestamp":"2026-03-13T05:46:22.212143428Z","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"                      ~~~~~~~~~~~~~~~~~~^^^^^^^^^^","timestamp":"2026-03-13T05:46:22.212148507Z","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:22.212153113Z","level":"error","message":"  File \"/app/.venv/lib/python3.13/site-packages/uvicorn/importer.py\", line 19, in import_from_string"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"    module = importlib.import_module(module_str)","timestamp":"2026-03-13T05:46:22.212157960Z","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"  File \"/mise/installs/python/3.13.12/lib/python3.13/importlib/__init__.py\", line 88, in import_module","timestamp":"2026-03-13T05:46:22.212163360Z","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"level":"error","timestamp":"2026-03-13T05:46:22.212167804Z","message":"    return _bootstrap._gcd_import(name[level:], package, level)"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"level":"error","message":"           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^","timestamp":"2026-03-13T05:46:22.212172780Z"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"level":"error","timestamp":"2026-03-13T05:46:22.212178200Z","message":"  File \"<frozen importlib._bootstrap>\", line 1387, in _gcd_import"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"level":"error","message":"  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load","timestamp":"2026-03-13T05:46:22.212182304Z"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:22.212186893Z","message":"  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:22.212191334Z","message":"  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:22.212196495Z","level":"error","message":"  File \"<frozen importlib._bootstrap_external>\", line 1023, in exec_module"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:22.212201342Z","message":"  File \"<frozen importlib._bootstrap>\", line 488, in _call_with_frames_removed","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:22.212205368Z","message":"  File \"/app/main.py\", line 11, in <module>","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"level":"error","message":"    from routers import auth, posts, rewards","timestamp":"2026-03-13T05:46:22.212209719Z"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:22.214149374Z","message":"  File \"/app/routers/auth.py\", line 10, in <module>","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"    from google.auth.transport import requests","timestamp":"2026-03-13T05:46:22.214159070Z","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"  File \"/app/.venv/lib/python3.13/site-packages/google/auth/transport/requests.py\", line 29, in <module>","timestamp":"2026-03-13T05:46:22.214166023Z","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"    raise ImportError(","level":"error","timestamp":"2026-03-13T05:46:22.214173672Z"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:22.214180519Z","level":"info","message":"\"The requests library is not installed from please install the requests package to use the requests transport.\""}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"message":"    ) from caught_exc","timestamp":"2026-03-13T05:46:22.214186974Z","level":"error"}"
+>> ParameterBinding(Out-File): name="InputObject"; value="{"timestamp":"2026-03-13T05:46:22.214193190Z","level":"error","message":"ImportError: The requests library is not installed from please install the requests package to use the requests transport."}"
+{"timestamp":"2026-03-13T05:46:20.166855502Z","message":"  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load","level":"error"}
+{"timestamp":"2026-03-13T05:46:20.166861743Z","message":"  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked","level":"error"}
+{"timestamp":"2026-03-13T05:46:20.166868546Z","message":"  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked","level":"error"}
+{"message":"  File \"<frozen importlib._bootstrap_external>\", line 1023, in exec_module","timestamp":"2026-03-13T05:46:20.166875967Z","level":"error"}
+{"level":"error","message":"  File \"<frozen importlib._bootstrap>\", line 488, in _call_with_frames_removed","timestamp":"2026-03-13T05:46:20.166882672Z"}
+{"timestamp":"2026-03-13T05:46:20.166887686Z","message":"  File \"/app/main.py\", line 11, in <module>","level":"error"}
+{"level":"error","message":"    from routers import auth, posts, rewards","timestamp":"2026-03-13T05:46:20.166894879Z"}
+{"timestamp":"2026-03-13T05:46:20.167191449Z","level":"error","message":"    await self._serve(sockets)"}
+{"message":"  File \"/app/.venv/lib/python3.13/site-packages/uvicorn/server.py\", line 86, in _serve","timestamp":"2026-03-13T05:46:20.167198225Z","level":"error"}
+{"level":"error","timestamp":"2026-03-13T05:46:20.167204077Z","message":"    config.load()"}
+{"timestamp":"2026-03-13T05:46:20.167209554Z","message":"    ~~~~~~~~~~~^^","level":"error"}
+{"level":"error","message":"  File \"/app/.venv/lib/python3.13/site-packages/uvicorn/config.py\", line 441, in load","timestamp":"2026-03-13T05:46:20.167214907Z"}
+{"timestamp":"2026-03-13T05:46:20.167228756Z","level":"error","message":"    self.loaded_app = import_from_string(self.app)"}
+{"message":"                      ~~~~~~~~~~~~~~~~~~^^^^^^^^^^","timestamp":"2026-03-13T05:46:20.167235005Z","level":"error"}
+{"level":"error","message":"  File \"/app/.venv/lib/python3.13/site-packages/uvicorn/importer.py\", line 19, in import_from_string","timestamp":"2026-03-13T05:46:20.167242246Z"}
+{"timestamp":"2026-03-13T05:46:20.167249586Z","level":"error","message":"    module = importlib.import_module(module_str)"}
+{"message":"  File \"/mise/installs/python/3.13.12/lib/python3.13/importlib/__init__.py\", line 88, in import_module","timestamp":"2026-03-13T05:46:20.167258153Z","level":"error"}
+{"timestamp":"2026-03-13T05:46:20.167265643Z","level":"error","message":"    return _bootstrap._gcd_import(name[level:], package, level)"}
+{"message":"  File \"/app/routers/auth.py\", line 10, in <module>","level":"error","timestamp":"2026-03-13T05:46:20.178905026Z"}
+{"timestamp":"2026-03-13T05:46:20.178910370Z","level":"error","message":"    from google.auth.transport import requests"}
+{"timestamp":"2026-03-13T05:46:20.178915426Z","level":"error","message":"  File \"/app/.venv/lib/python3.13/site-packages/google/auth/transport/requests.py\", line 29, in <module>"}
+{"level":"error","message":"    raise ImportError(","timestamp":"2026-03-13T05:46:20.178921579Z"}
+{"message":"\"The requests library is not installed from please install the requests package to use the requests transport.\"","timestamp":"2026-03-13T05:46:20.178929538Z","level":"info"}
+{"timestamp":"2026-03-13T05:46:20.178934336Z","message":"    ) from caught_exc","level":"error"}
+{"message":"ImportError: The requests library is not installed from please install the requests package to use the requests transport.","level":"error","timestamp":"2026-03-13T05:46:20.178939038Z"}
+{"timestamp":"2026-03-13T05:46:21.492224345Z","message":"--- DATABASE CONNECTION ---","level":"info"}
+{"message":"SUCCESS: CONNECTING TO POSTGRESQL -> postgres.railway.internal:5432/railway","timestamp":"2026-03-13T05:46:21.492236745Z","level":"info"}
+{"message":"    import requests","timestamp":"2026-03-13T05:46:22.202387333Z","level":"error"}
+{"timestamp":"2026-03-13T05:46:22.202402089Z","message":"ModuleNotFoundError: No module named 'requests'","level":"error"}
+{"timestamp":"2026-03-13T05:46:22.202410811Z","message":"","level":"error"}
+{"timestamp":"2026-03-13T05:46:22.202419911Z","message":"The above exception was the direct cause of the following exception:","level":"error"}
+{"message":"Traceback (most recent call last):","timestamp":"2026-03-13T05:46:22.202429328Z","level":"error"}
+{"timestamp":"2026-03-13T05:46:22.202434638Z","message":"","level":"error"}
+{"message":"  File \"/app/.venv/bin/uvicorn\", line 7, in <module>","level":"error","timestamp":"2026-03-13T05:46:22.202440220Z"}
+{"message":"    sys.exit(main())","timestamp":"2026-03-13T05:46:22.202446869Z","level":"error"}
+{"message":"             ~~~~^^","level":"error","timestamp":"2026-03-13T05:46:22.202454040Z"}
+{"message":"  File \"/app/.venv/lib/python3.13/site-packages/click/core.py\", line 1485, in __call__","timestamp":"2026-03-13T05:46:22.202467441Z","level":"error"}
+{"timestamp":"2026-03-13T05:46:22.202477893Z","message":"    return self.main(*args, **kwargs)","level":"error"}
+{"timestamp":"2026-03-13T05:46:22.202486083Z","message":"           ~~~~~~~~~^^^^^^^^^^^^^^^^^","level":"error"}
+{"message":"  File \"/app/.venv/lib/python3.13/site-packages/click/core.py\", line 1406, in main","timestamp":"2026-03-13T05:46:22.202493675Z","level":"error"}
+{"message":"    rv = self.invoke(ctx)","timestamp":"2026-03-13T05:46:22.202503000Z","level":"error"}
+{"level":"error","message":"  File \"/app/.venv/lib/python3.13/site-packages/click/core.py\", line 1269, in invoke","timestamp":"2026-03-13T05:46:22.202511305Z"}
+{"level":"error","message":"    return ctx.invoke(self.callback, **ctx.params)","timestamp":"2026-03-13T05:46:22.202523115Z"}
+{"message":"           ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^","timestamp":"2026-03-13T05:46:22.202532042Z","level":"error"}
+{"timestamp":"2026-03-13T05:46:22.202540348Z","level":"error","message":"  File \"/app/.venv/lib/python3.13/site-packages/click/core.py\", line 824, in invoke"}
+{"timestamp":"2026-03-13T05:46:22.202548946Z","level":"error","message":"    return callback(*args, **kwargs)"}
+{"timestamp":"2026-03-13T05:46:22.202558794Z","level":"error","message":"  File \"/app/.venv/lib/python3.13/site-packages/uvicorn/main.py\", line 433, in main"}
+{"message":"    run(","timestamp":"2026-03-13T05:46:22.202566695Z","level":"error"}
+{"level":"error","timestamp":"2026-03-13T05:46:22.202758481Z","message":"Traceback (most recent call last):"}
+{"level":"error","message":"  File \"/app/.venv/lib/python3.13/site-packages/google/auth/transport/requests.py\", line 27, in <module>","timestamp":"2026-03-13T05:46:22.202765262Z"}
+{"timestamp":"2026-03-13T05:46:22.202979316Z","level":"error","message":"           ~~~~~~~~~~~~~^^"}
+{"message":"  File \"/app/.venv/lib/python3.13/site-packages/uvicorn/server.py\", line 79, in serve","level":"error","timestamp":"2026-03-13T05:46:22.202987211Z"}
+{"timestamp":"2026-03-13T05:46:22.202999166Z","level":"error","message":"  File \"/mise/installs/python/3.13.12/lib/python3.13/asyncio/runners.py\", line 118, in run"}
+{"level":"error","message":"    return self._loop.run_until_complete(task)","timestamp":"2026-03-13T05:46:22.203007017Z"}
+{"message":"           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^","timestamp":"2026-03-13T05:46:22.203015289Z","level":"error"}
+{"level":"error","message":"  File \"/mise/installs/python/3.13.12/lib/python3.13/asyncio/base_events.py\", line 725, in run_until_complete","timestamp":"2026-03-13T05:46:22.203023792Z"}
+{"message":"    return future.result()","level":"error","timestamp":"2026-03-13T05:46:22.203032638Z"}
+{"timestamp":"2026-03-13T05:46:22.203058709Z","level":"error","message":"    ~~~^"}
+{"message":"        app,","level":"error","timestamp":"2026-03-13T05:46:22.203065504Z"}
+{"level":"error","message":"        ^^^^","timestamp":"2026-03-13T05:46:22.203079904Z"}
+{"level":"error","message":"    ...<47 lines>...","timestamp":"2026-03-13T05:46:22.203086685Z"}
+{"timestamp":"2026-03-13T05:46:22.203094360Z","message":"        h11_max_incomplete_event_size=h11_max_incomplete_event_size,","level":"error"}
+{"timestamp":"2026-03-13T05:46:22.203101150Z","message":"        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^","level":"error"}
+{"message":"    )","timestamp":"2026-03-13T05:46:22.203107247Z","level":"error"}
+{"message":"    ^","level":"error","timestamp":"2026-03-13T05:46:22.203113076Z"}
+{"timestamp":"2026-03-13T05:46:22.203118892Z","level":"error","message":"  File \"/app/.venv/lib/python3.13/site-packages/uvicorn/main.py\", line 606, in run"}
+{"message":"    server.run()","timestamp":"2026-03-13T05:46:22.203125063Z","level":"error"}
+{"level":"error","message":"    ~~~~~~~~~~^^","timestamp":"2026-03-13T05:46:22.203132673Z"}
+{"message":"  File \"/app/.venv/lib/python3.13/site-packages/uvicorn/server.py\", line 75, in run","timestamp":"2026-03-13T05:46:22.203159136Z","level":"error"}
+{"level":"error","message":"    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())","timestamp":"2026-03-13T05:46:22.203165863Z"}
+{"message":"  File \"/mise/installs/python/3.13.12/lib/python3.13/asyncio/runners.py\", line 195, in run","timestamp":"2026-03-13T05:46:22.203172297Z","level":"error"}
+{"level":"error","message":"    return runner.run(main)","timestamp":"2026-03-13T05:46:22.203178091Z"}
+{"message":"           ~~~~~~~~~~^^^^^^","level":"error","timestamp":"2026-03-13T05:46:22.203184911Z"}
+{"level":"error","message":"    await self._serve(sockets)","timestamp":"2026-03-13T05:46:22.212068382Z"}
+{"timestamp":"2026-03-13T05:46:22.212075768Z","message":"  File \"/app/.venv/lib/python3.13/site-packages/uvicorn/server.py\", line 86, in _serve","level":"error"}
+{"message":"    config.load()","timestamp":"2026-03-13T05:46:22.212123845Z","level":"error"}
+{"message":"    ~~~~~~~~~~~^^","timestamp":"2026-03-13T05:46:22.212131473Z","level":"error"}
+{"timestamp":"2026-03-13T05:46:22.212136627Z","level":"error","message":"  File \"/app/.venv/lib/python3.13/site-packages/uvicorn/config.py\", line 441, in load"}
+{"message":"    self.loaded_app = import_from_string(self.app)","timestamp":"2026-03-13T05:46:22.212143428Z","level":"error"}
+{"message":"                      ~~~~~~~~~~~~~~~~~~^^^^^^^^^^","timestamp":"2026-03-13T05:46:22.212148507Z","level":"error"}
+{"timestamp":"2026-03-13T05:46:22.212153113Z","level":"error","message":"  File \"/app/.venv/lib/python3.13/site-packages/uvicorn/importer.py\", line 19, in import_from_string"}
+{"message":"    module = importlib.import_module(module_str)","timestamp":"2026-03-13T05:46:22.212157960Z","level":"error"}
+{"message":"  File \"/mise/installs/python/3.13.12/lib/python3.13/importlib/__init__.py\", line 88, in import_module","timestamp":"2026-03-13T05:46:22.212163360Z","level":"error"}
+{"level":"error","timestamp":"2026-03-13T05:46:22.212167804Z","message":"    return _bootstrap._gcd_import(name[level:], package, level)"}
+{"level":"error","message":"           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^","timestamp":"2026-03-13T05:46:22.212172780Z"}
+{"level":"error","timestamp":"2026-03-13T05:46:22.212178200Z","message":"  File \"<frozen importlib._bootstrap>\", line 1387, in _gcd_import"}
+{"level":"error","message":"  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load","timestamp":"2026-03-13T05:46:22.212182304Z"}
+{"timestamp":"2026-03-13T05:46:22.212186893Z","message":"  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked","level":"error"}
+{"timestamp":"2026-03-13T05:46:22.212191334Z","message":"  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked","level":"error"}
+{"timestamp":"2026-03-13T05:46:22.212196495Z","level":"error","message":"  File \"<frozen importlib._bootstrap_external>\", line 1023, in exec_module"}
+{"timestamp":"2026-03-13T05:46:22.212201342Z","message":"  File \"<frozen importlib._bootstrap>\", line 488, in _call_with_frames_removed","level":"error"}
+{"timestamp":"2026-03-13T05:46:22.212205368Z","message":"  File \"/app/main.py\", line 11, in <module>","level":"error"}
+{"level":"error","message":"    from routers import auth, posts, rewards","timestamp":"2026-03-13T05:46:22.212209719Z"}
+{"timestamp":"2026-03-13T05:46:22.214149374Z","message":"  File \"/app/routers/auth.py\", line 10, in <module>","level":"error"}
+{"message":"    from google.auth.transport import requests","timestamp":"2026-03-13T05:46:22.214159070Z","level":"error"}
+{"message":"  File \"/app/.venv/lib/python3.13/site-packages/google/auth/transport/requests.py\", line 29, in <module>","timestamp":"2026-03-13T05:46:22.214166023Z","level":"error"}
+{"message":"    raise ImportError(","level":"error","timestamp":"2026-03-13T05:46:22.214173672Z"}
+{"timestamp":"2026-03-13T05:46:22.214180519Z","level":"info","message":"\"The requests library is not installed from please install the requests package to use the requests transport.\""}
+{"message":"    ) from caught_exc","timestamp":"2026-03-13T05:46:22.214186974Z","level":"error"}
+{"timestamp":"2026-03-13T05:46:22.214193190Z","level":"error","message":"ImportError: The requests library is not installed from please install the requests package to use the requests transport."}
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway variables --service postgres
+
+]633;D;1]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway status
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway list
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway list services
+
+]633;D;1]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway service
+ to filter]
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway variables --service Postgres --json > postgres_vars.json; type postgres_vars.json
+PS>ParameterBinding(Out-File): name="InputObject"; value="{"
+>> ParameterBinding(Out-File): name="InputObject"; value="  "DATABASE_PUBLIC_URL": "postgresql://postgres:abJBEObFGcOjTmwQFDSHBSDTgbSzApHI@junction.proxy.rlwy.net:36204/railway","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "DATABASE_URL": "postgresql://postgres:abJBEObFGcOjTmwQFDSHBSDTgbSzApHI@postgres.railway.internal:5432/railway","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "PGDATA": "/var/lib/postgresql/data/pgdata","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "PGDATABASE": "railway","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "PGHOST": "postgres.railway.internal","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "PGPASSWORD": "abJBEObFGcOjTmwQFDSHBSDTgbSzApHI","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "PGPORT": "5432","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "PGUSER": "postgres","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "POSTGRES_DB": "railway","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "POSTGRES_PASSWORD": "abJBEObFGcOjTmwQFDSHBSDTgbSzApHI","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "POSTGRES_USER": "postgres","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "RAILWAY_DEPLOYMENT_DRAINING_SECONDS": "60","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "RAILWAY_ENVIRONMENT": "production","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "RAILWAY_ENVIRONMENT_ID": "08576b36-6d3e-4642-8b9c-10baab39964d","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "RAILWAY_ENVIRONMENT_NAME": "production","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "RAILWAY_PRIVATE_DOMAIN": "postgres.railway.internal","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "RAILWAY_PROJECT_ID": "78c6c164-5d2f-489b-bf9e-0dc8942b0e0d","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "RAILWAY_PROJECT_NAME": "baapcollab-backend","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "RAILWAY_SERVICE_BAAPCOLLAB_BACKEND_URL": "baapcollab-backend-production.up.railway.app","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "RAILWAY_SERVICE_ID": "354090eb-1f6c-420f-be85-e3291fa3e205","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "RAILWAY_SERVICE_NAME": "Postgres","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "RAILWAY_TCP_APPLICATION_PORT": "5432","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "RAILWAY_TCP_PROXY_DOMAIN": "junction.proxy.rlwy.net","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "RAILWAY_TCP_PROXY_PORT": "36204","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "RAILWAY_VOLUME_ID": "a7e5b9b1-b96e-44b0-9f4a-6c411d30dcac","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "RAILWAY_VOLUME_MOUNT_PATH": "/var/lib/postgresql/data","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "RAILWAY_VOLUME_NAME": "postgres-volume","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "SSL_CERT_DAYS": "820""
+>> ParameterBinding(Out-File): name="InputObject"; value="}"
+{
+  "DATABASE_PUBLIC_URL": "postgresql://postgres:abJBEObFGcOjTmwQFDSHBSDTgbSzApHI@junction.proxy.rlwy.net:36204/railway",
+  "DATABASE_URL": "postgresql://postgres:abJBEObFGcOjTmwQFDSHBSDTgbSzApHI@postgres.railway.internal:5432/railway",
+  "PGDATA": "/var/lib/postgresql/data/pgdata",
+  "PGDATABASE": "railway",
+  "PGHOST": "postgres.railway.internal",
+  "PGPASSWORD": "abJBEObFGcOjTmwQFDSHBSDTgbSzApHI",
+  "PGPORT": "5432",
+  "PGUSER": "postgres",
+  "POSTGRES_DB": "railway",
+  "POSTGRES_PASSWORD": "abJBEObFGcOjTmwQFDSHBSDTgbSzApHI",
+  "POSTGRES_USER": "postgres",
+  "RAILWAY_DEPLOYMENT_DRAINING_SECONDS": "60",
+  "RAILWAY_ENVIRONMENT": "production",
+  "RAILWAY_ENVIRONMENT_ID": "08576b36-6d3e-4642-8b9c-10baab39964d",
+  "RAILWAY_ENVIRONMENT_NAME": "production",
+  "RAILWAY_PRIVATE_DOMAIN": "postgres.railway.internal",
+  "RAILWAY_PROJECT_ID": "78c6c164-5d2f-489b-bf9e-0dc8942b0e0d",
+  "RAILWAY_PROJECT_NAME": "baapcollab-backend",
+  "RAILWAY_SERVICE_BAAPCOLLAB_BACKEND_URL": "baapcollab-backend-production.up.railway.app",
+  "RAILWAY_SERVICE_ID": "354090eb-1f6c-420f-be85-e3291fa3e205",
+  "RAILWAY_SERVICE_NAME": "Postgres",
+  "RAILWAY_TCP_APPLICATION_PORT": "5432",
+  "RAILWAY_TCP_PROXY_DOMAIN": "junction.proxy.rlwy.net",
+  "RAILWAY_TCP_PROXY_PORT": "36204",
+  "RAILWAY_VOLUME_ID": "a7e5b9b1-b96e-44b0-9f4a-6c411d30dcac",
+  "RAILWAY_VOLUME_MOUNT_PATH": "/var/lib/postgresql/data",
+  "RAILWAY_VOLUME_NAME": "postgres-volume",
+  "SSL_CERT_DAYS": "820"
+}
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>python read_vars.py
+
+]633;D;1]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>powershell -Command "Get-Content postgres_vars.json | ConvertFrom-Json | Select-Object -ExpandProperty DATABASE_URL"
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway variables set DATABASE_URL="postgresql://postgres:abJBEObFGcOjTmwQEqNskHiznUCDPfac@postgres.railway.internal:5432/railway" --service baapcollab-backend
+  Set variables DATABASE_URL
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway status
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway logs -n 20
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway domain
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway up
+
+]633;D;1]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway logs -n 20
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway status
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway logs --service Postgres -n 20
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway run python test_env.py
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway up
+
+]633;D;1]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway variables set DATABASE_URL="postgresql://postgres:abJBEObFGcOjTmwQEqNskHiznUCDPfac@junction.proxy.rlwy.net:36204/railway" --service baapcollab-backend
+  Set variables DATABASE_URL
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway up
+
+]633;D;1]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway variables --service Postgres-bUQj --json
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway variables --service Postgres-bUQj --json > pg_vars_2.json; powershell -Command "Get-Content pg_vars_2.json | ConvertFrom-Json | Select-Object -ExpandProperty DATABASE_URL"
+PS>ParameterBinding(Out-File): name="InputObject"; value="{"
+>> ParameterBinding(Out-File): name="InputObject"; value="  "DATABASE_PUBLIC_URL": "postgresql://postgres:VjJQUDQJnSfghEWnwVFJJeIXxYiIwoyl@shortline.proxy.rlwy.net:13984/railway","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "DATABASE_URL": "postgresql://postgres:VjJQUDQJnSfghEWnwVFJJeIXxYiIwoyl@postgres-buqj.railway.internal:5432/railway","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "PGDATA": "/var/lib/postgresql/data/pgdata","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "PGDATABASE": "railway","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "PGHOST": "postgres-buqj.railway.internal","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "PGPASSWORD": "VjJQUDQJnSfghEWnwVFJJeIXxYiIwoyl","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "PGPORT": "5432","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "PGUSER": "postgres","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "POSTGRES_DB": "railway","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "POSTGRES_PASSWORD": "VjJQUDQJnSfghEWnwVFJJeIXxYiIwoyl","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "POSTGRES_USER": "postgres","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "RAILWAY_DEPLOYMENT_DRAINING_SECONDS": "60","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "RAILWAY_ENVIRONMENT": "production","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "RAILWAY_ENVIRONMENT_ID": "08576b36-6d3e-4642-8b9c-10baab39964d","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "RAILWAY_ENVIRONMENT_NAME": "production","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "RAILWAY_PRIVATE_DOMAIN": "postgres-buqj.railway.internal","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "RAILWAY_PROJECT_ID": "78c6c164-5d2f-489b-bf9e-0dc8942b0e0d","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "RAILWAY_PROJECT_NAME": "baapcollab-backend","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "RAILWAY_SERVICE_BAAPCOLLAB_BACKEND_URL": "baapcollab-backend-production.up.railway.app","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "RAILWAY_SERVICE_ID": "859165da-4254-4db5-a9f3-79980c1206c5","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "RAILWAY_SERVICE_NAME": "Postgres-bUQj","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "RAILWAY_TCP_APPLICATION_PORT": "5432","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "RAILWAY_TCP_PROXY_DOMAIN": "shortline.proxy.rlwy.net","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "RAILWAY_TCP_PROXY_PORT": "13984","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "RAILWAY_VOLUME_ID": "5c332173-a888-4cfa-a866-9dbf1a1e41fd","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "RAILWAY_VOLUME_MOUNT_PATH": "/var/lib/postgresql/data","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "RAILWAY_VOLUME_NAME": "postgres-volume-h91I","
+>> ParameterBinding(Out-File): name="InputObject"; value="  "SSL_CERT_DAYS": "820""
+>> ParameterBinding(Out-File): name="InputObject"; value="}"
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway variables set DATABASE_URL="postgresql://postgres:VjJQUDQJnSfghEWnzvCOeOaEpxVvGzPl@postgres-buqj.railway.internal:5432/railway" --service baapcollab-backend
+  Set variables DATABASE_URL
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway up
+
+]633;D;1]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway logs -n 20
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>python test_db_conn.py
+
+]633;D;1]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway variables set DATABASE_URL="postgresql://postgres:VjJQUDQJnSfghEWnzvCOeOaEpxVvGzPl@junction.proxy.rlwy.net:49011/railway" --service baapcollab-backend
+ers\intel\.vscode\coding\vibe\antigrav
+ity\backend'
+PS C:\Users\intel\.vscode\coding\vibe\
+antigravity\backend> railway variables
+ set DATABASE_URL="postgresql://postgr
+es:VjJQUDQJnSfghEWnzvCOeOaEpxVvGzPl@ju
+nction.proxy.rlwy.net:49011/railway" -
+-service baapcollab-backend
+  Set variables DATABASE_URL
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway up
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\frontend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>vercel whoami
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\frontend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>vercel --name baapcollab-frontend --env NEXT_PUBLIC_API_URL=https://baapcollab-backend-production.up.railway.app --yes
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\frontend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>vercel alias ls
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway logs -n 50
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway up
+
+]633;D;1]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway up
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway logs -n 20
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway logs -n 50
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\frontend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>vercel env ls
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\frontend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>cmd /c "echo 735745260532-2c2nmc7s92j25o0fl0p5a1itoauv30u0.apps.googleusercontent.com | vercel env add NEXT_PUBLIC_GOOGLE_CLIENT_ID production --yes"
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\frontend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>cmd /c "echo https://baapcollab-backend-production.up.railway.app | vercel env add NEXT_PUBLIC_API_URL production --yes"
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\frontend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>vercel --prod --yes
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\frontend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>vercel alias ls
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\frontend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>vercel env ls
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\frontend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>python fix_vercel_env.py
+
+]633;D;1]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\frontend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>powershell -Command "'735745260532-2c2nmc7s92j25o0fl0p5a1itoauv30u0.apps.googleusercontent.com' | vercel env add NEXT_PUBLIC_GOOGLE_CLIENT_ID production --yes"
+
+]633;D;1]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\frontend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>powershell -Command "Set-Content -Path cid.txt -Value '735745260532-2c2nmc7s92j25o0fl0p5a1itoauv30u0.apps.googleusercontent.com' -NoNewline; Get-Content cid.txt | vercel env add NEXT_PUBLIC_GOOGLE_CLIENT_ID production --yes"
+
+]633;D;1]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\frontend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>python fix_vercel_env_v2.py
+
+]633;D;1]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\frontend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>python fix_vercel_env_v3.py
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\frontend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>vercel --prod --yes
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravityPS C:\Users\intel\.vscode\coding\vibe\antigravity> ]633;B
+PS>git status
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravityPS C:\Users\intel\.vscode\coding\vibe\antigravity> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravityPS C:\Users\intel\.vscode\coding\vibe\antigravity> ]633;B
+PS>git status --porcelain=v1
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravityPS C:\Users\intel\.vscode\coding\vibe\antigravity> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\frontend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>git status
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\frontend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>git status
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\frontend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>git add .
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\frontend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>git status --porcelain
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\frontend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>git commit -m "fix(auth): add google client id fallback and fix button width to resolve stuck login"
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\frontend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>git remote -v
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\frontend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>dir .vercel /s /a:d
+>> TerminatingError(Get-ChildItem): "A positional parameter cannot be found that accepts argument '/a:d'."
+Get-ChildItem : A positional parameter cannot be found that accepts argument '/a:d'.
+At line:1 char:1
++ dir .vercel /s /a:d
++ ~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidArgument: (:) [Get-ChildItem], ParameterBindingException
+    + FullyQualifiedErrorId : PositionalParameterNotFound,Microsoft.PowerShell.Commands.GetChildItemCommand
+Get-ChildItem : A positional
+parameter cannot be found that
+accepts argument '/a:d'.
+At line:1 char:1
++ dir .vercel /s /a:d
++ ~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : Invali
+   dArgument: (:) [Get-ChildItem],
+  ParameterBindingException
+    + FullyQualifiedErrorId : Positi
+   onalParameterNotFound,Microsoft.
+  PowerShell.Commands.GetChildItem
+ Command
+
+]633;D;1]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\frontend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>ls -la .vercel
+>> TerminatingError(Get-ChildItem): "A parameter cannot be found that matches parameter name 'la'."
+Get-ChildItem : A parameter cannot be found that matches parameter name 'la'.
+At line:1 char:4
++ ls -la .vercel
++    ~~~
+    + CategoryInfo          : InvalidArgument: (:) [Get-ChildItem], ParameterBindingException
+    + FullyQualifiedErrorId : NamedParameterNotFound,Microsoft.PowerShell.Commands.GetChildItemCommand
+Get-ChildItem : A parameter cannot
+be found that matches parameter name
+'la'.
+At line:1 char:4
++ ls -la .vercel
++    ~~~
+    + CategoryInfo          : Invali
+   dArgument: (:) [Get-ChildItem],
+  ParameterBindingException
+    + FullyQualifiedErrorId : NamedP
+   arameterNotFound,Microsoft.Power
+  Shell.Commands.GetChildItemComma
+ nd
+
+]633;D;1]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\frontend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>Test-Path .vercel
+True
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>git status --porcelain
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+]633;D]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway --version
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravityPS C:\Users\intel\.vscode\coding\vibe\antigravity> ]633;B
+PS>git add backend/main.py; git commit -m "fix(cors): hardcode vercel production origins to fix network error on live site"
+
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravityPS C:\Users\intel\.vscode\coding\vibe\antigravity> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravityPS C:\Users\intel\.vscode\coding\vibe\antigravity> ]633;B
+PS>git push origin HEAD
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravityPS C:\Users\intel\.vscode\coding\vibe\antigravity> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway up --detach
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway status
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\backend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>railway domain
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cbackendPS C:\Users\intel\.vscode\coding\vibe\antigravity\backend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\frontend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>$files = @("src/app/page.tsx", "src/app/leaderboard/page.tsx", "src/app/profile/[id]/page.tsx", "src/components/dashboard/ForumList.tsx", "src/components/dashboard/ProjectList.tsx", "src/components/dashboard/ProfileSettings.tsx", "src/components/dashboard/CreatePostModal.tsx"); foreach ($f in $files) { (Get-Content $f) -replace 'process\.env\.NEXT_PUBLIC_API_URL \|\| \"http://localhost:8000\"', 'process.env.NEXT_PUBLIC_API_URL || "https://baapcollab-backend-production.up.railway.app"' | Set-Content $f }; echo "Done"
+Get-Content : An object at the specified path src/app/profile/[id]/page.tsx does not exist, or has been filtered by the 
+-Include or -Exclude parameter.
+At line:1 char:306
++ ... eatePostModal.tsx"); foreach ($f in $files) { (Get-Content $f) -repla ...
++                                                    ~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (System.String[]:String[]) [Get-Content], Exception
+    + FullyQualifiedErrorId : ItemNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+Get-Content : An object at the
+specified path
+src/app/profile/[id]/page.tsx
+does not exist, or has been
+filtered by the -Include or
+-Exclude parameter.
+At line:1 char:306
++ ... eatePostModal.tsx");
+foreach ($f in $files) {
+(Get-Content $f) -repla ...
++
+
+~~~~~~~~~~~~~~
+    + CategoryInfo          : Ob
+   jectNotFound: (System.String
+  []:String[]) [Get-Content],
+ Exception
+    + FullyQualifiedErrorId : It
+   emNotFound,Microsoft.PowerSh
+  ell.Commands.GetContentComma
+ nd
+
+Done
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+]633;D]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\frontend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>git add -A; git commit -m "fix(api): update API_BASE fallback to correct Railway production URL across all frontend files"; git status
+
+
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>cd 'c:\Users\intel\.vscode\coding\vibe\antigravity\frontend'
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B
+PS>vercel deploy --prod --yes
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cintel\x5c.vscode\x5ccoding\x5cvibe\x5cantigravity\x5cfrontendPS C:\Users\intel\.vscode\coding\vibe\antigravity\frontend> ]633;B

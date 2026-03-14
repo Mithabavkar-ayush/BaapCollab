@@ -1,0 +1,2 @@
+VARS 1 (Postgres): postgresql://postgres:abJBEObFGcOjTmwQFDSHBSDTgbSzApHI@postgres.railway.internal:5432/railway
+VARS 2 (Postgres-bUQj): postgresql://postgres:VjJQUDQJnSfghEWnwVFJJeIXxYiIwoyl@postgres-buqj.railway.internal:5432/railway
