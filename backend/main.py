@@ -10,7 +10,12 @@ load_dotenv()
 
 from routers import auth, posts, rewards
 
+from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
+
 app = FastAPI(title="BaapCollab API")
+
+# Ensure redirects preserve HTTPS behind Railway's proxy
+app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")
 
 # DISABLE strict slashes to prevent 307 redirects that downgrade to HTTP
 app.router.redirect_slashes = False
