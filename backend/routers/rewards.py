@@ -8,18 +8,17 @@ router = APIRouter()
 @router.get("/leaderboard")
 def get_leaderboard():
     with Session(engine) as session:
-        # User and RewardLog INNER JOIN to aggregate real-time points.
-        # This fulfills the request for an explicit INNER JOIN between Users and Points.
+        # Use LEFT JOIN (isouter=True) so users with 0 points still show up.
         statement = (
-            select(User, func.sum(RewardLog.points).label("total_points"))
-            .join(RewardLog, User.id == RewardLog.user_id)
+            select(User, func.coalesce(func.sum(RewardLog.points), 0).label("total_points"))
+            .join(RewardLog, User.id == RewardLog.user_id, isouter=True)
             .group_by(User.id)
-            .order_by(desc("total_points"))
+            .order_by(desc("total_points"), User.id)
             .limit(10)
         )
         results = session.exec(statement).all()
         
-        # If no reward logs exist yet, fall back to simple user points list to ensure UI isn't empty
+        # Additional fallback: if somehow results is still empty, get all users
         if not results:
             users = session.exec(select(User).order_by(desc(User.reward_points)).limit(10)).all()
             results = [(u, u.reward_points) for u in users]

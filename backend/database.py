@@ -8,26 +8,31 @@ load_dotenv(override=False)
 
 database_url = os.getenv("DATABASE_URL")
 
+# Fix for Railway/Render/Heroku where postgres:// is used instead of postgresql://
+if database_url and database_url.startswith("postgres://"):
+    database_url = database_url.replace("postgres://", "postgresql://", 1)
+
 print(f"DEBUG: DATABASE_URL check -> {'Found' if database_url else 'Not Found'}")
-if database_url:
-    print(f"DEBUG: DATABASE_URL starts with: {database_url[:15]}...")
 
 if not database_url:
-    print("CRITICAL: DATABASE_URL is missing! Falling back or failing...")
-    # For now, let's not raise so we can see the logs properly
-    database_url = "" 
+    print("CRITICAL: DATABASE_URL is missing! Falling back to SQLite...")
+    database_url = "sqlite:///./fallback.db"
 
-print(f"--- DATABASE CONNECTION ---")
+connect_args = {}
 if database_url.startswith("sqlite"):
-    print(f"WARNING: RUNNING ON SQLITE (Legacy fallback). Connection: {database_url}")
+    print(f"WARNING: RUNNING ON SQLITE. Connection: {database_url}")
     connect_args = {"check_same_thread": False}
 else:
-    # Log the connection (masking credentials for safety)
     db_host = database_url.split("@")[-1] if "@" in database_url else database_url
     print(f"SUCCESS: CONNECTING TO POSTGRESQL -> {db_host}")
-    connect_args = {}
+    # Explicitly handle SSL for production
+    if "sslmode" not in database_url:
+        if "?" in database_url:
+            database_url += "&sslmode=require"
+        else:
+            database_url += "?sslmode=require"
 
-engine = create_engine(database_url, echo=True, connect_args=connect_args)
+engine = create_engine(database_url, echo=False, connect_args=connect_args)
 
 class Branch(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)

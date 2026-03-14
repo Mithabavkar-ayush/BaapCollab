@@ -14,11 +14,16 @@ app = FastAPI(title="BaapCollab API")
 
 @app.middleware("http")
 async def log_requests(request, call_next):
-    print(f"Request: {request.method} {request.url}")
+    print(f"\n--- REQUEST: {request.method} {request.url.path} ---")
     print(f"Origin: {request.headers.get('origin')}")
-    response = await call_next(request)
-    print(f"Response status: {response.status_code}")
-    return response
+    print(f"Auth: {request.headers.get('authorization')[:20] if request.headers.get('authorization') else 'None'}...")
+    try:
+        response = await call_next(request)
+        print(f"Response: {response.status_code}")
+        return response
+    except Exception as e:
+        print(f"REQUEST ERROR: {e}")
+        raise e
 
 frontend_url = os.getenv("FRONTEND_URL", "")
 
@@ -37,7 +42,7 @@ if frontend_url and frontend_url not in origins:
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
-    allow_origin_regex=r"https://.*\.vercel\.app", # Support ALL Vercel previews securely
+    allow_origin_regex=r"https://.*\.vercel\.app|https://baapcollab\.vercel\.app.*", 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -51,6 +56,27 @@ def on_startup():
 app.include_router(auth.router, prefix="/auth", tags=["auth"])
 app.include_router(posts.router, prefix="/posts", tags=["posts"])
 app.include_router(rewards.router, prefix="/rewards", tags=["rewards"])
+
+@app.get("/debug/db-status")
+def debug_db_status():
+    from sqlmodel import Session, select, func
+    from database import User, Post, RewardLog, engine
+    try:
+        with Session(engine) as session:
+            u_count = session.exec(select(func.count()).select_from(User)).one()
+            p_count = session.exec(select(func.count()).select_from(Post)).one()
+            r_count = session.exec(select(func.count()).select_from(RewardLog)).one()
+            return {
+                "status": "online",
+                "counts": {
+                    "users": u_count,
+                    "posts": p_count,
+                    "reward_logs": r_count
+                },
+                "db_type": "postgresql" if "postgresql" in str(engine.url) else "sqlite"
+            }
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
 
 @app.get("/")
 def read_root():
