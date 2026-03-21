@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+pydantic
+email-validator
+sqlmodel
+python-dotenv
+psycopg2-binary
+python-jose[cryptography]
+passlib[bcrypt]
+Pillow
+requests
+SQLAlchemy==2.0.47
