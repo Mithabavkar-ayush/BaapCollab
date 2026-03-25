@@ -23,5 +23,5 @@ COPY . .
 # Expose the application port
 EXPOSE 8000
 
-# Start command using the PORT environment variable
-CMD uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}
+# Start command using the PORT environment variable (wrapped in sh for robust expansion)
+CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}"]
