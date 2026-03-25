@@ -133,7 +133,12 @@ export default function OnboardingSteps({
       if (res.ok) {
         setOtpSuccess(true);
         setTimeout(() => {
-          handleLoginSuccess(pendingAuthData);
+          if (pendingAuthData) {
+            handleLoginSuccess(pendingAuthData);
+          } else {
+            console.error("DEBUG: OTP verified but pendingAuthData is missing");
+            window.location.reload(); // Fallback to fresh login
+          }
         }, 1000);
       } else {
         setOtpError(data.detail || "Invalid code. Please try again.");

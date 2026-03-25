@@ -312,6 +312,12 @@ export default function Dashboard() {
   };
 
   const handleLoginSuccess = async (authData: any) => {
+    if (!authData) {
+      console.error("DEBUG: handleLoginSuccess received null/undefined authData");
+      setAuthError("An unexpected authentication error occurred. Please try again.");
+      return;
+    }
+    
     setAuthError(null);
     if (authData.token) {
       if (typeof window !== "undefined") {

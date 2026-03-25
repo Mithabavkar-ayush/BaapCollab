@@ -23,8 +23,8 @@ export async function apiFetch(endpoint: string, options: RequestInit = {}) {
     ...options,
     headers: {
       // Allow overriding headers, but keep common ones
-      'Content-Type': options.body instanceof FormData ? undefined : 'application/json',
-      ...options.headers,
+      ...(options.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
+      ...(options.headers as Record<string, string> || {}),
     },
   };
 
