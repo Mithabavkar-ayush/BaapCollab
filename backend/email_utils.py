@@ -208,11 +208,16 @@ def send_approval_request(user_email, branch_name, user_id, name, bio, dept, yea
         
         try:
             print(f"📡 [EMAIL] Connecting to {MAIL_SERVER}:{MAIL_PORT} (timeout=10s)...")
-            with smtplib.SMTP(MAIL_SERVER, MAIL_PORT, timeout=10) as server:
-                if MAIL_STARTTLS:
-                    server.starttls()
-                server.login(str(MAIL_USERNAME), str(MAIL_PASSWORD))
-                server.send_message(msg)
+            if MAIL_PORT == 465:
+                with smtplib.SMTP_SSL(MAIL_SERVER, MAIL_PORT, timeout=10) as server:
+                    server.login(str(MAIL_USERNAME), str(MAIL_PASSWORD))
+                    server.send_message(msg)
+            else:
+                with smtplib.SMTP(MAIL_SERVER, MAIL_PORT, timeout=10) as server:
+                    if MAIL_STARTTLS:
+                        server.starttls()
+                    server.login(str(MAIL_USERNAME), str(MAIL_PASSWORD))
+                    server.send_message(msg)
             print(f"✅ [EMAIL] Approval Request Sent for {user_email}")
         except Exception as smtp_err:
             print(f"❌ [EMAIL] SMTP Socket/Connection Error: {smtp_err}")
@@ -251,11 +256,16 @@ def send_access_granted(user_email):
         msg.attach(MIMEText(html, "html"))
 
         print(f"📡 [EMAIL] Sending access_granted to {user_email} (timeout=10s)...")
-        with smtplib.SMTP(MAIL_SERVER, MAIL_PORT, timeout=10) as server:
-            if MAIL_STARTTLS:
-                server.starttls()
-            server.login(str(MAIL_USERNAME), str(MAIL_PASSWORD))
-            server.send_message(msg)
+        if MAIL_PORT == 465:
+            with smtplib.SMTP_SSL(MAIL_SERVER, MAIL_PORT, timeout=10) as server:
+                server.login(str(MAIL_USERNAME), str(MAIL_PASSWORD))
+                server.send_message(msg)
+        else:
+            with smtplib.SMTP(MAIL_SERVER, MAIL_PORT, timeout=10) as server:
+                if MAIL_STARTTLS:
+                    server.starttls()
+                server.login(str(MAIL_USERNAME), str(MAIL_PASSWORD))
+                server.send_message(msg)
             
         print(f"✅ [EMAIL] Access Granted Notification Sent to {user_email}")
         return True
@@ -320,11 +330,16 @@ def send_welcome_otp(user_email: str, otp: str) -> bool:
         msg.attach(MIMEText(html, "html"))
 
         print(f"📡 [EMAIL] Sending welcome_otp to {user_email} (timeout=10s)...")
-        with smtplib.SMTP(MAIL_SERVER, MAIL_PORT, timeout=10) as server:
-            if MAIL_STARTTLS:
-                server.starttls()
-            server.login(str(MAIL_USERNAME), str(MAIL_PASSWORD))
-            server.send_message(msg)
+        if MAIL_PORT == 465:
+            with smtplib.SMTP_SSL(MAIL_SERVER, MAIL_PORT, timeout=10) as server:
+                server.login(str(MAIL_USERNAME), str(MAIL_PASSWORD))
+                server.send_message(msg)
+        else:
+            with smtplib.SMTP(MAIL_SERVER, MAIL_PORT, timeout=10) as server:
+                if MAIL_STARTTLS:
+                    server.starttls()
+                server.login(str(MAIL_USERNAME), str(MAIL_PASSWORD))
+                server.send_message(msg)
 
         print(f"✅ Welcome OTP email sent to {user_email}")
         return True
@@ -376,11 +391,16 @@ def send_password_reset_email(user_email: str, reset_link: str) -> bool:
         msg.attach(MIMEText(html, "html"))
 
         print(f"📡 [EMAIL] Sending password_reset_email to {user_email} (timeout=10s)...")
-        with smtplib.SMTP(MAIL_SERVER, MAIL_PORT, timeout=10) as server:
-            if MAIL_STARTTLS:
-                server.starttls()
-            server.login(str(MAIL_USERNAME), str(MAIL_PASSWORD))
-            server.send_message(msg)
+        if MAIL_PORT == 465:
+            with smtplib.SMTP_SSL(MAIL_SERVER, MAIL_PORT, timeout=10) as server:
+                server.login(str(MAIL_USERNAME), str(MAIL_PASSWORD))
+                server.send_message(msg)
+        else:
+            with smtplib.SMTP(MAIL_SERVER, MAIL_PORT, timeout=10) as server:
+                if MAIL_STARTTLS:
+                    server.starttls()
+                server.login(str(MAIL_USERNAME), str(MAIL_PASSWORD))
+                server.send_message(msg)
 
         print(f"✅ Password reset email sent to {user_email}")
         return True
