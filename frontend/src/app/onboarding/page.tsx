@@ -35,11 +35,23 @@ export default function OnboardingPage() {
   }, []);
 
   const fetchUser = async (token: string) => {
+    // Safety guard: if token is invalid or we're in a mid-auth state, don't spam /me
+    if (!token || token === "undefined") return;
+
     try {
       const res = await fetch(`${API_BASE}/auth/me`, {
         headers: { 'Authorization': `Bearer ${token}` },
         credentials: 'include'
       });
+      
+      if (res.status === 401) {
+        console.warn("🔐 [AUTH] Session expired or invalid token - clearing cache");
+        localStorage.removeItem("baap_token");
+        localStorage.removeItem("token");
+        setAuthToken(null);
+        return;
+      }
+
       if (res.ok) {
         const userData = await res.json();
         setUser(userData);

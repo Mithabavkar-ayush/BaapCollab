@@ -23,7 +23,7 @@ SECRET_KEY = os.getenv("JWT_SECRET", "baapcollab_super_secret_key_12345")
 ALGORITHM = os.getenv("ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7  # 7 days
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login", auto_error=False)
 
 class TokenData(BaseModel):
     email: Optional[str] = None
