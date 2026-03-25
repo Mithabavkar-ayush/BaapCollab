@@ -318,9 +318,11 @@ def send_welcome_otp(user_email: str, otp: str) -> bool:
 
         msg.attach(MIMEText(html, "html"))
 
-        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
-            server.starttls()
-            server.login(str(SMTP_USER), str(SMTP_PASSWORD))
+        print(f"📡 [EMAIL] Sending welcome_otp to {user_email}...")
+        with smtplib.SMTP(MAIL_SERVER, MAIL_PORT) as server:
+            if MAIL_STARTTLS:
+                server.starttls()
+            server.login(str(MAIL_USERNAME), str(MAIL_PASSWORD))
             server.send_message(msg)
 
         print(f"✅ Welcome OTP email sent to {user_email}")
@@ -372,9 +374,11 @@ def send_password_reset_email(user_email: str, reset_link: str) -> bool:
 </html>"""
         msg.attach(MIMEText(html, "html"))
 
-        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
-            server.starttls()
-            server.login(str(SMTP_USER), str(SMTP_PASSWORD))
+        print(f"📡 [EMAIL] Sending password_reset_email to {user_email}...")
+        with smtplib.SMTP(MAIL_SERVER, MAIL_PORT) as server:
+            if MAIL_STARTTLS:
+                server.starttls()
+            server.login(str(MAIL_USERNAME), str(MAIL_PASSWORD))
             server.send_message(msg)
 
         print(f"✅ Password reset email sent to {user_email}")
