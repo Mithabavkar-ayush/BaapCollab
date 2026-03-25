@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { API_BASE } from "@/lib/api";
+import { API_BASE, apiFetch } from "@/lib/api";
 
 
 export default function WaitingRoom() {
@@ -18,11 +18,10 @@ export default function WaitingRoom() {
         return;
       }
 
-      const res = await fetch(`${API_BASE}/auth/me`, {
+      const res = await apiFetch(`/auth/me`, {
         headers: {
           Authorization: `Bearer ${token}`,
-        },
-        credentials: "include"
+        }
       });
 
       if (res.ok) {

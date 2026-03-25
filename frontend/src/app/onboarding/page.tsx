@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import OnboardingSteps from "@/components/dashboard/OnboardingSteps";
 import { SUPPORTED_BRANCHES } from "@/data/institutions";
 
-import { API_BASE } from "@/lib/api";
+import { API_BASE, apiFetch } from "@/lib/api";
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -35,23 +35,10 @@ export default function OnboardingPage() {
   }, []);
 
   const fetchUser = async (token: string) => {
-    // Safety guard: if token is invalid or we're in a mid-auth state, don't spam /me
-    if (!token || token === "undefined") return;
-
     try {
-      const res = await fetch(`${API_BASE}/auth/me`, {
-        headers: { 'Authorization': `Bearer ${token}` },
-        credentials: 'include'
+      const res = await apiFetch(`/auth/me`, {
+        headers: { 'Authorization': `Bearer ${token}` }
       });
-      
-      if (res.status === 401) {
-        console.warn("🔐 [AUTH] Session expired or invalid token - clearing cache");
-        localStorage.removeItem("baap_token");
-        localStorage.removeItem("token");
-        setAuthToken(null);
-        return;
-      }
-
       if (res.ok) {
         const userData = await res.json();
         setUser(userData);
@@ -106,10 +93,9 @@ export default function OnboardingPage() {
     const match = SUPPORTED_BRANCHES.find(b => b.name === manualCollegeName);
     if (match) {
         try {
-            const res = await fetch(`${API_BASE}/auth/onboarding/institute?branch_id=${match.id}`, {
+            const res = await apiFetch(`/auth/onboarding/institute?branch_id=${match.id}`, {
                 method: 'POST',
-                headers: { 'Authorization': `Bearer ${authToken}` },
-                credentials: 'include'
+                headers: { 'Authorization': `Bearer ${authToken}` }
             });
             if (res.ok) {
                 setStep(3); // Go to Profile Builder
@@ -134,7 +120,7 @@ export default function OnboardingPage() {
     setValidationError(null);
 
     try {
-      const res = await fetch(`${API_BASE}/auth/onboarding/details`, {
+      const res = await apiFetch(`/auth/onboarding/details`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -148,8 +134,7 @@ export default function OnboardingPage() {
           bio: profileData.bio,
           linkedin_url: profileData.linkedin_url,
           github_url: profileData.github_url
-        }),
-        credentials: 'include'
+        })
       });
       if (res.ok) {
         router.push("/waiting-room");

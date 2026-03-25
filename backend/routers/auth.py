@@ -107,13 +107,6 @@ def login(request: UserLogin, response: Response):
                 detail="Incorrect password. Please try again.",
                 headers={"WWW-Authenticate": "Bearer"},
             )
-            
-        # Ensure user is verified before allowing full login (Bypass handles new signups for now)
-        if not user.is_verified:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Email not verified. Please check your email for the OTP.",
-            )
         
         access_token_expires = timedelta(minutes=60 * 24 * 7)
         access_token = create_access_token(
@@ -126,8 +119,8 @@ def login(request: UserLogin, response: Response):
             value=access_token,
             httponly=True,
             max_age=60 * 60 * 24 * 7,
-            samesite="none", # Required for cross-site cookies between Vercel and Railway
-            secure=True,     # Must be True if samesite="none"
+            samesite="lax",
+            secure=is_production,
         )
         
         return {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { API_BASE } from "@/lib/api";
+import { API_BASE, apiFetch } from "@/lib/api";
 import { useRouter, usePathname } from "next/navigation";
 
 export default function RouteGuard({ children }: { children: React.ReactNode }) {
@@ -26,9 +26,8 @@ export default function RouteGuard({ children }: { children: React.ReactNode }) 
       }
 
       try {
-        const res = await fetch(`${API_BASE}/auth/me`, {
-          headers: { 'Authorization': `Bearer ${token}` },
-          credentials: "include"
+        const res = await apiFetch(`/auth/me`, {
+          headers: { 'Authorization': `Bearer ${token}` }
         });
 
         if (res.ok) {

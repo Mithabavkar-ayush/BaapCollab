@@ -15,7 +15,7 @@ import ProfileSettings from "@/components/dashboard/ProfileSettings";
 import CreatePostModal from "@/components/dashboard/CreatePostModal";
 
 const inter = Inter({ subsets: ['latin'] });
-import { API_BASE } from "@/lib/api";
+import { API_BASE, apiFetch } from "@/lib/api";
 const PRODUCTION_DOMAIN = "localhost:3000";
 
 console.log("PRODUCTION_BUILD_V4_API_CENTRALIZED");
@@ -132,9 +132,8 @@ export default function Dashboard() {
 
   const fetchUser = async (token: string) => {
     try {
-      const res = await fetch(`${API_BASE}/auth/me`, {
-        headers: { 'Authorization': `Bearer ${token}` },
-        credentials: 'include'
+      const res = await apiFetch(`/auth/me`, {
+        headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {
         const userData = await res.json();
@@ -187,13 +186,11 @@ export default function Dashboard() {
       console.log(`DEBUG [fetchData] Executing fetch to: ${fetchUrl}`);
       const headers = { 'Authorization': `Bearer ${currentToken}` };
       const [postsRes, leaderRes] = await Promise.all([
-        fetch(fetchUrl, {
-          headers: { ...headers },
-          credentials: 'include'
+        apiFetch(`/posts`, {
+          headers: { ...headers }
         }),
-        fetch(`${API_BASE}/rewards/leaderboard`, {
-          headers,
-          credentials: 'include'
+        apiFetch(`/rewards/leaderboard`, {
+          headers
         })
       ]);
 
@@ -248,10 +245,9 @@ export default function Dashboard() {
 
     if (match) {
       try {
-        const res = await fetch(`${API_BASE}/auth/onboarding/institute?branch_id=${match.id}`, {
+        const res = await apiFetch(`/auth/onboarding/institute?branch_id=${match.id}`, {
           method: 'POST',
-          headers: { 'Authorization': `Bearer ${token}` },
-          credentials: 'include'
+          headers: { 'Authorization': `Bearer ${token}` }
         });
         if (res.ok) {
           setStep(3);
@@ -290,14 +286,13 @@ export default function Dashboard() {
     };
 
     try {
-      const res = await fetch(`${API_BASE}/auth/onboarding/details`, {
+      const res = await apiFetch(`/auth/onboarding/details`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(details),
-        credentials: 'include'
+        body: JSON.stringify(details)
       });
       if (res.ok) {
         const updatedUser = await res.json();
@@ -349,10 +344,9 @@ export default function Dashboard() {
     setShowGuide(false);
     if (!authToken) return;
     try {
-      await fetch(`${API_BASE}/auth/welcome-seen`, {
+      await apiFetch(`/auth/welcome-seen`, {
         method: 'POST',
-        headers: { 'Authorization': `Bearer ${authToken}` },
-        credentials: 'include'
+        headers: { 'Authorization': `Bearer ${authToken}` }
       });
       // Update local user state
       setUser((prev: any) => ({ ...prev, has_seen_welcome: true }));

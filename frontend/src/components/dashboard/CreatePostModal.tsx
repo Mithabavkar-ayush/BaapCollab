@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { API_BASE } from "@/lib/api";
+import { API_BASE, apiFetch } from "@/lib/api";
 
 interface CreatePostModalProps {
     modalType: 'project' | 'discussion';
@@ -33,7 +33,7 @@ export default function CreatePostModal({
 
         setIsPosting(true);
         try {
-            const res = await fetch(`${API_BASE}/posts`, {
+            const res = await apiFetch(`/posts`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -43,8 +43,7 @@ export default function CreatePostModal({
                     title,
                     content,
                     type: modalType === 'project' ? 'LFM' : 'FORUM'
-                }),
-                credentials: 'include'
+                })
             });
 
             if (res.ok) {

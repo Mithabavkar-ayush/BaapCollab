@@ -9,29 +9,26 @@ import uvicorn
 load_dotenv()
 
 from routers import auth, posts, rewards
-import traceback
-from fastapi.responses import JSONResponse
+# from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 
 app = FastAPI(title="BaapCollab API")
-
-@app.exception_handler(Exception)
-async def global_exception_handler(request: Request, exc: Exception):
-    return JSONResponse(
-        status_code=500,
-        content={
-            "message": "Internal Server Error",
-            "detail": str(exc),
-            "traceback": traceback.format_exc()
-        }
-    )
 
 # The following line is a duplicate in the provided edit, keeping original structure
 # from fastapi.middleware.cors import CORSMiddleware
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=False,  # Must be false for "*"
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:8000",
+        "https://baapcollab-production.up.railway.app",
+        "https://baap-collab-nmwcadgzh-ayushs-projects-1c3d55f9.vercel.app",
+        "https://baap-collab.vercel.app",
+        "https://baapcollab.vercel.app",
+    ],
+    allow_origin_regex="https://baap-collab-.*\.vercel\.app",
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )

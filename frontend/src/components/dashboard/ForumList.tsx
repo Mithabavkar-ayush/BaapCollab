@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { formatDistanceToNow, parseISO } from "date-fns";
-import { API_BASE } from "@/lib/api";
+import { API_BASE, apiFetch } from "@/lib/api";
 
 
 interface ForumListProps {
@@ -111,9 +111,7 @@ function PostCard({
     const fetchComments = async () => {
         setLoadingComments(true);
         try {
-            const res = await fetch(`${API_BASE}/posts/${post.id}/comments${loggedInUser ? `?current_user_id=${loggedInUser.id}` : ''}`, {
-                credentials: 'include'
-            });
+            const res = await apiFetch(`/posts/${post.id}/comments${loggedInUser ? `?current_user_id=${loggedInUser.id}` : ''}`);
             if (res.ok) {
                 const data = await res.json();
                 console.log("DEBUG [ForumList]: Comments fetched for post:", post.id, data);
@@ -135,14 +133,13 @@ function PostCard({
         if (!commentInput.trim() || !loggedInUser) return;
         setSubmitting(true);
         try {
-            const res = await fetch(`${API_BASE}/posts/${post.id}/comments`, {
+            const res = await apiFetch(`/posts/${post.id}/comments`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify({ content: commentInput }),
-                credentials: 'include'
+                body: JSON.stringify({ content: commentInput })
             });
             if (res.ok) {
                 const newComment = await res.json();
@@ -173,14 +170,13 @@ function PostCard({
         console.log(`[Assist Edit] New text: "${editContent}"`);
 
         try {
-            const res = await fetch(`${API_BASE}/posts/${post.id}/comments/${commentId}`, {
+            const res = await apiFetch(`/posts/${post.id}/comments/${commentId}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${authToken}`
                 },
-                body: JSON.stringify({ content: editContent }),
-                credentials: 'include'
+                body: JSON.stringify({ content: editContent })
             });
             if (res.ok) {
                 const updated = await res.json();
@@ -222,10 +218,9 @@ function PostCard({
         // Schedule the real deletion after 5 seconds
         const timerId = setTimeout(async () => {
             try {
-                await fetch(`${API_BASE}/posts/${post.id}/comments/${commentId}`, {
+                await apiFetch(`/posts/${post.id}/comments/${commentId}`, {
                     method: "DELETE",
-                    headers: { "Authorization": `Bearer ${token || (typeof window !== "undefined" ? (localStorage.getItem("baap_token") || localStorage.getItem("token")) : null)}` },
-                    credentials: 'include'
+                    headers: { "Authorization": `Bearer ${token || (typeof window !== "undefined" ? (localStorage.getItem('baap_token') || localStorage.getItem('token')) : null)}` }
                 });
             } catch (err) {
                 console.error("Deferred delete failed:", err);
@@ -255,10 +250,9 @@ function PostCard({
     const handleToggleUpvote = async (commentId: number) => {
         if (!loggedInUser) return;
         try {
-            const res = await fetch(`${API_BASE}/posts/${post.id}/comments/${commentId}/upvote`, {
+            const res = await apiFetch(`/posts/${post.id}/comments/${commentId}/upvote`, {
                 method: "POST",
-                headers: { "Authorization": `Bearer ${token}` },
-                credentials: 'include'
+                headers: { "Authorization": `Bearer ${token}` }
             });
             if (res.ok) {
                 const data = await res.json();
@@ -279,10 +273,9 @@ function PostCard({
         setShowDeleteModal(false);
 
         try {
-            const res = await fetch(`${API_BASE}/posts/${post.id}`, {
+            const res = await apiFetch(`/posts/${post.id}`, {
                 method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${token}` },
-                credentials: 'include'
+                headers: { 'Authorization': `Bearer ${token}` }
             });
             if (!res.ok) {
                 console.error("Failed to delete post from server");

@@ -1,6 +1,6 @@
 "use client";
 
-import { API_BASE } from "@/lib/api";
+import { API_BASE, apiFetch } from "@/lib/api";
 
 interface ProfileSettingsProps {
     user: any;
@@ -95,14 +95,13 @@ export default function ProfileSettings({
                     };
 
                     try {
-                        const res = await fetch(`${API_BASE}/auth/profile`, {
+                        const res = await apiFetch(`/auth/profile`, {
                             method: 'PATCH',
                             headers: {
                                 'Content-Type': 'application/json',
                                 'Authorization': `Bearer ${authToken}`
                             },
-                            body: JSON.stringify(details),
-                            credentials: 'include'
+                            body: JSON.stringify(details)
                         });
                         if (res.ok) {
                             const updatedUser = await res.json();

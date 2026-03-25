@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { formatDistanceToNow, parseISO } from "date-fns";
-import { API_BASE } from "@/lib/api";
+import { API_BASE, apiFetch } from "@/lib/api";
 
 
 interface ProjectListProps {
@@ -48,14 +48,13 @@ export default function ProjectList({
         setApplyingId(postId);
 
         try {
-            const endpoint = `${API_BASE}/posts/${postId}/apply`;
+            const endpoint = isUnenrolling ? `/posts/${postId}/apply` : `/posts/${postId}/apply`;
             const method = isUnenrolling ? 'DELETE' : 'POST';
             const authToken = token || (typeof window !== "undefined" ? (localStorage.getItem('baap_token') || localStorage.getItem('token')) : null);
 
-            const res = await fetch(endpoint, {
+            const res = await apiFetch(endpoint, {
                 method: method,
-                headers: { 'Authorization': `Bearer ${authToken}` },
-                credentials: 'include'
+                headers: { 'Authorization': `Bearer ${authToken}` }
             });
             if (!res.ok) {
                 // Revert optimistic update silently on failure
@@ -81,9 +80,8 @@ export default function ProjectList({
         setLoadingApplicants(true);
         try {
             const authToken = token || (typeof window !== "undefined" ? (localStorage.getItem('baap_token') || localStorage.getItem('token')) : null);
-            const res = await fetch(`${API_BASE}/posts/${postId}/applicants`, {
-                headers: { 'Authorization': `Bearer ${authToken}` },
-                credentials: 'include'
+            const res = await apiFetch(`/posts/${postId}/applicants`, {
+                headers: { 'Authorization': `Bearer ${authToken}` }
             });
             if (res.ok) {
                 const data = await res.json();
@@ -104,10 +102,9 @@ export default function ProjectList({
             setDeletingPostId(null);
 
             const authToken = token || (typeof window !== "undefined" ? (localStorage.getItem('baap_token') || localStorage.getItem('token')) : null);
-            const res = await fetch(`${API_BASE}/posts/${postId}`, {
+            const res = await apiFetch(`/posts/${postId}`, {
                 method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${authToken}` },
-                credentials: 'include'
+                headers: { 'Authorization': `Bearer ${authToken}` }
             });
 
             if (!res.ok) {

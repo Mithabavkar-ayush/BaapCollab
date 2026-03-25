@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { SUPPORTED_BRANCHES } from "@/data/institutions";
-import { API_BASE as API } from "@/lib/api";
+import { API_BASE as API, apiFetch } from "@/lib/api";
 
 interface OnboardingStepsProps {
   step: number;
@@ -68,7 +68,7 @@ export default function OnboardingSteps({
     setForgotSuccess(false);
     setIsSubmitting(true);
     try {
-      const res = await fetch(`${API}/auth/forgot-password`, {
+      const res = await apiFetch(`/auth/forgot-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
@@ -96,7 +96,7 @@ export default function OnboardingSteps({
     setIsSubmitting(true);
     const endpoint = isSignUp ? "/auth/signup" : "/auth/login";
     try {
-      const res = await fetch(`${API}${endpoint}`, {
+      const res = await apiFetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -124,7 +124,7 @@ export default function OnboardingSteps({
     setOtpError(null);
     setIsSubmitting(true);
     try {
-      const res = await fetch(`${API}/auth/verify-otp`, {
+      const res = await apiFetch(`/auth/verify-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, otp }),

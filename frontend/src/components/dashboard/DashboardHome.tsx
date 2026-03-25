@@ -20,7 +20,7 @@ interface DashboardHomeProps {
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { API_BASE } from "@/lib/api";
+import { API_BASE, apiFetch } from "@/lib/api";
 
 export default function DashboardHome({
     user,
@@ -137,7 +137,7 @@ export default function DashboardHome({
                                     const token = localStorage.getItem('baap_token') || localStorage.getItem('token');
                                     
                                     try {
-                                        const res = await fetch(`${API_BASE}/auth/admin/role?target_email=${email}&new_role=ADMIN`, {
+                                        const res = await apiFetch(`/auth/admin/role?target_email=${email}&new_role=ADMIN`, {
                                             method: 'PATCH',
                                             headers: { 'Authorization': `Bearer ${token}` }
                                         });

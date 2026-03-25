@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Inter } from 'next/font/google';
 import Link from 'next/link';
-import { API_BASE } from "@/lib/api";
+import { API_BASE, apiFetch } from "@/lib/api";
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -14,9 +14,7 @@ export default function LeaderboardPage() {
     useEffect(() => {
         const fetchLeaderboard = async () => {
             try {
-                const res = await fetch(`${API_BASE}/rewards/leaderboard`, {
-                    credentials: 'include'
-                });
+                const res = await apiFetch(`/rewards/leaderboard`);
                 if (res.ok) {
                     const data = await res.json();
                     // Limit to exactly Top 5 as per Mission

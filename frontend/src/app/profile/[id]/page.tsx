@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Inter } from 'next/font/google';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { API_BASE } from "@/lib/api";
+import { API_BASE, apiFetch } from "@/lib/api";
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -21,9 +21,7 @@ export default function ProfilePage() {
 
         const fetchProfile = async () => {
             try {
-                const res = await fetch(`${API_BASE}/auth/profile/${id}`, {
-                    credentials: 'include'
-                });
+                const res = await apiFetch(`/auth/profile/${id}`);
                 if (res.ok) {
                     const data = await res.json();
                     setProfile(data);
@@ -39,7 +37,7 @@ export default function ProfilePage() {
             const token = localStorage.getItem('baap_token') || localStorage.getItem('token');
             if (!token) return;
             try {
-                const res = await fetch(`${API_BASE}/auth/me`, {
+                const res = await apiFetch(`/auth/me`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (res.ok) {
@@ -173,7 +171,7 @@ export default function ProfilePage() {
                                             setActionLoading(true);
                                             const token = localStorage.getItem('baap_token') || localStorage.getItem('token');
                                             try {
-                                                const res = await fetch(`${API_BASE}/auth/admin/role?target_email=${profile.email}&new_role=${profile.role === 'ADMIN' ? 'STUDENT' : 'ADMIN'}`, {
+                                                const res = await apiFetch(`/auth/admin/role?target_email=${profile.email}&new_role=${profile.role === 'ADMIN' ? 'STUDENT' : 'ADMIN'}`, {
                                                     method: 'PATCH',
                                                     headers: { 'Authorization': `Bearer ${token}` }
                                                 });
@@ -202,7 +200,7 @@ export default function ProfilePage() {
                                                 setActionLoading(true);
                                                 const token = localStorage.getItem('baap_token') || localStorage.getItem('token');
                                                 try {
-                                                    const res = await fetch(`${API_BASE}/auth/admin/users/${profile.id}`, {
+                                                    const res = await apiFetch(`/auth/admin/users/${profile.id}`, {
                                                         method: 'DELETE',
                                                         headers: { 'Authorization': `Bearer ${token}` }
                                                     });

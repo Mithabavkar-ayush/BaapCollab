@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Inter } from 'next/font/google';
 import Link from "next/link";
-import { API_BASE } from "@/lib/api";
+import { API_BASE, apiFetch } from "@/lib/api";
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -18,7 +18,7 @@ export default function ForgotPassword() {
     setMessage(null);
 
     try {
-      const res = await fetch(`${API_BASE}/auth/forgot-password`, {
+      const res = await apiFetch(`/auth/forgot-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),

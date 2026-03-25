@@ -2,7 +2,7 @@
 
 import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { API_BASE } from "@/lib/api";
+import { API_BASE, apiFetch } from "@/lib/api";
 import { Inter } from 'next/font/google';
 import Link from 'next/link';
 
@@ -55,7 +55,7 @@ function ResetPasswordForm() {
     setIsSubmitting(true);
 
     try {
-      const res = await fetch(`${API_BASE}/auth/reset-password`, {
+      const res = await apiFetch(`/auth/reset-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token, new_password: password }),
