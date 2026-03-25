@@ -1,6 +1,6 @@
 "use client";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+import { API_BASE } from "@/lib/api";
 
 interface ProfileSettingsProps {
     user: any;
@@ -136,6 +136,7 @@ export default function ProfileSettings({
                                 <option value="2025">2025</option>
                                 <option value="2026">2026</option>
                                 <option value="2027">2027</option>
+                                <option value="2028">2028</option>
                             </select>
                         </div>
                     </div>
@@ -186,13 +187,6 @@ export default function ProfileSettings({
                                 onChange={(e) => setProfileData({ ...profileData, github_url: e.target.value })}
                             />
                         </div>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                        <span className="flex items-center gap-1.5 px-3 py-1 bg-gray-50 border border-gray-100 rounded-md text-[11px] font-bold text-gray-600 uppercase">
-                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
-                            {user?.role || "Student"}
-                        </span>
                     </div>
 
                     <button
