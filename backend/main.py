@@ -23,8 +23,7 @@ app.add_middleware(
         "http://127.0.0.1:3000",
         "http://localhost:8000",
         "https://baapcollab-production.up.railway.app",
-        # Allow Vercel Preview/Production URLs (Placeholder - update with exact URL)
-        "https://baapcollab.vercel.app", 
+        "https://baap-collab-nmwcadgzh-ayushs-projects-1c3d55f9.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
