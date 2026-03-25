@@ -1,16 +1,9 @@
-const getApiBase = () => {
-  let base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-  
-  // Enforce protocol if missing
-  if (!base.startsWith('http')) {
-    const isLocal = base.includes('localhost') || base.includes('127.0.0.1');
-    base = isLocal ? `http://${base}` : `https://${base}`;
-  }
-  
-  // Strip trailing slash to prevent double-slashes in fetch calls
-  return base.replace(/\/$/, '');
-};
+// Force absolute URL logic in src/lib/api.ts
+const rawUrl = process.env.NEXT_PUBLIC_API_URL || "";
 
-export const API_BASE = getApiBase();
+// If it doesn't start with http, prepend https:// automatically
+export const API_BASE = rawUrl.startsWith('http') 
+  ? rawUrl.replace(/\/$/, "") 
+  : `https://${rawUrl}`.replace(/\/$/, "");
 
-console.log("📡 [API] Base URL configured:", API_BASE);
+console.log("Network targeting:", API_BASE);
