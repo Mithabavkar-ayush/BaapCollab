@@ -10,7 +10,7 @@ from database import engine, User
 from sqlmodel import Session, select
 from passlib.context import CryptContext
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["sha256_crypt"], deprecated="auto")
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
@@ -20,7 +20,7 @@ def get_password_hash(password):
 
 # Secret key for JWT signing
 SECRET_KEY = os.getenv("JWT_SECRET", "baapcollab_super_secret_key_12345")
-ALGORITHM = "HS256"
+ALGORITHM = os.getenv("ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7  # 7 days
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")

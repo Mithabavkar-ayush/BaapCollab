@@ -437,6 +437,41 @@ export default function Dashboard() {
         </nav>
 
         <div className="flex items-center gap-4 shrink-0 justify-end">
+          {/* Notifications Trigger */}
+          <div className="relative group">
+            <button className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-gray-50 rounded-xl transition-all relative">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+              <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-[#524EEE] text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-white">
+                3
+              </span>
+            </button>
+
+            {/* Notifications Dropdown */}
+            <div className="absolute right-0 mt-2 w-72 bg-white rounded-2xl shadow-xl border border-gray-100 py-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right group-hover:translate-y-0 translate-y-2 z-[1100]">
+              <div className="px-5 py-2 border-b border-gray-50 mb-2">
+                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Notifications</span>
+              </div>
+              <div className="px-2 space-y-1">
+                {[
+                  { title: "New project invite", disc: "You have been invited to 'AI Research'", time: "2m ago" },
+                  { title: "System update", disc: "Dashboard v3.5 is now live", time: "1h ago" },
+                  { title: "Task assigned", disc: "Complete the UI injection task", time: "3h ago" }
+                ].map((n, i) => (
+                  <div key={i} className="px-4 py-3 hover:bg-gray-50 rounded-xl transition-colors cursor-pointer group/item">
+                    <p className="text-sm font-bold text-gray-700 group-hover/item:text-[#524EEE]">{n.title}</p>
+                    <p className="text-[11px] text-gray-500 line-clamp-1">{n.disc}</p>
+                    <p className="text-[10px] text-gray-400 font-medium mt-1">{n.time}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="px-5 py-2 mt-2 border-t border-gray-50 text-center">
+                <button className="text-[10px] font-bold text-[#524EEE] hover:text-[#433fd1] uppercase tracking-widest w-full">View All Activity</button>
+              </div>
+            </div>
+          </div>
+
           <div
             onClick={() => setActiveTab('settings')}
             className="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center overflow-hidden border-2 border-white shadow-md hover:scale-105 transition-transform cursor-pointer group"
