@@ -11,10 +11,13 @@ import base64
 load_dotenv()
 
 # Configuration
-SMTP_SERVER = "smtp.gmail.com"
-SMTP_PORT = 587
-SMTP_USER = os.getenv("SMTP_USER", "thebaapcollab@gmail.com")
-SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "")
+MAIL_SERVER = os.getenv("MAIL_SERVER", "smtp.gmail.com")
+MAIL_PORT = int(os.getenv("MAIL_PORT", 587))
+MAIL_USERNAME = os.getenv("MAIL_USERNAME", "thebaapcollab@gmail.com")
+MAIL_PASSWORD = os.getenv("MAIL_PASSWORD", "")
+MAIL_FROM = os.getenv("MAIL_FROM", MAIL_USERNAME)
+MAIL_STARTTLS = os.getenv("MAIL_STARTTLS", "True").lower() == "true"
+
 ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "ayushmith249@gmail.com")
 BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8000")
 
@@ -166,7 +169,7 @@ def send_approval_request(user_email, branch_name, user_id, name, bio, dept, yea
         # Construct Email
         msg = MIMEMultipart("related")
         msg["Subject"] = f"🚨 ACTION REQUIRED: Verify {name}"
-        msg["From"] = f"BaapCollab Onboarding <{SMTP_USER}>"
+        msg["From"] = f"BaapCollab Onboarding <{MAIL_FROM}>"
         msg["To"] = ADMIN_EMAIL
 
         approve_link = f"{BACKEND_URL}/auth/admin/approve/{user_id}"
@@ -199,15 +202,21 @@ def send_approval_request(user_email, branch_name, user_id, name, bio, dept, yea
         msg.attach(msg_img)
 
         # Send via SMTP
-        print(f"DEBUG: Connecting to SMTP server {SMTP_SERVER} for {user_email}...")
-        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
-            server.starttls()
-            print(f"DEBUG: Logging in to SMTP as {SMTP_USER}...")
-            server.login(str(SMTP_USER), str(SMTP_PASSWORD))
-            print(f"DEBUG: Sending message to {ADMIN_EMAIL}...")
-            server.send_message(msg)
+        print(f"📡 [EMAIL] Triggering send_approval_request to admin...")
+        print(f"   - Target User: {user_email}")
+        print(f"   - Server: {MAIL_SERVER}:{MAIL_PORT}")
+        
+        try:
+            with smtplib.SMTP(MAIL_SERVER, MAIL_PORT) as server:
+                if MAIL_STARTTLS:
+                    server.starttls()
+                server.login(str(MAIL_USERNAME), str(MAIL_PASSWORD))
+                server.send_message(msg)
+            print(f"✅ [EMAIL] Approval Request Sent for {user_email}")
+        except Exception as smtp_err:
+            print(f"❌ [EMAIL] SMTP Error during approval request: {smtp_err}")
+            raise smtp_err
             
-        print(f"✅ Approval Request Sent for {user_email} via SMTP (Local)")
         return True
     except Exception as e:
         import traceback
@@ -220,13 +229,14 @@ def send_access_granted(user_email):
     Notifies the user that their access has been granted using SMTP.
     """
     try:
-        if not SMTP_PASSWORD:
+        if not MAIL_PASSWORD:
+            print("⚠️ [EMAIL] MAIL_PASSWORD missing - skipping access granted notification")
             return False
 
         frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
         msg = MIMEMultipart()
         msg["Subject"] = "🎉 Welcome to BaapCollab: Access Granted!"
-        msg["From"] = f"BaapCollab <{SMTP_USER}>"
+        msg["From"] = f"BaapCollab <{MAIL_FROM}>"
         msg["To"] = user_email
 
         html = f"""
@@ -239,12 +249,14 @@ def send_access_granted(user_email):
         """
         msg.attach(MIMEText(html, "html"))
 
-        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
-            server.starttls()
-            server.login(str(SMTP_USER), str(SMTP_PASSWORD))
+        print(f"📡 [EMAIL] Sending access_granted to {user_email}...")
+        with smtplib.SMTP(MAIL_SERVER, MAIL_PORT) as server:
+            if MAIL_STARTTLS:
+                server.starttls()
+            server.login(str(MAIL_USERNAME), str(MAIL_PASSWORD))
             server.send_message(msg)
             
-        print(f"✅ Access Granted Notification Sent to {user_email} (Local)")
+        print(f"✅ [EMAIL] Access Granted Notification Sent to {user_email}")
         return True
     except Exception as e:
         print(f"❌ Failed to send access granted email: {e}")
@@ -256,13 +268,13 @@ def send_welcome_otp(user_email: str, otp: str) -> bool:
     Sends a professional Welcome email with a 6-digit OTP for email verification.
     """
     try:
-        if not SMTP_PASSWORD:
-            print("❌ SMTP_PASSWORD missing — skipping OTP email")
+        if not MAIL_PASSWORD:
+            print("⚠️ [EMAIL] MAIL_PASSWORD missing — skipping OTP email")
             return False
 
         msg = MIMEMultipart("alternative")
         msg["Subject"] = "🔐 Verify your BaapCollab account"
-        msg["From"] = f"BaapCollab <{SMTP_USER}>"
+        msg["From"] = f"BaapCollab <{MAIL_FROM}>"
         msg["To"] = user_email
 
         html = f"""<!DOCTYPE html>
@@ -324,13 +336,13 @@ def send_password_reset_email(user_email: str, reset_link: str) -> bool:
     Sends a professional password reset email.
     """
     try:
-        if not SMTP_PASSWORD:
-            print("❌ SMTP_PASSWORD missing — skipping reset email")
+        if not MAIL_PASSWORD:
+            print("⚠️ [EMAIL] MAIL_PASSWORD missing — skipping reset email")
             return False
 
         msg = MIMEMultipart("alternative")
         msg["Subject"] = "🔐 Password Reset for BaapCollab"
-        msg["From"] = f"BaapCollab <{SMTP_USER}>"
+        msg["From"] = f"BaapCollab <{MAIL_FROM}>"
         msg["To"] = user_email
 
         html = f"""<!DOCTYPE html>
