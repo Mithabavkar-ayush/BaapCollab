@@ -101,7 +101,20 @@ def login(request: UserLogin, response: Response):
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="No account found with this email. Please sign up first.",
             )
-        if not user.hashed_password or not verify_password(request.password, user.hashed_password):
+        print(f"DEBUG: Login attempt for {request.email}")
+        if not user.hashed_password:
+            print(f"DEBUG: User {request.email} has NO hashed_password set!")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Your account is not fully set up. Please try resetting your password.",
+            )
+        
+        is_valid = verify_password(request.password, user.hashed_password)
+        print(f"DEBUG: Password verification result for {request.email}: {is_valid}")
+        if not is_valid:
+            # Check if the hash looks like a certain format
+            hash_prefix = user.hashed_password[:10] if user.hashed_password else "None"
+            print(f"DEBUG: Hash prefix for {request.email}: {hash_prefix}")
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Incorrect password. Please try again.",
