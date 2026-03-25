@@ -9,13 +9,8 @@ import os
 import random
 from dotenv import load_dotenv
 
-# Google OAuth Config
-GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "735745260532-2c2nmc7s92j25o0fl0p5a1itoauv30u0.apps.googleusercontent.com")
+# Deployment Configuration
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
-REDIRECT_URI = f"{FRONTEND_URL}/auth/callback"
-
-print(f"CRITICAL DEBUG: Using Client ID: {str(GOOGLE_CLIENT_ID)[:20]}...")
-print(f"CRITICAL DEBUG: Redirect URI set to: {REDIRECT_URI}")
 
 router = APIRouter()
 
