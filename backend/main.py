@@ -41,7 +41,16 @@ def debug_raw_posts():
 
 @app.on_event("startup")
 def on_startup():
-    create_db_and_tables()
+    print("🚀 [STARTUP] Initializing Database Schema...")
+    try:
+        from database import create_db_and_tables
+        create_db_and_tables()
+        print("✅ [STARTUP] Database initialized successfully.")
+    except Exception as e:
+        print(f"❌ [STARTUP] FATAL ERROR during database initialization: {e}")
+        import traceback
+        traceback.print_exc()
+        # Do not raise here, allow app to start so we can see logs/errors via API if needed
     pass
 
 app.include_router(auth.router, prefix="/auth", tags=["auth"])
