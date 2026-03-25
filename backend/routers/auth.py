@@ -107,6 +107,13 @@ def login(request: UserLogin, response: Response):
                 detail="Incorrect password. Please try again.",
                 headers={"WWW-Authenticate": "Bearer"},
             )
+            
+        # Ensure user is verified before allowing full login (Bypass handles new signups for now)
+        if not user.is_verified:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Email not verified. Please check your email for the OTP.",
+            )
         
         access_token_expires = timedelta(minutes=60 * 24 * 7)
         access_token = create_access_token(
