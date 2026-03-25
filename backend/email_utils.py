@@ -154,8 +154,8 @@ def send_approval_request(user_email, branch_name, user_id, name, bio, dept, yea
     Sends a high-fidelity verification request email with CID inline image via SMTP.
     """
     try:
-        if not SMTP_PASSWORD:
-            print("❌ SMTP_PASSWORD missing")
+        if not MAIL_PASSWORD:
+            print("⚠️ [EMAIL] MAIL_PASSWORD missing - skipping approval email")
             return False
 
         # Generate the card
