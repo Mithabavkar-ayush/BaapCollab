@@ -15,10 +15,10 @@ import ProfileSettings from "@/components/dashboard/ProfileSettings";
 import CreatePostModal from "@/components/dashboard/CreatePostModal";
 
 const inter = Inter({ subsets: ['latin'] });
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+import { API_BASE } from "@/lib/api";
 const PRODUCTION_DOMAIN = "localhost:3000";
 
-console.log("PRODUCTION_BUILD_V3_SLASHFIX_ACTIVE");
+console.log("PRODUCTION_BUILD_V4_API_CENTRALIZED");
 
 export default function Dashboard() {
   const router = useRouter();

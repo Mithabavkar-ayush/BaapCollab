@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { Inter } from 'next/font/google';
-import Link from 'next/link';
+import Link from "next/link";
+import { API_BASE } from "@/lib/api";
 
 const inter = Inter({ subsets: ['latin'] });
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");

@@ -2,11 +2,11 @@
 
 import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { API_BASE } from "@/lib/api";
 import { Inter } from 'next/font/google';
 import Link from 'next/link';
 
 const inter = Inter({ subsets: ['latin'] });
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 const EyeIcon = () => (
   <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

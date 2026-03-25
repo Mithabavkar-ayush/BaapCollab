@@ -3,8 +3,8 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { formatDistanceToNow, parseISO } from "date-fns";
+import { API_BASE } from "@/lib/api";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 interface ForumListProps {
     forumPosts: any[];

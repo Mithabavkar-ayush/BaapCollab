@@ -20,6 +20,7 @@ interface DashboardHomeProps {
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { API_BASE } from "@/lib/api";
 
 export default function DashboardHome({
     user,
@@ -133,7 +134,6 @@ export default function DashboardHome({
                                 onClick={async () => {
                                     const email = (document.getElementById('promote-email') as HTMLInputElement).value;
                                     if (!email) return;
-                                    const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
                                     const token = localStorage.getItem('baap_token') || localStorage.getItem('token');
                                     
                                     try {

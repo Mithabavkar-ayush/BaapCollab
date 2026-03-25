@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { SUPPORTED_BRANCHES } from "@/data/institutions";
+import { API_BASE as API } from "@/lib/api";
 
 interface OnboardingStepsProps {
   step: number;
@@ -60,7 +61,6 @@ export default function OnboardingSteps({
   const [otpSuccess, setOtpSuccess] = useState(false);
   const [pendingAuthData, setPendingAuthData] = useState<any>(null);
 
-  const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
   const handleForgotSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

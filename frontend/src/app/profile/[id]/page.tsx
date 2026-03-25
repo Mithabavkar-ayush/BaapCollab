@@ -3,13 +3,14 @@
 import { useState, useEffect } from "react";
 import { Inter } from 'next/font/google';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+import { API_BASE } from "@/lib/api";
 
 const inter = Inter({ subsets: ['latin'] });
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 export default function ProfilePage() {
     const { id } = useParams();
+    const router = useRouter();
     const [profile, setProfile] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [currentUser, setCurrentUser] = useState<any>(null);

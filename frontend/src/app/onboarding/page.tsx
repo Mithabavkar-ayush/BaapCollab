@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import OnboardingSteps from "@/components/dashboard/OnboardingSteps";
 import { SUPPORTED_BRANCHES } from "@/data/institutions";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+import { API_BASE } from "@/lib/api";
 
 export default function OnboardingPage() {
   const router = useRouter();

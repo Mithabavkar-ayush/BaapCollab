@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { API_BASE } from "@/lib/api";
 import { useRouter, usePathname } from "next/navigation";
-
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 export default function RouteGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
