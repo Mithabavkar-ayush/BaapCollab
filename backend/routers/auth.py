@@ -119,8 +119,8 @@ def login(request: UserLogin, response: Response):
             value=access_token,
             httponly=True,
             max_age=60 * 60 * 24 * 7,
-            samesite="lax",
-            secure=is_production,
+            samesite="none", # Required for cross-site cookies between Vercel and Railway
+            secure=True,     # Must be True if samesite="none"
         )
         
         return {
