@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from database import create_db_and_tables
 from dotenv import load_dotenv
 import os
+import uvicorn
 
 # Load environment variables at the very start
 load_dotenv()
@@ -19,9 +20,14 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
-        "http://localhost:3001",
+        "http://127.0.0.1:3000",
         "http://localhost:8000",
+        "http://127.0.0.1:8000",
+        "https://baapcollab-production.up.railway.app",
+        # Add your Vercel URL here once generated
+        "https://baapcollab.vercel.app", 
     ],
+    allow_origin_regex=r"https://baapcollab-.*\.vercel\.app", # For preview deployments
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -44,6 +50,7 @@ app.include_router(auth.router, prefix="/auth", tags=["auth"])
 app.include_router(posts.router, prefix="/posts", tags=["posts"])
 app.include_router(rewards.router, prefix="/rewards", tags=["rewards"])
 
+# Google OAuth Config
 @app.get("/debug/db-status")
 def debug_db_status():
     from sqlmodel import Session, select, func
@@ -71,4 +78,4 @@ def read_root():
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
-    uvicorn.run("main:app", host="0.0.0.0", port=port)
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
