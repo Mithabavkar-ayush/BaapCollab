@@ -1,6 +1,5 @@
 from sqlmodel import Session, select
 from database import engine, User
-from passlib.hash import pbkdf2_sha256
 import os
 
 def reseed():
@@ -10,7 +9,8 @@ def reseed():
         
         # New Password
         new_password = "admin77" # VERY SHORT
-        hashed = pbkdf2_sha256.hash(new_password)
+        from auth_utils import get_password_hash
+        hashed = get_password_hash(new_password)
         
         if not user:
             print(f"User {email} not found, creating...")
