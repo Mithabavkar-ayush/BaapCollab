@@ -7,7 +7,7 @@ import base64
 
 load_dotenv()
 
-resend.api_key = os.getenv("RESEND_API_KEY", "re_NzLhRrdq_EkRNav8CoUDG4jYcUE26KapJ")
+resend.api_key = os.getenv("RESEND_API_KEY")
 
 MAIL_FROM = os.getenv("MAIL_FROM", "BaapCollab <onboarding@resend.dev>")
 ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "ayushmith249@gmail.com")
@@ -159,6 +159,7 @@ def send_approval_request(user_email, branch_name, user_id, name, bio, dept, yea
         img_data = buffered.getvalue()
 
         approve_link = f"{BACKEND_URL}/auth/admin/approve/{user_id}"
+        FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
         reject_link = f"{FRONTEND_URL}/admin/users" # Links to admin panel
 
         html_body = f"""
