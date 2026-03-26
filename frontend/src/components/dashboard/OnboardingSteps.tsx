@@ -110,9 +110,13 @@ export default function OnboardingSteps({
           handleLoginSuccess({ token: data.token, user: data.user, requires_onboarding: data.requires_onboarding });
         }
       } else {
+        if (res.status === 403 && data.requires_verification) {
+            setOtpSent(true);
+            setAuthError(null);
+            return;
+        }
         setAuthError(data.detail || "Authentication failed. Please try again.");
       }
-    } catch {
       setAuthError("Network error. Please check your connection and try again.");
     } finally {
       setIsSubmitting(false);

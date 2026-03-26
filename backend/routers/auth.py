@@ -36,8 +36,8 @@ def signup(request: UserSignup, background_tasks: BackgroundTasks):
         user = User(
             email=request.email,
             hashed_password=hashed_password,
-            is_approved=True,  # TEMPORARY BYPASS: Pre-approve for production debug
-            is_verified=True,  # TEMPORARY BYPASS: Pre-verify for production debug
+            is_approved=False,
+            is_verified=False,
             otp_code=otp,
             role="STUDENT"
         )
@@ -92,7 +92,7 @@ def verify_otp(req: OTPVerify):
 
 
 @router.post("/login")
-def login(request: UserLogin, response: Response):
+def login(request: UserLogin, response: Response, background_tasks: BackgroundTasks):
     from auth_utils import verify_password
     with Session(engine) as session:
         user = session.exec(select(User).where(User.email == request.email)).first()
@@ -119,6 +119,21 @@ def login(request: UserLogin, response: Response):
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Incorrect password. Please try again.",
                 headers={"WWW-Authenticate": "Bearer"},
+            )
+        
+        if not user.is_verified:
+            from fastapi.responses import JSONResponse
+            from email_utils import send_welcome_otp
+            
+            otp = str(random.randint(100000, 999999))
+            user.otp_code = otp
+            session.add(user)
+            session.commit()
+            
+            background_tasks.add_task(send_welcome_otp, request.email, otp)
+            return JSONResponse(
+                status_code=403,
+                content={"detail": "Email not verified. A fresh OTP has been sent.", "requires_verification": True}
             )
         
         access_token_expires = timedelta(minutes=60 * 24 * 7)
