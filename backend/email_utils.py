@@ -159,20 +159,31 @@ def send_approval_request(user_email, branch_name, user_id, name, bio, dept, yea
         img_data = buffered.getvalue()
 
         approve_link = f"{BACKEND_URL}/auth/admin/approve/{user_id}"
+        reject_link = f"{FRONTEND_URL}/admin/users" # Links to admin panel
 
         html_body = f"""
         <html>
             <body style="font-family: sans-serif; background-color: #f4f4f7; padding: 40px;">
-                <div style="max-width: 800px; margin: 0 auto; background-color: #ffffff; padding: 40px; border-radius: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                    <h2 style="color: #1a1a1a;">New Access Request</h2>
+                <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 40px; border-radius: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <h2 style="color: #1a1a1a;">New User Pending Approval</h2>
                     <p style="color: #51545e; font-size: 16px;">A user has requested access to the BaapCollab platform.</p>
                     
-                    <div style="margin: 30px 0; text-align: center;">
-                        <p><em>Identity Card attached below</em></p>
+                    <div style="background-color: #f8fafc; padding: 20px; border-radius: 10px; margin: 20px 0; color: #111827;">
+                        <h3 style="margin-top: 0; border-bottom: 1px solid #e5e7eb; padding-bottom: 10px;">User Profile Card</h3>
+                        <p style="margin: 8px 0;"><strong>Name:</strong> {name}</p>
+                        <p style="margin: 8px 0;"><strong>Email:</strong> {user_email}</p>
+                        <p style="margin: 8px 0;"><strong>Institution:</strong> {branch_name}</p>
+                        <p style="margin: 8px 0;"><strong>Department:</strong> {dept}</p>
+                        <p style="margin: 8px 0;"><strong>Role Applied For:</strong> Student</p>
+                    </div>
+
+                    <div style="margin: 30px 0; text-align: center; color: #6b7280;">
+                        <p><em>(Auto-generated Identity Card attached below)</em></p>
                     </div>
 
                     <div style="text-align: center; margin-top: 40px;">
-                        <a href="{approve_link}" style="background-color: #524EEE; color: white; padding: 15px 30px; text-decoration: none; border-radius: 10px; font-weight: bold; font-size: 18px;">Approve Access Now</a>
+                        <a href="{approve_link}" style="background-color: #10b981; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; margin-right: 15px; display: inline-block;">Approve User</a>
+                        <a href="{reject_link}" style="background-color: #ef4444; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Reject User</a>
                     </div>
                 </div>
             </body>
@@ -184,7 +195,7 @@ def send_approval_request(user_email, branch_name, user_id, name, bio, dept, yea
         resend.Emails.send({
             "from": MAIL_FROM,
             "to": ADMIN_EMAIL,
-            "subject": f"🚨 ACTION REQUIRED: Verify {name}",
+            "subject": f"New user pending approval - {name}",
             "html": html_body,
             "attachments": [
                 {"filename": "identity_card.png", "content": list(img_data)}
@@ -221,7 +232,7 @@ def send_access_granted(user_email):
         resend.Emails.send({
             "from": MAIL_FROM,
             "to": user_email,
-            "subject": "🎉 Welcome to BaapCollab: Access Granted!",
+            "subject": "You're approved! Welcome to BaapCollab",
             "html": html
         })
             
@@ -279,7 +290,7 @@ def send_welcome_otp(user_email: str, otp: str) -> bool:
         resend.Emails.send({
             "from": MAIL_FROM,
             "to": user_email,
-            "subject": "🔐 Verify your BaapCollab account",
+            "subject": "Verify your BaapCollab account",
             "html": html
         })
 
@@ -330,7 +341,7 @@ def send_password_reset_email(user_email: str, reset_link: str) -> bool:
         resend.Emails.send({
             "from": MAIL_FROM,
             "to": user_email,
-            "subject": "🔐 Password Reset for BaapCollab",
+            "subject": "Reset your BaapCollab password",
             "html": html
         })
 
