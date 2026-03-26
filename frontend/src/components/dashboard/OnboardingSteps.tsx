@@ -117,6 +117,7 @@ export default function OnboardingSteps({
         }
         setAuthError(data.detail || "Authentication failed. Please try again.");
       }
+    } catch {
       setAuthError("Network error. Please check your connection and try again.");
     } finally {
       setIsSubmitting(false);
