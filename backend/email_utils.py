@@ -7,14 +7,10 @@ from PIL import Image, ImageDraw, ImageFont
 from dotenv import load_dotenv
 from io import BytesIO
 import base64
-import resend
 
 load_dotenv()
 
 # Configuration
-RESEND_API_KEY = os.getenv("RESEND_API_KEY")
-if RESEND_API_KEY:
-    resend.api_key = RESEND_API_KEY
 
 MAIL_SERVER = os.getenv("MAIL_SERVER", "smtp.gmail.com")
 MAIL_PORT = int(os.getenv("MAIL_PORT", 587))
@@ -206,36 +202,7 @@ def send_approval_request(user_email, branch_name, user_id, name, bio, dept, yea
         msg_img.add_header("Content-ID", "<identity_card>")
         msg.attach(msg_img)
 
-        # --- RESEND INTEGRATION ---
-        if RESEND_API_KEY:
-            try:
-                print(f"📡 [EMAIL] Using RESEND for approval request...")
-                params = {
-                    "from": f"BaapCollab Onboarding <onboarding@resend.dev>" if "resend.dev" in MAIL_FROM else MAIL_FROM,
-                    "to": ADMIN_EMAIL,
-                    "subject": f"🚨 ACTION REQUIRED: Verify {name}",
-                    "html": html_body,
-                    # For Resend, we usually don't do CID inline easily in the same way, 
-                    # but we can attach the file. For now, let's keep it simple.
-                    "attachments": [
-                        {
-                            "filename": "identity_card.png",
-                            "content": list(img_data) # Resend python internal handles this
-                        }
-                    ]
-                }
-                # Fix for 'from' address: Resend requires a verified domain.
-                # If using trial, it MUST be 'onboarding@resend.dev'.
-                if not os.getenv("RESEND_DOMAIN_VERIFIED"):
-                    params["from"] = "onboarding@resend.dev"
-
-                r_res = resend.Emails.send(params)
-                print(f"✅ [RESEND] Approval Request Sent: {r_res}")
-                return True
-            except Exception as resend_err:
-                print(f"⚠️ [RESEND] Failed: {resend_err}. Falling back to SMTP...")
-
-        # --- SMTP FALLBACK ---
+        # --- SMTP SENDING ---
         try:
             print(f"📡 [EMAIL] Connecting to {MAIL_SERVER}:{MAIL_PORT} (timeout=10s)...")
             with smtplib.SMTP(MAIL_SERVER, MAIL_PORT, timeout=10) as server:
@@ -349,23 +316,7 @@ def send_welcome_otp(user_email: str, otp: str) -> bool:
 
         msg.attach(MIMEText(html, "html"))
 
-        # --- RESEND INTEGRATION ---
-        if RESEND_API_KEY:
-            try:
-                print(f"📡 [EMAIL] Using RESEND for Welcome OTP to {user_email}...")
-                params = {
-                    "from": "onboarding@resend.dev" if not os.getenv("RESEND_DOMAIN_VERIFIED") else MAIL_FROM,
-                    "to": user_email,
-                    "subject": "🔐 Verify your BaapCollab account",
-                    "html": html,
-                }
-                r_res = resend.Emails.send(params)
-                print(f"✅ [RESEND] OTP Sent: {r_res}")
-                return True
-            except Exception as resend_err:
-                print(f"⚠️ [RESEND] Failed: {resend_err}. Falling back to SMTP...")
-
-        # --- SMTP FALLBACK ---
+        # --- SMTP SENDING ---
         print(f"📡 [EMAIL] Sending welcome_otp to {user_email} (timeout=10s)...")
         with smtplib.SMTP(MAIL_SERVER, MAIL_PORT, timeout=10) as server:
             if MAIL_STARTTLS:
@@ -422,23 +373,7 @@ def send_password_reset_email(user_email: str, reset_link: str) -> bool:
 </html>"""
         msg.attach(MIMEText(html, "html"))
 
-        # --- RESEND INTEGRATION ---
-        if RESEND_API_KEY:
-            try:
-                print(f"📡 [EMAIL] Using RESEND for Password Reset to {user_email}...")
-                params = {
-                    "from": "onboarding@resend.dev" if not os.getenv("RESEND_DOMAIN_VERIFIED") else MAIL_FROM,
-                    "to": user_email,
-                    "subject": "🔐 Password Reset for BaapCollab",
-                    "html": html,
-                }
-                r_res = resend.Emails.send(params)
-                print(f"✅ [RESEND] Reset Link Sent: {r_res}")
-                return True
-            except Exception as resend_err:
-                print(f"⚠️ [RESEND] Failed: {resend_err}. Falling back to SMTP...")
-
-        # --- SMTP FALLBACK ---
+        # --- SMTP SENDING ---
         print(f"📡 [EMAIL] Sending password_reset_email to {user_email} (timeout=10s)...")
         with smtplib.SMTP(MAIL_SERVER, MAIL_PORT, timeout=10) as server:
             if MAIL_STARTTLS:

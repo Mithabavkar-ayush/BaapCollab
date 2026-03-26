@@ -10,4 +10,3 @@ passlib[bcrypt]
 Pillow
 requests
 SQLAlchemy==2.0.47
-resend
