@@ -9,7 +9,7 @@ load_dotenv()
 
 resend.api_key = os.getenv("RESEND_API_KEY")
 
-MAIL_FROM = "BaapCollab <onboarding@resend.dev>"
+MAIL_FROM = os.getenv("MAIL_FROM", "BaapCollab <onboarding@resend.dev>")
 ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "ayushmith249@gmail.com")
 BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8000")
 
