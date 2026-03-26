@@ -11,3 +11,4 @@ Pillow
 requests
 SQLAlchemy==2.0.47
 bcrypt==4.0.1
+resend

@@ -1,0 +1,27 @@
+﻿commit 20155bad52533daeebd9585c3cd33620ef3f9336
+Author: Ayush Sunil Mithabavkar <ayushmith249@gmail.com>
+Date:   Thu Mar 26 12:02:00 2026 +0530
+
+    fix: pin bcrypt to 4.0.1 and verify CORS origins for production
+
+ backend/requirements.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 73d1eccd82005829e708798bbc5118cc3fbe42d8
+Author: Ayush Sunil Mithabavkar <ayushmith249@gmail.com>
+Date:   Thu Mar 26 11:46:08 2026 +0530
+
+    fix: update CORS config to support Vercel production and preview URLs
+
+ backend/main.py | 6 ------
+ 1 file changed, 6 deletions(-)
+
+commit 24c98a0ac70efe2577d81e96971e7b67fa788d90
+Author: Ayush Sunil Mithabavkar <ayushmith249@gmail.com>
+Date:   Thu Mar 26 11:37:42 2026 +0530
+
+    security: standardize password hashing on bcrypt across project
+
+ backend/auth_utils.py      | 2 +-
+ backend/reseed_admin_v2.py | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)

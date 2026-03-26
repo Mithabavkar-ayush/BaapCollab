@@ -1,8 +1,5 @@
 import os
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from email.mime.image import MIMEImage
+import resend
 from PIL import Image, ImageDraw, ImageFont
 from dotenv import load_dotenv
 from io import BytesIO
@@ -10,15 +7,9 @@ import base64
 
 load_dotenv()
 
-# Configuration
+resend.api_key = os.getenv("RESEND_API_KEY", "re_NzLhRrdq_EkRNav8CoUDG4jYcUE26KapJ")
 
-MAIL_SERVER = os.getenv("MAIL_SERVER", "smtp.gmail.com")
-MAIL_PORT = int(os.getenv("MAIL_PORT", 587))
-MAIL_USERNAME = os.getenv("MAIL_USERNAME", "thebaapcollab@gmail.com")
-MAIL_PASSWORD = os.getenv("MAIL_PASSWORD", "")
-MAIL_FROM = os.getenv("MAIL_FROM", MAIL_USERNAME)
-MAIL_STARTTLS = os.getenv("MAIL_STARTTLS", "True").lower() == "true"
-
+MAIL_FROM = os.getenv("MAIL_FROM", "BaapCollab <onboarding@resend.dev>")
 ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "ayushmith249@gmail.com")
 BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8000")
 
@@ -150,28 +141,22 @@ def generate_identity_card(user_email, branch_name, user_id, name, bio, dept, ye
 
     return image
 
+
 def send_approval_request(user_email, branch_name, user_id, name, bio, dept, year, skills, linkedin, github):
     """
-    Sends a high-fidelity verification request email with CID inline image via SMTP.
+    Sends a high-fidelity verification request email with attached CID image via Resend.
     """
     try:
-        if not MAIL_PASSWORD:
-            print("⚠️ [EMAIL] MAIL_PASSWORD missing - skipping approval email")
+        if not resend.api_key:
+            print("⚠️ [EMAIL] RESEND_API_KEY missing - skipping approval email")
             return False
 
         # Generate the card
         img = generate_identity_card(user_email, branch_name, user_id, name, bio, dept, year, skills, linkedin, github)
         
-        # Convert to Bytes for email attachment
         buffered = BytesIO()
         img.save(buffered, format="PNG")
         img_data = buffered.getvalue()
-
-        # Construct Email
-        msg = MIMEMultipart("related")
-        msg["Subject"] = f"🚨 ACTION REQUIRED: Verify {name}"
-        msg["From"] = f"BaapCollab Onboarding <{MAIL_FROM}>"
-        msg["To"] = ADMIN_EMAIL
 
         approve_link = f"{BACKEND_URL}/auth/admin/approve/{user_id}"
 
@@ -183,7 +168,7 @@ def send_approval_request(user_email, branch_name, user_id, name, bio, dept, yea
                     <p style="color: #51545e; font-size: 16px;">A user has requested access to the BaapCollab platform.</p>
                     
                     <div style="margin: 30px 0; text-align: center;">
-                        <img src="cid:identity_card" alt="Identity Card" style="max-width: 100%; border-radius: 15px;" />
+                        <p><em>Identity Card attached below</em></p>
                     </div>
 
                     <div style="text-align: center; margin-top: 40px;">
@@ -194,27 +179,18 @@ def send_approval_request(user_email, branch_name, user_id, name, bio, dept, yea
         </html>
         """
         
-        msg_html = MIMEText(html_body, "html")
-        msg.attach(msg_html)
-
-        # Attach image with Content-ID
-        msg_img = MIMEImage(img_data)
-        msg_img.add_header("Content-ID", "<identity_card>")
-        msg.attach(msg_img)
-
-        # --- SMTP SENDING ---
-        try:
-            print(f"📡 [EMAIL] Connecting to {MAIL_SERVER}:{MAIL_PORT} (timeout=10s)...")
-            with smtplib.SMTP(MAIL_SERVER, MAIL_PORT, timeout=10) as server:
-                if MAIL_STARTTLS:
-                    server.starttls()
-                server.login(str(MAIL_USERNAME), str(MAIL_PASSWORD))
-                server.send_message(msg)
-            print(f"✅ [EMAIL] Approval Request Sent for {user_email}")
-        except Exception as smtp_err:
-            print(f"❌ [EMAIL] SMTP Socket/Connection Error: {smtp_err}")
-            return False
-            
+        # --- RESEND SENDING ---
+        print(f"📡 [EMAIL] Sending approval request via Resend API to {ADMIN_EMAIL}...")
+        resend.Emails.send({
+            "from": MAIL_FROM,
+            "to": ADMIN_EMAIL,
+            "subject": f"🚨 ACTION REQUIRED: Verify {name}",
+            "html": html_body,
+            "attachments": [
+                {"filename": "identity_card.png", "content": list(img_data)}
+            ]
+        })
+        print(f"✅ [EMAIL] Approval Request Sent for {user_email}")
         return True
     except Exception as e:
         import traceback
@@ -224,19 +200,14 @@ def send_approval_request(user_email, branch_name, user_id, name, bio, dept, yea
 
 def send_access_granted(user_email):
     """
-    Notifies the user that their access has been granted using SMTP.
+    Notifies the user that their access has been granted using Resend.
     """
     try:
-        if not MAIL_PASSWORD:
-            print("⚠️ [EMAIL] MAIL_PASSWORD missing - skipping access granted notification")
+        if not resend.api_key:
+            print("⚠️ [EMAIL] RESEND_API_KEY missing - skipping access granted notification")
             return False
 
         frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
-        msg = MIMEMultipart()
-        msg["Subject"] = "🎉 Welcome to BaapCollab: Access Granted!"
-        msg["From"] = f"BaapCollab <{MAIL_FROM}>"
-        msg["To"] = user_email
-
         html = f"""
             <div style="font-family: sans-serif; padding: 20px;">
                 <h2>High Five! ✋</h2>
@@ -245,14 +216,14 @@ def send_access_granted(user_email):
                 <a href="{frontend_url}" style="background-color: #524EEE; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Go to Dashboard</a>
             </div>
         """
-        msg.attach(MIMEText(html, "html"))
 
-        print(f"📡 [EMAIL] Sending access_granted to {user_email} (timeout=10s)...")
-        with smtplib.SMTP(MAIL_SERVER, MAIL_PORT, timeout=10) as server:
-            if MAIL_STARTTLS:
-                server.starttls()
-            server.login(str(MAIL_USERNAME), str(MAIL_PASSWORD))
-            server.send_message(msg)
+        print(f"📡 [EMAIL] Sending access_granted to {user_email} via Resend...")
+        resend.Emails.send({
+            "from": MAIL_FROM,
+            "to": user_email,
+            "subject": "🎉 Welcome to BaapCollab: Access Granted!",
+            "html": html
+        })
             
         print(f"✅ [EMAIL] Access Granted Notification Sent to {user_email}")
         return True
@@ -260,20 +231,14 @@ def send_access_granted(user_email):
         print(f"❌ Failed to send access granted email: {e}")
         return False
 
-
 def send_welcome_otp(user_email: str, otp: str) -> bool:
     """
-    Sends a professional Welcome email with a 6-digit OTP for email verification.
+    Sends a professional Welcome email with a 6-digit OTP for email verification via Resend.
     """
     try:
-        if not MAIL_PASSWORD:
-            print("⚠️ [EMAIL] MAIL_PASSWORD missing — skipping OTP email")
+        if not resend.api_key:
+            print("⚠️ [EMAIL] RESEND_API_KEY missing — skipping OTP email")
             return False
-
-        msg = MIMEMultipart("alternative")
-        msg["Subject"] = "🔐 Verify your BaapCollab account"
-        msg["From"] = f"BaapCollab <{MAIL_FROM}>"
-        msg["To"] = user_email
 
         html = f"""<!DOCTYPE html>
 <html>
@@ -282,19 +247,16 @@ def send_welcome_otp(user_email: str, otp: str) -> bool:
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#F8FAFC;padding:40px 20px;">
     <tr><td align="center">
       <table width="480" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:24px;overflow:hidden;box-shadow:0 4px 24px rgba(82,78,238,.12);">
-        <!-- Header -->
         <tr>
           <td style="background:linear-gradient(135deg,#524EEE 0%,#6366f1 100%);padding:40px;text-align:center;">
             <p style="margin:0;font-size:28px;font-weight:900;color:#ffffff;letter-spacing:-0.5px;">BaapCollab</p>
             <p style="margin:8px 0 0;font-size:14px;color:rgba(255,255,255,.75);letter-spacing:2px;text-transform:uppercase;">Student Community</p>
           </td>
         </tr>
-        <!-- Body -->
         <tr>
           <td style="padding:48px 40px 32px;">
             <h2 style="margin:0 0 12px;font-size:22px;font-weight:700;color:#111827;">Verify your email address</h2>
             <p style="margin:0 0 32px;font-size:15px;color:#6B7280;line-height:1.6;">Welcome to BaapCollab! Use the one-time code below to verify your account. This code expires in <strong>10 minutes</strong>.</p>
-            <!-- OTP Box -->
             <div style="background:#F3F4FF;border:2px solid #E0E0FF;border-radius:16px;padding:28px;text-align:center;margin-bottom:32px;">
               <p style="margin:0 0 8px;font-size:12px;color:#6B7280;text-transform:uppercase;letter-spacing:2px;font-weight:600;">Your verification code</p>
               <p style="margin:0;font-size:48px;font-weight:900;letter-spacing:12px;color:#524EEE;font-family:monospace;">{otp}</p>
@@ -302,7 +264,6 @@ def send_welcome_otp(user_email: str, otp: str) -> bool:
             <p style="margin:0 0 8px;font-size:13px;color:#9CA3AF;">If you didn't create a BaapCollab account, you can safely ignore this email.</p>
           </td>
         </tr>
-        <!-- Footer -->
         <tr>
           <td style="background:#F8FAFC;padding:24px 40px;text-align:center;border-top:1px solid #F3F4F6;">
             <p style="margin:0;font-size:12px;color:#9CA3AF;">© 2025 BaapCollab · Student Collaboration Platform</p>
@@ -314,15 +275,13 @@ def send_welcome_otp(user_email: str, otp: str) -> bool:
 </body>
 </html>"""
 
-        msg.attach(MIMEText(html, "html"))
-
-        # --- SMTP SENDING ---
-        print(f"📡 [EMAIL] Sending welcome_otp to {user_email} (timeout=10s)...")
-        with smtplib.SMTP(MAIL_SERVER, MAIL_PORT, timeout=10) as server:
-            if MAIL_STARTTLS:
-                server.starttls()
-            server.login(str(MAIL_USERNAME), str(MAIL_PASSWORD))
-            server.send_message(msg)
+        print(f"📡 [EMAIL] Sending welcome_otp to {user_email} via Resend API...")
+        resend.Emails.send({
+            "from": MAIL_FROM,
+            "to": user_email,
+            "subject": "🔐 Verify your BaapCollab account",
+            "html": html
+        })
 
         print(f"✅ Welcome OTP email sent to {user_email}")
         return True
@@ -334,17 +293,12 @@ def send_welcome_otp(user_email: str, otp: str) -> bool:
 
 def send_password_reset_email(user_email: str, reset_link: str) -> bool:
     """
-    Sends a professional password reset email.
+    Sends a professional password reset email via Resend API.
     """
     try:
-        if not MAIL_PASSWORD:
-            print("⚠️ [EMAIL] MAIL_PASSWORD missing — skipping reset email")
+        if not resend.api_key:
+            print("⚠️ [EMAIL] RESEND_API_KEY missing — skipping reset email")
             return False
-
-        msg = MIMEMultipart("alternative")
-        msg["Subject"] = "🔐 Password Reset for BaapCollab"
-        msg["From"] = f"BaapCollab <{MAIL_FROM}>"
-        msg["To"] = user_email
 
         html = f"""<!DOCTYPE html>
 <html>
@@ -371,15 +325,14 @@ def send_password_reset_email(user_email: str, reset_link: str) -> bool:
   </table>
 </body>
 </html>"""
-        msg.attach(MIMEText(html, "html"))
-
-        # --- SMTP SENDING ---
-        print(f"📡 [EMAIL] Sending password_reset_email to {user_email} (timeout=10s)...")
-        with smtplib.SMTP(MAIL_SERVER, MAIL_PORT, timeout=10) as server:
-            if MAIL_STARTTLS:
-                server.starttls()
-            server.login(str(MAIL_USERNAME), str(MAIL_PASSWORD))
-            server.send_message(msg)
+        
+        print(f"📡 [EMAIL] Sending password_reset_email to {user_email} via Resend API...")
+        resend.Emails.send({
+            "from": MAIL_FROM,
+            "to": user_email,
+            "subject": "🔐 Password Reset for BaapCollab",
+            "html": html
+        })
 
         print(f"✅ Password reset email sent to {user_email}")
         return True
