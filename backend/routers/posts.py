@@ -104,7 +104,7 @@ def get_posts(type: Optional[str] = None, current_user_id: Optional[int] = None)
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.delete("/{post_id}")
-def delete_post(post_id: int, current_user: User = Depends(get_current_user)):
+async def delete_post(post_id: int, current_user: User = Depends(get_current_user)):
     with Session(engine) as session:
         post = session.get(Post, post_id)
         if not post:
@@ -126,6 +126,10 @@ def delete_post(post_id: int, current_user: User = Depends(get_current_user)):
 
         session.delete(post)
         session.commit()
+        
+        # Broadcast deletion to all connected clients
+        await manager.broadcast({"type": "delete_post", "post_id": post_id})
+        
         return {"message": "Post deleted successfully"}
 
 @router.get("/{post_id}/comments")

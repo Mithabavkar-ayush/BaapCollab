@@ -183,11 +183,11 @@ export default function Dashboard() {
     const currentToken = tokenOverride || (typeof window !== "undefined" ? (localStorage.getItem('baap_token') || localStorage.getItem('token')) : null) || authToken;
     if (!currentToken || isLoading) return;
     try {
-      const fetchUrl = `${API_BASE}/posts`;
+      const fetchUrl = `/posts?t=${Date.now()}`;
       console.log(`DEBUG [fetchData] Executing fetch to: ${fetchUrl}`);
       const headers = { 'Authorization': `Bearer ${currentToken}` };
       const [postsRes, leaderRes] = await Promise.all([
-        apiFetch(`/posts`, {
+        apiFetch(fetchUrl, {
           headers: { ...headers }
         }),
         apiFetch(`/rewards/leaderboard`, {
@@ -224,6 +224,10 @@ export default function Dashboard() {
     const token = (typeof window !== "undefined" ? (localStorage.getItem('baap_token') || localStorage.getItem('token')) : null) || authToken;
     if (step === 4 && token && !isLoading) {
       fetchData(token);
+      
+      // Implement 3s polling fallback for high reliability
+      const interval = setInterval(() => fetchData(token), 3000);
+      return () => clearInterval(interval);
     }
   }, [step, authToken, isLoading, userId]);
 
@@ -264,6 +268,11 @@ export default function Dashboard() {
       setAllForumPosts(updateCount);
       setForumPosts(updateCount);
       setLfmPosts(updateCount);
+    }
+
+    if (data.type === "delete_post" && data.post_id) {
+      console.log("🔌 [WS] Post deleted, removing from state:", data.post_id);
+      removePostFromState(data.post_id);
     }
   }, []);
 
