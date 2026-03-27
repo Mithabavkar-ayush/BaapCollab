@@ -10,8 +10,7 @@ import { API_BASE } from "@/lib/api";
  */
 export function useWebSocket(
   onMessage: (data: any) => void,
-  enabled: boolean = true,
-  token?: string | null
+  enabled: boolean = true
 ) {
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -27,13 +26,10 @@ export function useWebSocket(
     if (!enabled) return;
 
     // Derive WS URL from API_BASE (http→ws, https→wss)
-    const baseWsUrl = API_BASE
+    const wsUrl = API_BASE
       .replace(/^https:\/\//, "wss://")
       .replace(/^http:\/\//, "ws://")
       + "/ws/feed";
-    
-    // WebSockets in browsers don't support headers, use query param for auth
-    const wsUrl = token ? `${baseWsUrl}?token=${token}` : baseWsUrl;
 
     console.log("🔌 [WS] Connecting to:", wsUrl);
 
