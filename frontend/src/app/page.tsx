@@ -198,10 +198,15 @@ export default function Dashboard() {
       if (postsRes.ok) {
         const allPosts = await postsRes.json();
         console.log("DEBUG [fetchData]: All posts fetched:", allPosts);
-        setLfmPosts(allPosts.filter((p: any) => p.type === 'LFM').slice(0, 3));
-        const forum = allPosts.filter((p: any) => p.type === 'FORUM');
-        setAllForumPosts(forum);
-        setForumPosts(forum.slice(0, 4));
+        
+        if (Array.isArray(allPosts)) {
+          setLfmPosts(allPosts.filter((p: any) => p.type === 'LFM').slice(0, 3));
+          const forum = allPosts.filter((p: any) => p.type === 'FORUM');
+          setAllForumPosts(forum);
+          setForumPosts(forum.slice(0, 4));
+        } else {
+          console.error("DEBUG [fetchData]: API returned non-array posts data:", allPosts);
+        }
       } else {
         const errText = await postsRes.text();
         console.error("Posts fetch failed:", postsRes.status, errText);

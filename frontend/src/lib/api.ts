@@ -21,7 +21,11 @@ export async function apiFetch(endpoint: string, options: RequestInit = {}) {
     // CRITICAL: Ensure cookies/tokens are sent with every request
     credentials: 'include',
     ...options,
+    cache: 'no-store',
     headers: {
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0',
       // Allow overriding headers, but keep common ones
       ...(options.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
       ...(options.headers as Record<string, string> || {}),
