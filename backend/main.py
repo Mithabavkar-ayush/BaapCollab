@@ -9,6 +9,8 @@ import uvicorn
 load_dotenv()
 
 from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
+from routers import auth, posts, rewards
+from ws_manager import manager
 
 app = FastAPI(title="BaapCollab API")
 
