@@ -13,6 +13,7 @@ WORKDIR /app
 # Install system dependencies (for psycopg2 if needed, though binary is used)
 # RUN apt-get update && apt-get install -y libpq-dev gcc && rm -rf /var/lib/apt/lists/*
 
+# Force Railway rebuild: 2026-03-27_1
 # Install Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt

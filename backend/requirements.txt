@@ -1,5 +1,6 @@
 fastapi
-uvicorn
+uvicorn[standard]
+websockets>=11.0
 pydantic
 email-validator
 sqlmodel
