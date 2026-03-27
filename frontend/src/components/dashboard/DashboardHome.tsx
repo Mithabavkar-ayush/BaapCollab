@@ -19,7 +19,7 @@ interface DashboardHomeProps {
     setToast: (toast: { message: string; type: 'success' | 'error' } | null) => void;
 }
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { API_BASE, apiFetch } from "@/lib/api";
 
@@ -48,8 +48,21 @@ export default function DashboardHome({
 
     const [allUsers, setAllUsers] = useState<any[]>([]);
     const [selectedUserId, setSelectedUserId] = useState<string>("");
+    const [searchQuery, setSearchQuery] = useState<string>("");
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [selectedRole, setSelectedRole] = useState<string>("ADMIN");
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsDropdownOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
 
     const isSuper = user?.role === "SUPERADMIN";
 
@@ -91,6 +104,7 @@ export default function DashboardHome({
                 setToast({ message: `Success: User role updated to ${selectedRole}`, type: 'success' });
                 fetchAllUsers();
                 setSelectedUserId("");
+                setSearchQuery("");
             } else {
                 const err = await res.json();
                 setToast({ message: err.detail || "Failed to update role", type: 'error' });
@@ -101,6 +115,13 @@ export default function DashboardHome({
             setIsSubmitting(false);
         }
     };
+
+    const filteredUsers = allUsers.filter(u => {
+        const query = searchQuery.toLowerCase();
+        const name = (u.name || "").toLowerCase();
+        const email = (u.email || "").toLowerCase();
+        return name.includes(query) || email.includes(query);
+    });
 
     if (user && !user.is_approved) return null; // Prevent flash of dashboard
 
@@ -178,20 +199,48 @@ export default function DashboardHome({
                         </div>
                         
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
-                            <div className="md:col-span-1 space-y-1.5">
+                            <div className="md:col-span-1 space-y-1.5 relative" ref={dropdownRef}>
                                 <label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest px-1">Select User</label>
-                                <select 
-                                    value={selectedUserId}
-                                    onChange={(e) => setSelectedUserId(e.target.value)}
-                                    className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:ring-2 focus:ring-indigo-500/20 focus:bg-white transition-all text-sm font-medium"
-                                >
-                                    <option value="">Select a user...</option>
-                                    {allUsers.map((u) => (
-                                        <option key={u.id} value={u.id}>
-                                            {u.name || "Pending Setup"} — {u.email} ({u.role})
-                                        </option>
-                                    ))}
-                                </select>
+                                <div className="relative">
+                                    <input 
+                                        type="text"
+                                        placeholder="Search by name or email..."
+                                        value={searchQuery}
+                                        onChange={(e) => {
+                                            setSearchQuery(e.target.value);
+                                            setIsDropdownOpen(true);
+                                            if (selectedUserId) setSelectedUserId("");
+                                        }}
+                                        onFocus={() => setIsDropdownOpen(true)}
+                                        className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:ring-2 focus:ring-indigo-500/20 focus:bg-white transition-all text-sm font-medium"
+                                    />
+                                    {isDropdownOpen && (
+                                        <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-100 rounded-2xl shadow-xl z-50 max-h-60 overflow-y-auto overflow-x-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                                            {filteredUsers.length > 0 ? filteredUsers.map((u) => (
+                                                <button
+                                                    key={u.id}
+                                                    onClick={() => {
+                                                        setSelectedUserId(u.id);
+                                                        setSearchQuery(u.name || "");
+                                                        setIsDropdownOpen(false);
+                                                    }}
+                                                    className="w-full text-left px-5 py-3 hover:bg-indigo-50 transition-colors border-b border-gray-50 last:border-0"
+                                                >
+                                                    <p className="text-sm font-semibold text-gray-900 truncate">
+                                                        {u.name ? u.name : <span className="text-gray-400 italic">Pending Setup</span>} — <span className="text-gray-500 font-normal">{u.email}</span> ( {u.role} )
+                                                    </p>
+                                                    <p className="text-[10px] font-bold text-indigo-500 uppercase tracking-wider mt-0.5">
+                                                        {u.role}
+                                                    </p>
+                                                </button>
+                                            )) : (
+                                                <div className="px-5 py-8 text-center text-gray-400 text-sm italic">
+                                                    No users found
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                             <div className="space-y-1.5">
                                 <label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest px-1">Assign Role</label>

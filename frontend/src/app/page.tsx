@@ -298,29 +298,39 @@ export default function Dashboard() {
 
     if (data.type === "role_update" && data.user_id && data.new_role) {
       if (userId === data.user_id) {
-        // I am the one being updated
-        setUser((prev: any) => ({ ...prev, role: data.new_role }));
-        if (typeof window !== "undefined") {
-          const stored = localStorage.getItem('user');
-          if (stored) {
-            const parsed = JSON.parse(stored);
-            parsed.role = data.new_role;
-            localStorage.setItem('user', JSON.stringify(parsed));
+        // Update local state immediately for navbar and dashboard reactivity
+        setUser((prev: any) => {
+          const updated = { ...prev, role: data.new_role };
+          
+          // Persistence
+          if (typeof window !== "undefined") {
+            localStorage.setItem('user', JSON.stringify(updated));
+            // Backup legacy/sync keys if they exist
+            if (localStorage.getItem('baap_user')) localStorage.setItem('baap_user', JSON.stringify(updated));
           }
-        }
+          
+          return updated;
+        });
 
         if (data.new_role === "ADMIN") {
-          if (!user?.has_seen_admin_welcome) {
-            setToast({ message: "🎉 Congratulations! You are now an Admin of BaapCollab!", type: 'success' });
-            apiFetch(`/admin/users/${data.user_id}/welcome-seen`, {
-              method: 'PATCH',
-              headers: { 'Authorization': `Bearer ${authToken}` }
-            }).then(() => {
-              setUser((prev: any) => ({ ...prev, has_seen_admin_welcome: true }));
-            });
-          }
+          // Check has_seen_admin_welcome from the LATEST state (passed in closure or prev)
+          // Note: prev might be more reliable in the setUser callback
+          setUser((currentUser: any) => {
+            if (!currentUser?.has_seen_admin_welcome) {
+              setToast({ message: "🎉 Congratulations! You are now an Admin of BaapCollab!", type: 'success' });
+              
+              // Mark as seen on backend to prevent duplicate toasts on re-login
+              apiFetch(`/admin/users/${data.user_id}/welcome-seen`, {
+                method: 'PATCH',
+                headers: { 'Authorization': `Bearer ${authToken}` }
+              }).catch(err => console.error("Failed to sync welcome-seen:", err));
+              
+              return { ...currentUser, has_seen_admin_welcome: true };
+            }
+            return currentUser;
+          });
         } else if (data.new_role === "STUDENT") {
-          setToast({ message: "You have been demoted to Student.", type: 'error' });
+          setToast({ message: "Note: Your role has been updated to Student.", type: 'error' });
           if (activeTab === 'admin') setActiveTab('dashboard');
         }
       }

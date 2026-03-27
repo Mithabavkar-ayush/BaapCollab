@@ -216,7 +216,7 @@ export default function AdminDashboard({ user, token, setToast, latestWsApproval
               return (
                 <tr key={u.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
                   <td className="py-4 px-4 font-medium text-gray-900">
-                    {u.name ? u.name : <em className="text-gray-400 not-italic">Pending Setup</em>}
+                    {u.name ? u.name : <span className="text-gray-400 italic">Pending Setup</span>}
                   </td>
                   <td className="py-4 px-4 text-gray-500 text-sm">{u.email}</td>
                   <td className="py-4 px-4">
