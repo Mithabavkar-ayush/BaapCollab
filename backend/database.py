@@ -49,6 +49,10 @@ class UserBase(SQLModel):
     hashed_password: Optional[str] = Field(default=None)
     is_verified: bool = Field(default=False)
     otp_code: Optional[str] = Field(default=None)
+    is_banned: bool = Field(default=False)
+    is_suspended: bool = Field(default=False)
+    suspended_until: Optional[datetime] = Field(default=None)
+    rejection_handled: bool = Field(default=False)
     role: str = Field(default="STUDENT") # STUDENT, ADMIN, SUPERADMIN
 
 class User(UserBase, table=True):
@@ -110,6 +114,17 @@ class RewardLog(SQLModel, table=True):
     points: int
     reason: str
     user: User = Relationship(back_populates="reward_logs")
+
+class AuditLog(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    action: str
+    performed_by: int = Field(foreign_key="user.id")
+    target_user: int = Field(foreign_key="user.id")
+    timestamp: datetime = Field(
+        sa_column=Column(DateTime(timezone=True), server_default=func.now()),
+        default_factory=lambda: datetime.now(timezone.utc)
+    )
+    details: Optional[str] = Field(default=None)
 
 def create_db_and_tables():
     try:

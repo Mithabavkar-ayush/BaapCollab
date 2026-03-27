@@ -353,3 +353,48 @@ def send_password_reset_email(user_email: str, reset_link: str) -> bool:
         print(f"❌ Failed to send password reset email: {e}")
         traceback.print_exc()
         return False
+
+def send_role_update_email(user_email: str, name: str, new_role: str) -> bool:
+    try:
+        if not resend.api_key:
+            return False
+            
+        html = f"""
+            <div style="font-family: sans-serif; padding: 20px;">
+                <p>Hi {name}, your role on BaapCollab has been updated to <strong>{new_role}</strong>.</p>
+                <p>If you have questions, contact the admin.</p>
+            </div>
+        """
+        
+        resend.Emails.send({
+            "from": MAIL_FROM,
+            "to": user_email,
+            "subject": "Your BaapCollab role has been updated",
+            "html": html
+        })
+        return True
+    except Exception as e:
+        print(f"❌ Failed to send role update email: {e}")
+        return False
+
+def send_promotion_confirmation_email(admin_email: str, target_name: str, target_email: str, new_role: str, timestamp_str: str) -> bool:
+    try:
+        if not resend.api_key:
+            return False
+            
+        html = f"""
+            <div style="font-family: sans-serif; padding: 20px;">
+                <p>You promoted {target_name} ({target_email}) to <strong>{new_role}</strong> on {timestamp_str}.</p>
+            </div>
+        """
+        
+        resend.Emails.send({
+            "from": MAIL_FROM,
+            "to": admin_email,
+            "subject": "Admin promotion confirmed",
+            "html": html
+        })
+        return True
+    except Exception as e:
+        print(f"❌ Failed to send promotion confirmation email: {e}")
+        return False

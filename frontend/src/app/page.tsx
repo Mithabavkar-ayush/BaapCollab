@@ -13,6 +13,7 @@ import ProjectList from "@/components/dashboard/ProjectList";
 import ForumList from "@/components/dashboard/ForumList";
 import ProfileSettings from "@/components/dashboard/ProfileSettings";
 import CreatePostModal from "@/components/dashboard/CreatePostModal";
+import AdminDashboard from "@/components/dashboard/AdminDashboard";
 
 const inter = Inter({ subsets: ['latin'] });
 import { API_BASE, apiFetch } from "@/lib/api";
@@ -45,7 +46,7 @@ export default function Dashboard() {
   const [latestWsDeletedComment, setLatestWsDeletedComment] = useState<{postId: number, commentId: number} | null>(null);
   const [latestWsEditedComment, setLatestWsEditedComment] = useState<{postId: number, comment: any} | null>(null);
   const [showGuide, setShowGuide] = useState(false);
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'forum' | 'settings'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'forum' | 'settings' | 'admin'>('dashboard');
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [modalType, setModalType] = useState<'project' | 'discussion'>('project');
   const [authError, setAuthError] = useState<string | null>(null);
@@ -56,7 +57,7 @@ export default function Dashboard() {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       const tab = params.get('tab');
-      if (tab && ['dashboard', 'projects', 'forum', 'settings'].includes(tab)) {
+      if (tab && ['dashboard', 'projects', 'forum', 'settings', 'admin'].includes(tab)) {
         setActiveTab(tab as any);
       }
     }
@@ -499,6 +500,14 @@ export default function Dashboard() {
           >
             Forum
           </button>
+          {(user?.role === 'ADMIN' || user?.role === 'SUPERADMIN') && (
+            <button
+              onClick={() => setActiveTab('admin')}
+              className={`px-5 py-2 rounded-[14px] text-sm font-bold transition-all whitespace-nowrap ${activeTab === 'admin' ? 'bg-white text-[#524EEE] shadow-sm ring-1 ring-gray-100' : 'text-gray-500 hover:text-black hover:bg-white/50'}`}
+            >
+              Admin
+            </button>
+          )}
         </nav>
 
         <div className="flex items-center gap-4 shrink-0 justify-end">
@@ -612,6 +621,9 @@ export default function Dashboard() {
             authToken={authToken} setUser={setUser} setToast={setToast}
           />
         )}
+        {activeTab === 'admin' && (user?.role === 'ADMIN' || user?.role === 'SUPERADMIN') && (
+          <AdminDashboard user={user} token={authToken} setToast={setToast} />
+        )}
       </main>
 
       {toast && (
@@ -643,6 +655,15 @@ export default function Dashboard() {
           <svg className="w-6 h-6 mb-1" fill={activeTab === 'forum' ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={activeTab === 'forum' ? "1.5" : "2"} d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" /></svg>
           <span className="text-[10px] font-bold uppercase tracking-wider">Forum</span>
         </button>
+        {(user?.role === 'ADMIN' || user?.role === 'SUPERADMIN') && (
+          <button
+            onClick={() => setActiveTab('admin')}
+            className={`flex flex-col items-center justify-center p-2 min-h-[44px] min-w-[44px] rounded-xl transition-all ${activeTab === 'admin' ? 'text-[#524EEE] scale-110' : 'text-gray-400 hover:text-gray-600'}`}
+          >
+            <svg className="w-6 h-6 mb-1" fill={activeTab === 'admin' ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={activeTab === 'admin' ? "1.5" : "2"} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+            <span className="text-[10px] font-bold uppercase tracking-wider">Admin</span>
+          </button>
+        )}
       </nav>
 
       {showGuide && (

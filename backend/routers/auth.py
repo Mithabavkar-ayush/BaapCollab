@@ -4,7 +4,7 @@ from database import engine, User, Branch
 from auth_utils import create_access_token, get_current_user, ACCESS_TOKEN_EXPIRE_MINUTES
 from typing import List, Optional
 from pydantic import BaseModel
-from datetime import timedelta
+from datetime import timedelta, datetime, timezone
 import os
 import random
 from dotenv import load_dotenv
@@ -120,6 +120,19 @@ def login(request: UserLogin, response: Response, background_tasks: BackgroundTa
                 detail="Incorrect password. Please try again.",
                 headers={"WWW-Authenticate": "Bearer"},
             )
+            
+        if user.is_banned:
+            raise HTTPException(status_code=403, detail="Your account has been banned.")
+            
+        if user.is_suspended:
+            if user.suspended_until and user.suspended_until <= datetime.now(timezone.utc):
+                user.is_suspended = False
+                user.suspended_until = None
+                session.add(user)
+                session.commit()
+            else:
+                formatted_time = user.suspended_until.strftime('%Y-%m-%d %H:%M:%S UTC') if user.suspended_until else 'indefinitely'
+                raise HTTPException(status_code=403, detail=f"Your account is suspended until {formatted_time}.")
         
         if not user.is_verified:
             from fastapi.responses import JSONResponse
@@ -263,19 +276,9 @@ def select_institute(branch_id: int, current_user: User = Depends(get_current_us
 
 @router.get("/admin/approve/{user_id}")
 def approve_user(user_id: int):
-    with Session(engine) as session:
-        user = session.get(User, user_id)
-        if not user:
-            raise HTTPException(status_code=404, detail="User not found")
-        
-        user.is_approved = True
-        session.add(user)
-        session.commit()
-        
-        # Notify user their access is granted
-        send_access_granted(user.email)
-        
-        return {"message": f"User {user.email} has been approved."}
+    # Backward compatibility, redirect to UI
+    from fastapi.responses import RedirectResponse
+    return RedirectResponse(url=f"{FRONTEND_URL}/admin/users")
 
 class ProfileUpdate(BaseModel):
     name: Optional[str] = None
@@ -386,20 +389,28 @@ def complete_profile(details: ProfileDetails, background_tasks: BackgroundTasks,
         print(f"DEBUG: Branch Name for email: {branch_name}")
         
         try:
-            background_tasks.add_task(
-                send_approval_request,
-                user.email, 
-                branch_name, 
-                user.id, 
-                user.name or user.email,
-                user.bio or "",
-                user.department or "",
-                str(user.graduation_year or ""),
-                user.skills or "",
-                user.linkedin_url or "",
-                user.github_url or ""
-            )
-            print(f"DEBUG: Background task queued for {user.email}")
+            admin_users = session.exec(
+                select(User).where(User.role.in_(["ADMIN", "SUPERADMIN"]), User.is_verified == True, User.is_banned == False)
+            ).all()
+            admin_emails = [a.email for a in admin_users if a.email]
+            if admin_emails:
+                background_tasks.add_task(
+                    send_approval_request,
+                    admin_emails,
+                    user.email, 
+                    branch_name, 
+                    user.id, 
+                    user.name or user.email,
+                    user.bio or "",
+                    user.department or "",
+                    str(user.graduation_year or ""),
+                    user.skills or "",
+                    user.linkedin_url or "",
+                    user.github_url or ""
+                )
+                print(f"DEBUG: Background task queued for {len(admin_emails)} admins")
+            else:
+                print("⚠️ No valid admins found to receive approval email.")
         except Exception as e:
             print(f"⚠️ Failed to queue verification email: {e}")
         
