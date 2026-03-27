@@ -12,6 +12,7 @@ interface ForumListProps {
     setShowCreateModal: (show: boolean) => void;
     loggedInUser: any;
     onPostDeleted: (postId: number) => void;
+    latestWsComment?: {postId: number, comment: any} | null;
 }
 
 function Avatar({ picture, profile_pic_url, name, size = 40, authorId }: { picture?: string | null; profile_pic_url?: string | null; name?: string | null; size?: number; authorId?: string | number }) {
@@ -80,11 +81,13 @@ function PostCard({
     loggedInUser,
     onPostDeleted,
     token,
+    latestWsComment,
 }: {
     post: any;
     loggedInUser: any;
     onPostDeleted: (postId: number) => void;
     token: string | null;
+    latestWsComment?: {postId: number, comment: any} | null;
 }) {
     const [expanded, setExpanded] = useState(false);
     const [comments, setComments] = useState<any[]>([]);
@@ -107,6 +110,17 @@ function PostCard({
     const isOwner = String(post.author_id) === String(loggedInUser?.id);
     const commentCount = post.comment_count || 0;
     const userAlreadyAssisted = comments.some(c => String(c.author_id) === String(loggedInUser?.id));
+
+    // Handle real-time incoming comments from WebSocket
+    useEffect(() => {
+        if (expanded && latestWsComment && latestWsComment.postId === post.id) {
+            setComments(prev => {
+                // Ignore if we already have it (e.g., if we were the ones who submitted it)
+                if (prev.some(c => c.id === latestWsComment.comment.id)) return prev;
+                return [...prev, latestWsComment.comment];
+            });
+        }
+    }, [latestWsComment, expanded, post.id]);
 
     const fetchComments = async () => {
         setLoadingComments(true);
@@ -268,26 +282,20 @@ function PostCard({
     };
 
     const handleDeletePost = async () => {
-        setIsDeleting(true);
+        // Instant UI Update
+        onPostDeleted(post.id);
+        setShowDeleteModal(false);
+
         try {
             const res = await apiFetch(`/posts/${post.id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-            if (res.ok) {
-                // Remove from local UI only after confirmed success
-                onPostDeleted(post.id);
-                setShowDeleteModal(false);
-            } else {
-                const errData = await res.json().catch(() => ({}));
-                console.error("Failed to delete post from server", errData);
-                alert(`Failed to delete post: ${errData.detail || "Unknown error"}`);
-                setShowDeleteModal(false);
+            if (!res.ok) {
+                console.error("Failed to delete post from server");
             }
         } catch (err) {
             console.error("Failed to delete post", err);
-            alert("Connection error: Could not reach server to delete post.");
-            setShowDeleteModal(false);
         } finally {
             setIsDeleting(false);
         }
@@ -565,6 +573,7 @@ export default function ForumList({
     setShowCreateModal,
     loggedInUser,
     onPostDeleted,
+    latestWsComment,
 }: ForumListProps) {
     const token = typeof window !== "undefined" ? (localStorage.getItem("baap_token") || localStorage.getItem("token")) : null;
 
@@ -594,6 +603,7 @@ export default function ForumList({
                             loggedInUser={loggedInUser}
                             onPostDeleted={onPostDeleted}
                             token={token}
+                            latestWsComment={latestWsComment}
                         />
                     ))}
                 </div>

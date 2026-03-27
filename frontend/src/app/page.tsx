@@ -41,6 +41,7 @@ export default function Dashboard() {
   const [forumPosts, setForumPosts] = useState<any[]>([]);
   const [allForumPosts, setAllForumPosts] = useState<any[]>([]);
   const [leaderboard, setLeaderboard] = useState<any[]>([]);
+  const [latestWsComment, setLatestWsComment] = useState<{postId: number, comment: any} | null>(null);
   const [showGuide, setShowGuide] = useState(false);
   const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'forum' | 'settings'>('dashboard');
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -257,6 +258,7 @@ export default function Dashboard() {
     }
 
     if (data.type === "new_comment" && data.post_id) {
+      setLatestWsComment({ postId: data.post_id, comment: data.comment });
       const updateCount = (posts: any[]) =>
         posts.map(p =>
           p.id === data.post_id
@@ -548,10 +550,17 @@ export default function Dashboard() {
       <main className="w-full max-w-[1920px] mx-auto pt-[100px] pb-[100px] md:pb-20 px-6 xl:px-12">
         {activeTab === 'dashboard' && (
           <DashboardHome
-            user={user} initials={initials} userBranchName={userBranchName}
-            imgError={imgError} setImgError={setImgError}
-            lfmPosts={lfmPosts} forumPosts={forumPosts} leaderboard={leaderboard}
-            setActiveTab={setActiveTab} setModalType={setModalType} setShowCreateModal={setShowCreateModal}
+            user={user}
+            initials={initials}
+            userBranchName={userBranchName}
+            imgError={imgError}
+            setImgError={setImgError}
+            lfmPosts={lfmPosts}
+            forumPosts={forumPosts}
+            leaderboard={leaderboard}
+            setActiveTab={setActiveTab}
+            setModalType={setModalType}
+            setShowCreateModal={setShowCreateModal}
           />
         )}
         {activeTab === 'projects' && (
@@ -571,6 +580,7 @@ export default function Dashboard() {
             setShowCreateModal={setShowCreateModal}
             loggedInUser={user}
             onPostDeleted={removePostFromState}
+            latestWsComment={latestWsComment}
           />
         )}
         {activeTab === 'settings' && (
