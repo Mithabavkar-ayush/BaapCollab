@@ -6,6 +6,8 @@ from sqlmodel import Session, select
 from database import engine, User, AuditLog
 from auth_utils import get_current_user
 from email_utils import send_role_update_email, send_promotion_confirmation_email
+from ws_manager import manager
+import asyncio
 
 router = APIRouter()
 
@@ -57,7 +59,7 @@ def admin_or_superadmin(current_user: User = Depends(get_current_user)):
 @router.get("/users", response_model=List[UserResponse])
 def get_admin_users(current_user: User = Depends(admin_or_superadmin)):
     with Session(engine) as session:
-        query = select(User)
+        query = select(User).where(User.role != "SUPERADMIN")
         if current_user.role == "ADMIN":
             query = query.where(User.role == "STUDENT")
         users = session.exec(query).all()
@@ -91,6 +93,16 @@ def update_role(user_id: int, request: RoleUpdate, background_tasks: BackgroundT
         # Send Email to Superadmin
         timestamp_str = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
         background_tasks.add_task(send_promotion_confirmation_email, current_user.email, target.name or 'User', target.email, request.role, timestamp_str)
+
+        try:
+            loop = asyncio.get_running_loop()
+            loop.create_task(manager.broadcast_json({
+                "type": "role_update",
+                "user_id": target.id,
+                "new_role": request.role
+            }))
+        except RuntimeError:
+            pass # fallback if not in event loop
 
         return {"message": "Role successfully updated."}
 
@@ -161,7 +173,7 @@ def approve_new_user(user_id: int, current_user: User = Depends(admin_or_superad
             raise HTTPException(status_code=404, detail="User not found.")
             
         if target.rejection_handled:
-            return {"message": "This request has already been resolved.", "already_resolved": True}
+            raise HTTPException(status_code=400, detail="This request has already been resolved.")
 
         target.is_approved = True
         target.rejection_handled = True
@@ -170,6 +182,18 @@ def approve_new_user(user_id: int, current_user: User = Depends(admin_or_superad
         
         log_audit(session, "APPROVE_USER", current_user.id, target.id)
         send_access_granted(target.email)
+
+        try:
+            loop = asyncio.get_running_loop()
+            loop.create_task(manager.broadcast_json({
+                "type": "approval_update",
+                "user_id": target.id,
+                "status": "approved",
+                "acted_by": current_user.name
+            }))
+        except RuntimeError:
+            pass
+
         return {"message": "User approved successfully."}
 
 @router.post("/users/{user_id}/reject")
@@ -180,7 +204,7 @@ def reject_new_user(user_id: int, current_user: User = Depends(admin_or_superadm
             raise HTTPException(status_code=404, detail="User not found.")
             
         if target.rejection_handled:
-            return {"message": "This request has already been resolved.", "already_resolved": True}
+            raise HTTPException(status_code=400, detail="This request has already been resolved.")
 
         target.is_approved = False
         target.rejection_handled = True
@@ -188,4 +212,29 @@ def reject_new_user(user_id: int, current_user: User = Depends(admin_or_superadm
         session.commit()
         
         log_audit(session, "REJECT_USER", current_user.id, target.id)
+
+        try:
+            loop = asyncio.get_running_loop()
+            loop.create_task(manager.broadcast_json({
+                "type": "approval_update",
+                "user_id": target.id,
+                "status": "rejected",
+                "acted_by": current_user.name
+            }))
+        except RuntimeError:
+            pass
+
         return {"message": "User rejected successfully."}
+
+@router.patch("/users/{user_id}/welcome-seen")
+def update_welcome_seen(user_id: int, current_user: User = Depends(get_current_user)):
+    if current_user.id != user_id:
+        raise HTTPException(status_code=403, detail="Cannot modify someone else's welcome status.")
+    with Session(engine) as session:
+        target = session.get(User, user_id)
+        if not target:
+            raise HTTPException(status_code=404, detail="User not found.")
+        target.has_seen_admin_welcome = True
+        session.add(target)
+        session.commit()
+        return {"message": "Welcome status updated."}

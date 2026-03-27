@@ -16,9 +16,10 @@ interface DashboardHomeProps {
     setActiveTab: (tab: 'dashboard' | 'projects' | 'forum' | 'settings') => void;
     setModalType: (type: 'project' | 'discussion') => void;
     setShowCreateModal: (show: boolean) => void;
+    setToast: (toast: { message: string; type: 'success' | 'error' } | null) => void;
 }
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { API_BASE, apiFetch } from "@/lib/api";
 
@@ -33,7 +34,8 @@ export default function DashboardHome({
     leaderboard,
     setActiveTab,
     setModalType,
-    setShowCreateModal
+    setShowCreateModal,
+    setToast
 }: DashboardHomeProps) {
     const router = useRouter();
 
@@ -43,6 +45,62 @@ export default function DashboardHome({
             router.push("/waiting-room");
         }
     }, [user, router]);
+
+    const [allUsers, setAllUsers] = useState<any[]>([]);
+    const [selectedUserId, setSelectedUserId] = useState<string>("");
+    const [selectedRole, setSelectedRole] = useState<string>("ADMIN");
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const isSuper = user?.role === "SUPERADMIN";
+
+    const fetchAllUsers = async () => {
+        if (!isSuper) return;
+        const token = localStorage.getItem('baap_token') || localStorage.getItem('token');
+        try {
+            const res = await apiFetch("/admin/users", {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                // Filter out superadmins just in case, though backend should handle it
+                setAllUsers(data.filter((u: any) => u.role !== 'SUPERADMIN'));
+            }
+        } catch (err) {
+            console.error("Failed to fetch users for role management:", err);
+        }
+    };
+
+    useEffect(() => {
+        if (isSuper) fetchAllUsers();
+    }, [isSuper]);
+
+    const handleRoleUpdate = async () => {
+        if (!selectedUserId || !isSuper) return;
+        setIsSubmitting(true);
+        const token = localStorage.getItem('baap_token') || localStorage.getItem('token');
+        try {
+            const res = await apiFetch(`/admin/users/${selectedUserId}/role`, {
+                method: 'PATCH',
+                headers: { 
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ role: selectedRole })
+            });
+            if (res.ok) {
+                setToast({ message: `Success: User role updated to ${selectedRole}`, type: 'success' });
+                fetchAllUsers();
+                setSelectedUserId("");
+            } else {
+                const err = await res.json();
+                setToast({ message: err.detail || "Failed to update role", type: 'error' });
+            }
+        } catch (err) {
+            setToast({ message: "Network error updating role", type: 'error' });
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
 
     if (user && !user.is_approved) return null; // Prevent flash of dashboard
 
@@ -108,48 +166,50 @@ export default function DashboardHome({
                 </div>
             </div>
 
-            {/* Admin Panel - Only for Admin/Superadmin */}
-            {(user?.role === "ADMIN" || user?.role === "SUPERADMIN") && (
+            {isSuper && (
                 <div className="mb-10 animate-in slide-in-from-top-4 duration-500">
                     <div className="bg-white rounded-3xl border-2 border-indigo-100/50 p-8 shadow-xl shadow-indigo-100/20">
                         <div className="flex items-center gap-3 mb-6">
                             <div className="p-2.5 bg-indigo-50 rounded-xl text-xl">🛡️</div>
                             <div>
-                                <h3 className="text-lg font-bold text-[#111827]">Administrative Controls</h3>
-                                <p className="text-xs text-gray-500 font-medium">Manage user roles and permissions</p>
+                                <h3 className="text-lg font-bold text-[#111827]">Manage User Roles</h3>
+                                <p className="text-xs text-gray-500 font-medium">Promote or demote members of the community</p>
                             </div>
                         </div>
                         
-                        <div className="flex flex-col md:flex-row gap-4 items-end">
-                            <div className="flex-1 space-y-1.5">
-                                <label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest px-1">Promote User to Admin</label>
-                                <input 
-                                    type="email" 
-                                    id="promote-email"
-                                    placeholder="Enter user email..." 
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                            <div className="md:col-span-1 space-y-1.5">
+                                <label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest px-1">Select User</label>
+                                <select 
+                                    value={selectedUserId}
+                                    onChange={(e) => setSelectedUserId(e.target.value)}
                                     className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:ring-2 focus:ring-indigo-500/20 focus:bg-white transition-all text-sm font-medium"
-                                />
+                                >
+                                    <option value="">Select a user...</option>
+                                    {allUsers.map((u) => (
+                                        <option key={u.id} value={u.id}>
+                                            {u.name || "Pending Setup"} — {u.email} ({u.role})
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="space-y-1.5">
+                                <label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest px-1">Assign Role</label>
+                                <select 
+                                    value={selectedRole}
+                                    onChange={(e) => setSelectedRole(e.target.value)}
+                                    className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:ring-2 focus:ring-indigo-500/20 focus:bg-white transition-all text-sm font-medium"
+                                >
+                                    <option value="ADMIN">ADMIN</option>
+                                    <option value="STUDENT">STUDENT</option>
+                                </select>
                             </div>
                             <button 
-                                onClick={async () => {
-                                    const email = (document.getElementById('promote-email') as HTMLInputElement).value;
-                                    if (!email) return;
-                                    const token = localStorage.getItem('baap_token') || localStorage.getItem('token');
-                                    
-                                    try {
-                                        const res = await apiFetch(`/auth/admin/role?target_email=${email}&new_role=ADMIN`, {
-                                            method: 'PATCH',
-                                            headers: { 'Authorization': `Bearer ${token}` }
-                                        });
-                                        if (res.ok) alert(`Success: ${email} is now an ADMIN`);
-                                        else alert('Failed to update role. Check email and permissions.');
-                                    } catch (err) {
-                                        alert('Error connecting to server.');
-                                    }
-                                }}
-                                className="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl shadow-lg shadow-indigo-200 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                                onClick={handleRoleUpdate}
+                                disabled={!selectedUserId || isSubmitting}
+                                className="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-bold rounded-2xl shadow-lg shadow-indigo-200 transition-all hover:scale-[1.02] active:scale-[0.98]"
                             >
-                                Promote to Admin
+                                {isSubmitting ? "Updating..." : (selectedRole === "ADMIN" ? "Promote to Admin" : "Demote to Student")}
                             </button>
                         </div>
                     </div>

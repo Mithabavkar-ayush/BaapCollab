@@ -5,10 +5,12 @@ interface AdminDashboardProps {
   user: any;
   token: string | null;
   setToast: (toast: { message: string; type: "success" | "error" } | null) => void;
+  latestWsApproval?: { userId: number; status: string; actedBy: string } | null;
 }
 
-export default function AdminDashboard({ user, token, setToast }: AdminDashboardProps) {
+export default function AdminDashboard({ user, token, setToast, latestWsApproval }: AdminDashboardProps) {
   const [usersList, setUsersList] = useState<any[]>([]);
+  const [resolvedUsers, setResolvedUsers] = useState<Record<number, { status: string; actedBy: string }>>({});
   const [loading, setLoading] = useState(true);
   const [suspendModal, setSuspendModal] = useState<{ isOpen: boolean; targetId: number | null }>({ isOpen: false, targetId: null });
   const [suspendDays, setSuspendDays] = useState<string>("3");
@@ -39,34 +41,19 @@ export default function AdminDashboard({ user, token, setToast }: AdminDashboard
     fetchUsers();
   }, [token]);
 
-  const handleRoleChange = async (userId: number, currentRole: string) => {
-    if (!token || !isSuper) return;
-    const newRole = currentRole === "STUDENT" ? "ADMIN" : "STUDENT";
-    if (!window.confirm(`Are you sure you want to change this user's role to ${newRole}?`)) return;
-
-    try {
-      const res = await apiFetch(`/admin/users/${userId}/role`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ role: newRole }),
-      });
-      if (res.ok) {
-        setToast({ message: "Role updated successfully", type: "success" });
-        fetchUsers();
-      } else {
-        if (res.status === 403) setToast({ message: "You do not have permission to perform this action.", type: "error" });
-        else if (res.status === 404) setToast({ message: "User not found.", type: "error" });
-        else {
-          const e = await res.json();
-          setToast({ message: e.detail || "Failed to update role", type: "error" });
-        }
-      }
-    } catch (err) {
-      setToast({ message: "Network error.", type: "error" });
+  useEffect(() => {
+    if (latestWsApproval) {
+      setResolvedUsers(prev => ({
+        ...prev,
+        [latestWsApproval.userId]: { status: latestWsApproval.status, actedBy: latestWsApproval.actedBy }
+      }));
     }
+  }, [latestWsApproval]);
+
+  const handleRoleChange = async (userId: number, currentRole: string) => {
+    // This function is no longer used in this component but kept for reference if needed
+    // The requirement says remove role management from Admin table
+    return;
   };
 
   const handleBanToggle = async (userId: number, currentlyBanned: boolean) => {
@@ -169,25 +156,24 @@ export default function AdminDashboard({ user, token, setToast }: AdminDashboard
 
     try {
       const res = await apiFetch(`/admin/users/${userId}/${action}`, {
-         method: "POST",
-         headers: { Authorization: `Bearer ${token}` }
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` }
       });
-      const data = await res.json();
       if (res.ok) {
-        if (data.already_resolved) {
-           setToast({ message: "This request has already been resolved.", type: "error" });
-        } else {
-           setToast({ message: `User ${action}d successfully.`, type: "success" });
-        }
-        fetchUsers();
+        setToast({ message: `User ${action}d successfully.`, type: "success" });
+        setResolvedUsers(prev => ({
+          ...prev,
+          [userId]: { status: approved ? "approved" : "rejected", actedBy: user.name }
+        }));
       } else {
-         if (res.status === 403) setToast({ message: "Permission denied", type: "error" });
-         else setToast({ message: data.detail || `Failed to ${action}`, type: "error" });
+        const data = await res.json().catch(() => ({}));
+        if (res.status === 403) setToast({ message: "Permission denied", type: "error" });
+        else setToast({ message: data.detail || `Failed to ${action}`, type: "error" });
       }
     } catch (err) {
       setToast({ message: "Network error.", type: "error" });
     }
-  }
+  };
 
   const getStatusText = (u: any) => {
     if (u.is_banned) return <span className="text-red-600 font-bold">Banned</span>;
@@ -229,7 +215,9 @@ export default function AdminDashboard({ user, token, setToast }: AdminDashboard
 
               return (
                 <tr key={u.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
-                  <td className="py-4 px-4 font-medium text-gray-900">{u.name || "Unknown"}</td>
+                  <td className="py-4 px-4 font-medium text-gray-900">
+                    {u.name ? u.name : <em className="text-gray-400 not-italic">Pending Setup</em>}
+                  </td>
                   <td className="py-4 px-4 text-gray-500 text-sm">{u.email}</td>
                   <td className="py-4 px-4">
                     <span className={`px-3 py-1 rounded-full text-[10px] font-black tracking-widest ${u.role === 'SUPERADMIN' ? 'bg-purple-100 text-purple-700' : u.role === 'ADMIN' ? 'bg-indigo-100 text-[#524EEE]' : 'bg-gray-100 text-gray-600'}`}>
@@ -239,29 +227,23 @@ export default function AdminDashboard({ user, token, setToast }: AdminDashboard
                   <td className="py-4 px-4 text-sm">{getStatusText(u)}</td>
                   <td className="py-4 px-4 text-right">
                     <div className="flex items-center justify-end gap-2">
-                       {/* Pending Approval Actions for ADMIN & SUPERADMIN */}
+                       {/* Pending Approval Actions */}
                        {!u.is_approved && !u.is_banned && (
-                          <>
-                             <button onClick={() => handleApprove(u.id, true)} className="text-xs bg-emerald-100 text-emerald-700 font-bold px-3 py-1.5 rounded-lg hover:bg-emerald-200">Approve</button>
-                             <button onClick={() => handleApprove(u.id, false)} className="text-xs bg-red-100 text-red-700 font-bold px-3 py-1.5 rounded-lg hover:bg-red-200">Reject</button>
-                          </>
+                          resolvedUsers[u.id] ? (
+                            <span className={`px-3 py-1.5 rounded-lg text-xs font-bold ${resolvedUsers[u.id].status === 'approved' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}>
+                              {resolvedUsers[u.id].status === 'approved' ? 'Approved' : 'Rejected'}
+                            </span>
+                          ) : (
+                            <>
+                               <button onClick={() => handleApprove(u.id, true)} className="text-xs bg-emerald-100 text-emerald-700 font-bold px-3 py-1.5 rounded-lg hover:bg-emerald-200">Approve</button>
+                               <button onClick={() => handleApprove(u.id, false)} className="text-xs bg-red-100 text-red-700 font-bold px-3 py-1.5 rounded-lg hover:bg-red-200">Reject</button>
+                            </>
+                          )
                        )}
 
                        {/* SUPERADMIN ONLY MODERATION ACTIONS */}
-                       {isSuper && u.is_approved && (
+                       {isSuper && (u.is_approved || resolvedUsers[u.id]?.status === 'approved') && (
                          <>
-                          {/* Role Switch */}
-                           <select
-                              disabled={restrictAdminTarget}
-                              className="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white disabled:opacity-50"
-                              value={u.role}
-                              onChange={(e) => handleRoleChange(u.id, u.role)}
-                           >
-                             <option value="STUDENT">STUDENT</option>
-                             <option value="ADMIN">ADMIN</option>
-                             {u.role === "SUPERADMIN" && <option value="SUPERADMIN">SUPERADMIN</option>}
-                           </select>
-
                           {/* Ban Toggle */}
                           <button
                             disabled={restrictAdminTarget}

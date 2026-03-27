@@ -53,6 +53,7 @@ class UserBase(SQLModel):
     is_suspended: bool = Field(default=False)
     suspended_until: Optional[datetime] = Field(default=None)
     rejection_handled: bool = Field(default=False)
+    has_seen_admin_welcome: bool = Field(default=False)
     role: str = Field(default="STUDENT") # STUDENT, ADMIN, SUPERADMIN
 
 class User(UserBase, table=True):

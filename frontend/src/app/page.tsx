@@ -45,6 +45,7 @@ export default function Dashboard() {
   const [latestWsComment, setLatestWsComment] = useState<{postId: number, comment: any} | null>(null);
   const [latestWsDeletedComment, setLatestWsDeletedComment] = useState<{postId: number, commentId: number} | null>(null);
   const [latestWsEditedComment, setLatestWsEditedComment] = useState<{postId: number, comment: any} | null>(null);
+  const [latestWsApproval, setLatestWsApproval] = useState<{userId: number, status: string, actedBy: string} | null>(null);
   const [showGuide, setShowGuide] = useState(false);
   const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'forum' | 'settings' | 'admin'>('dashboard');
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -294,7 +295,49 @@ export default function Dashboard() {
     if (data.type === "delete_post" && data.post_id) {
       removePostFromState(data.post_id);
     }
-  }, []);
+
+    if (data.type === "role_update" && data.user_id && data.new_role) {
+      if (userId === data.user_id) {
+        // I am the one being updated
+        setUser((prev: any) => ({ ...prev, role: data.new_role }));
+        if (typeof window !== "undefined") {
+          const stored = localStorage.getItem('user');
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            parsed.role = data.new_role;
+            localStorage.setItem('user', JSON.stringify(parsed));
+          }
+        }
+
+        if (data.new_role === "ADMIN") {
+          if (!user?.has_seen_admin_welcome) {
+            setToast({ message: "🎉 Congratulations! You are now an Admin of BaapCollab!", type: 'success' });
+            apiFetch(`/admin/users/${data.user_id}/welcome-seen`, {
+              method: 'PATCH',
+              headers: { 'Authorization': `Bearer ${authToken}` }
+            }).then(() => {
+              setUser((prev: any) => ({ ...prev, has_seen_admin_welcome: true }));
+            });
+          }
+        } else if (data.new_role === "STUDENT") {
+          setToast({ message: "You have been demoted to Student.", type: 'error' });
+          if (activeTab === 'admin') setActiveTab('dashboard');
+        }
+      }
+    }
+
+    if (data.type === "approval_update" && data.user_id && data.status) {
+      setLatestWsApproval({ userId: data.user_id, status: data.status, actedBy: data.acted_by });
+      if (userId !== data.user_id) {
+        // Don't toast the person who was just approved (they get an email or redirect)
+        // But toast other admins
+        if (user?.role === 'ADMIN' || user?.role === 'SUPERADMIN') {
+           const targetUser = data.user_name || "A user";
+           setToast({ message: `${targetUser} was ${data.status} by ${data.acted_by}`, type: 'success' });
+        }
+      }
+    }
+  }, [userId, authToken, user, activeTab]);
 
   useWebSocket(handleWsMessage, step === 4);
 
@@ -590,6 +633,7 @@ export default function Dashboard() {
             setActiveTab={setActiveTab}
             setModalType={setModalType}
             setShowCreateModal={setShowCreateModal}
+            setToast={setToast}
           />
         )}
         {activeTab === 'projects' && (
@@ -622,7 +666,12 @@ export default function Dashboard() {
           />
         )}
         {activeTab === 'admin' && (user?.role === 'ADMIN' || user?.role === 'SUPERADMIN') && (
-          <AdminDashboard user={user} token={authToken} setToast={setToast} />
+          <AdminDashboard 
+            user={user} 
+            token={authToken} 
+            setToast={setToast} 
+            latestWsApproval={latestWsApproval}
+          />
         )}
       </main>
 
