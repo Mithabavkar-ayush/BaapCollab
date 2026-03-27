@@ -111,7 +111,7 @@ function PostCard({
     const fetchComments = async () => {
         setLoadingComments(true);
         try {
-            const res = await apiFetch(`/posts/${post.id}/comments${loggedInUser ? `?current_user_id=${loggedInUser.id}` : ''}`);
+            const res = await apiFetch(`/posts/${post.id}/comments?t=${Date.now()}${loggedInUser ? `&current_user_id=${loggedInUser.id}` : ''}`);
             if (res.ok) {
                 const data = await res.json();
                 console.log("DEBUG [ForumList]: Comments fetched for post:", post.id, data);
