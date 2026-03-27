@@ -1,4 +1,5 @@
-from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect, Query
+from typing import Optional
 from fastapi.middleware.cors import CORSMiddleware
 from database import create_db_and_tables
 from dotenv import load_dotenv
@@ -79,7 +80,7 @@ def debug_db_status():
         return {"status": "error", "message": str(e)}
 
 @app.websocket("/ws/feed")
-async def websocket_feed(websocket: WebSocket):
+async def websocket_feed(websocket: WebSocket, token: Optional[str] = Query(default=None)):
     await manager.connect(websocket)
     try:
         while True:
