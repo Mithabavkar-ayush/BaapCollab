@@ -31,20 +31,20 @@ export function useWebSocket(
       .replace(/^http:\/\//, "ws://")
       + "/ws/feed";
 
-    console.log("🔌 [WS] Connecting to:", wsUrl);
+
 
     const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
 
     ws.onopen = () => {
-      console.log("🔌 [WS] Connected");
+
       reconnectDelay.current = 1000; // Reset backoff on successful connect
     };
 
     ws.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        console.log("🔌 [WS] Received:", data.type);
+
         onMessageRef.current(data);
       } catch (err) {
         console.error("🔌 [WS] Failed to parse message:", err);
@@ -52,7 +52,7 @@ export function useWebSocket(
     };
 
     ws.onclose = (event) => {
-      console.log(`🔌 [WS] Closed (code: ${event.code}). Reconnecting in ${reconnectDelay.current / 1000}s...`);
+
       scheduleReconnect();
     };
 

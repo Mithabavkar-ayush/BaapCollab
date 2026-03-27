@@ -184,7 +184,6 @@ export default function Dashboard() {
     if (!currentToken || isLoading) return;
     try {
       const fetchUrl = `/posts?t=${Date.now()}`;
-      console.log(`DEBUG [fetchData] Executing fetch to: ${fetchUrl}`);
       const headers = { 'Authorization': `Bearer ${currentToken}` };
       const [postsRes, leaderRes] = await Promise.all([
         apiFetch(fetchUrl, {
@@ -197,15 +196,13 @@ export default function Dashboard() {
 
       if (postsRes.ok) {
         const allPosts = await postsRes.json();
-        console.log("DEBUG [fetchData]: All posts fetched:", allPosts);
-        
         if (Array.isArray(allPosts)) {
           setLfmPosts(allPosts.filter((p: any) => p.type === 'LFM').slice(0, 3));
           const forum = allPosts.filter((p: any) => p.type === 'FORUM');
           setAllForumPosts(forum);
           setForumPosts(forum.slice(0, 4));
         } else {
-          console.error("DEBUG [fetchData]: API returned non-array posts data:", allPosts);
+          console.error("DEBUG [fetchData]: API returned non-array posts data:");
         }
       } else {
         const errText = await postsRes.text();
@@ -229,10 +226,6 @@ export default function Dashboard() {
     const token = (typeof window !== "undefined" ? (localStorage.getItem('baap_token') || localStorage.getItem('token')) : null) || authToken;
     if (step === 4 && token && !isLoading) {
       fetchData(token);
-      
-      // Implement 3s polling fallback for high reliability
-      const interval = setInterval(() => fetchData(token), 3000);
-      return () => clearInterval(interval);
     }
   }, [step, authToken, isLoading, userId]);
 
@@ -276,7 +269,6 @@ export default function Dashboard() {
     }
 
     if (data.type === "delete_post" && data.post_id) {
-      console.log("🔌 [WS] Post deleted, removing from state:", data.post_id);
       removePostFromState(data.post_id);
     }
   }, []);
