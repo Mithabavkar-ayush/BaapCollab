@@ -170,8 +170,8 @@ export default function OnboardingSteps({
 
   if (step === 1 && otpSent && !otpSuccess) {
     return (
-      <div className="min-h-screen flex flex-col items-center pt-24 bg-[#F8FAFC]">
-        <div className="bg-white rounded-[32px] premium-shadow hairline-border-projects p-10 w-full max-w-[480px] mb-8">
+      <div className="min-h-screen flex flex-col items-center pt-24 bg-[#F8FAFC] px-4 w-full box-border">
+        <div className="bg-white rounded-[32px] premium-shadow hairline-border-projects p-6 sm:p-10 w-full max-w-[480px] mb-8">
           <div className="flex justify-center mb-6">
             <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center">
               <svg className="w-8 h-8 text-[#524EEE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -210,7 +210,7 @@ export default function OnboardingSteps({
 
   if (step === 1) {
     return (
-      <div className="min-h-screen flex flex-col items-center pt-24 bg-[#F8FAFC]">
+      <div className="min-h-screen flex flex-col items-center pt-24 bg-[#F8FAFC] px-4 w-full box-border">
         <div className="flex items-center gap-2 mb-12">
           <div className="w-2.5 h-2.5 rounded-full bg-[#524EEE]"></div>
           <div className="w-8 h-[2px] bg-gray-200"></div>
@@ -219,7 +219,7 @@ export default function OnboardingSteps({
           <div className="w-2.5 h-2.5 rounded-full bg-gray-200"></div>
         </div>
 
-        <div className="bg-white rounded-[32px] premium-shadow hairline-border-projects p-10 w-full max-w-[480px] mb-8">
+        <div className="bg-white rounded-[32px] premium-shadow hairline-border-projects p-6 sm:p-10 w-full max-w-[480px] mb-8">
           <div className="flex justify-center mb-8">
             <div className="w-[60px] h-[60px] flex items-center justify-center">
               <img src="/baap-logo.jpg" alt="Baap Logo" className="w-full h-full object-contain" />
@@ -380,7 +380,7 @@ export default function OnboardingSteps({
 
   if (step === 2) {
     return (
-      <div className="min-h-screen flex flex-col items-center pt-24 bg-[#F8FAFC]">
+      <div className="min-h-screen flex flex-col items-center pt-24 bg-[#F8FAFC] px-4 w-full box-border">
         <div className="flex items-center gap-2 mb-12">
           <div className="w-2.5 h-2.5 rounded-full bg-[#524EEE]"></div>
           <div className="w-8 h-[2px] bg-[#524EEE]"></div>
@@ -389,7 +389,7 @@ export default function OnboardingSteps({
           <div className="w-2.5 h-2.5 rounded-full bg-gray-200"></div>
         </div>
 
-        <div className="bg-white rounded-3xl premium-shadow hairline-border-projects p-8 w-full max-w-[480px] mb-8 text-center">
+        <div className="bg-white rounded-3xl premium-shadow hairline-border-projects p-6 sm:p-8 w-full max-w-[480px] mb-8 text-center">
           <div className="flex justify-center mb-6">
             <div className="w-[60px] h-[60px] rounded-[16px] bg-indigo-50 flex items-center justify-center text-[#524EEE] shadow-sm">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -463,7 +463,7 @@ export default function OnboardingSteps({
 
   if (step === 3) {
     return (
-      <div className="min-h-screen flex flex-col items-center pt-16 bg-[#F8FAFC]">
+      <div className="min-h-screen flex flex-col items-center pt-16 bg-[#F8FAFC] px-4 w-full box-border">
         <div className="flex items-center gap-2 mb-12">
           <div className="w-2.5 h-2.5 rounded-full bg-[#524EEE]"></div>
           <div className="w-8 h-[2px] bg-[#524EEE]"></div>

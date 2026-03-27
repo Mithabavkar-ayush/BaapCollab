@@ -464,7 +464,7 @@ export default function Dashboard() {
 
   return (
     <div className={`min-h-screen bg-[#F8FAFC] ${inter.className}`}>
-      <header className="fixed top-0 left-0 right-0 min-h-[5rem] bg-white/80 backdrop-blur-md z-[1000] border-b border-gray-100/50 flex items-center justify-between px-[5%] py-4 flex-nowrap gap-6">
+      <header className="fixed top-0 left-0 right-0 min-h-[5rem] bg-white/80 backdrop-blur-md z-[1000] border-b border-gray-100/50 flex items-center justify-between px-4 md:px-8 lg:px-16 py-4 flex-nowrap gap-6">
         <div className="flex items-center gap-3 shrink-0 flex-shrink-0">
           <Link href="/">
             <div className="flex items-center gap-2 group transition-transform hover:scale-105 active:scale-95 cursor-pointer">
@@ -539,7 +539,7 @@ export default function Dashboard() {
 
           <div
             onClick={() => setActiveTab('settings')}
-            className="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center overflow-hidden border-2 border-white shadow-md hover:scale-105 transition-transform cursor-pointer group"
+            className="w-10 h-10 shrink-0 rounded-full bg-orange-500 flex items-center justify-center overflow-hidden border-2 border-white shadow-md hover:scale-105 transition-transform cursor-pointer group"
           >
             {user?.picture ? (
               <img src={user.picture} alt="" className="w-full h-full object-cover" />
@@ -567,7 +567,7 @@ export default function Dashboard() {
       </header>
 
 
-      <main className="w-full max-w-[1920px] mx-auto pt-[100px] pb-[100px] md:pb-20 px-6 xl:px-12">
+      <main className="w-full max-w-[1920px] mx-auto pt-[100px] pb-[100px] md:pb-20 px-4 md:px-8 lg:px-16 overflow-x-hidden">
         {activeTab === 'dashboard' && (
           <DashboardHome
             user={user}
@@ -624,21 +624,21 @@ export default function Dashboard() {
       <nav className="md:hidden fixed bottom-0 left-0 right-0 h-20 bg-white/90 backdrop-blur-md border-t border-gray-100 shadow-[0_-10px_40px_rgba(0,0,0,0.05)] z-[1000] flex justify-around items-center px-4 pb-2">
         <button
           onClick={() => { setActiveTab('dashboard'); fetchData(); }}
-          className={`flex flex-col items-center justify-center p-2 rounded-xl transition-all ${activeTab === 'dashboard' ? 'text-[#524EEE] scale-110' : 'text-gray-400 hover:text-gray-600'}`}
+          className={`flex flex-col items-center justify-center p-2 min-h-[44px] min-w-[44px] rounded-xl transition-all ${activeTab === 'dashboard' ? 'text-[#524EEE] scale-110' : 'text-gray-400 hover:text-gray-600'}`}
         >
           <svg className="w-6 h-6 mb-1" fill={activeTab === 'dashboard' ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={activeTab === 'dashboard' ? "1.5" : "2"} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
           <span className="text-[10px] font-bold uppercase tracking-wider">Home</span>
         </button>
         <button
           onClick={() => setActiveTab('projects')}
-          className={`flex flex-col items-center justify-center p-2 rounded-xl transition-all ${activeTab === 'projects' ? 'text-[#524EEE] scale-110' : 'text-gray-400 hover:text-gray-600'}`}
+          className={`flex flex-col items-center justify-center p-2 min-h-[44px] min-w-[44px] rounded-xl transition-all ${activeTab === 'projects' ? 'text-[#524EEE] scale-110' : 'text-gray-400 hover:text-gray-600'}`}
         >
           <svg className="w-6 h-6 mb-1" fill={activeTab === 'projects' ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={activeTab === 'projects' ? "1.5" : "2"} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
           <span className="text-[10px] font-bold uppercase tracking-wider">Projects</span>
         </button>
         <button
           onClick={() => setActiveTab('forum')}
-          className={`flex flex-col items-center justify-center p-2 rounded-xl transition-all ${activeTab === 'forum' ? 'text-[#524EEE] scale-110' : 'text-gray-400 hover:text-gray-600'}`}
+          className={`flex flex-col items-center justify-center p-2 min-h-[44px] min-w-[44px] rounded-xl transition-all ${activeTab === 'forum' ? 'text-[#524EEE] scale-110' : 'text-gray-400 hover:text-gray-600'}`}
         >
           <svg className="w-6 h-6 mb-1" fill={activeTab === 'forum' ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={activeTab === 'forum' ? "1.5" : "2"} d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" /></svg>
           <span className="text-[10px] font-bold uppercase tracking-wider">Forum</span>

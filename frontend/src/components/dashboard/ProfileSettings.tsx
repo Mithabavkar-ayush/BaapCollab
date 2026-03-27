@@ -34,8 +34,8 @@ export default function ProfileSettings({
             </div>
 
             {/* Identity Card */}
-            <div className="bg-white rounded-3xl premium-shadow premium-hover p-8 flex items-center gap-6">
-                <div className="w-20 h-20 rounded-full bg-indigo-50 flex items-center justify-center text-[#524EEE] text-2xl font-bold shadow-inner overflow-hidden">
+            <div className="bg-white rounded-3xl premium-shadow premium-hover p-6 md:p-8 flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-6 text-center md:text-left">
+                <div className="w-20 h-20 md:w-24 md:h-24 shrink-0 rounded-full bg-indigo-50 flex items-center justify-center text-[#524EEE] text-2xl md:text-3xl font-bold shadow-inner overflow-hidden">
                     {user?.picture && !imgError ? (
                         <img
                             src={user.picture}
@@ -51,7 +51,7 @@ export default function ProfileSettings({
                 <div>
                     <h2 className="text-2xl font-bold text-[#111827]">{user?.name || "Baap Student"}</h2>
                     <p className="text-gray-500 mb-3">{user?.email}</p>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center justify-center md:justify-start gap-2">
                         <span className="px-3 py-1 bg-zinc-100 border border-gray-200 rounded-full text-xs font-bold text-gray-600">Student</span>
                         <span className="px-3 py-1 bg-emerald-50 border border-emerald-100 rounded-full text-xs font-bold text-emerald-600">verified</span>
                     </div>
@@ -59,7 +59,7 @@ export default function ProfileSettings({
             </div>
 
             {/* College Information */}
-            <div className="bg-white rounded-3xl premium-shadow premium-hover p-8">
+            <div className="bg-white rounded-3xl premium-shadow premium-hover p-6 md:p-8">
                 <div className="flex items-center gap-3 mb-6">
                     <div className="p-2 bg-zinc-50 rounded-lg">🏢</div>
                     <h3 className="font-bold text-gray-900">College Information</h3>
@@ -71,7 +71,7 @@ export default function ProfileSettings({
             </div>
 
             {/* Personal Information Form */}
-            <div className="bg-white rounded-3xl premium-shadow premium-hover p-8">
+            <div className="bg-white rounded-3xl premium-shadow premium-hover p-6 md:p-8">
                 <div className="flex items-center gap-3 mb-8">
                     <div className="p-2 bg-zinc-50 rounded-lg">👤</div>
                     <div>

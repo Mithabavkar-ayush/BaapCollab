@@ -137,10 +137,10 @@ export default function ProjectList({
             </div>
 
             {/* Projects List */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-full lg:max-w-6xl w-full mx-auto">
                 {displayPosts.length > 0 ? displayPosts.map((post: any) => (
-                    <div key={post.id} className="bg-white rounded-2xl border border-gray-100 p-[25px] shadow-sm hover:shadow-md hover:border-indigo-100 transition-all cursor-pointer group">
-                        <div className="flex items-center justify-between mb-3">
+                    <div key={post.id} className="bg-white rounded-2xl border border-gray-100 p-5 md:p-[25px] shadow-sm hover:shadow-md hover:border-indigo-100 transition-all cursor-pointer group flex flex-col h-full">
+                        <div className="flex items-start md:items-center justify-between gap-3 mb-3 flex-col md:flex-row">
                             <h3 className="font-black text-2xl text-[#111827] tracking-tight group-hover:text-[#524EEE] transition-colors">{post.title}</h3>
                             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest bg-gray-50 px-2 py-1 rounded-md">
                                     {(() => {
@@ -158,10 +158,10 @@ export default function ProjectList({
                                     })()}
                             </span>
                         </div>
-                        <p className="text-gray-500 leading-relaxed mb-8 text-sm font-medium">{post.content}</p>
-                        <div className="flex items-center justify-between pt-5 border-t border-gray-50">
-                            <div className="flex items-center gap-3">
-                                <Link href={`/profile/${post.author_id}`} className="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-500 shadow-inner overflow-hidden border border-white cursor-pointer hover:ring-2 hover:ring-indigo-400/50 transition-all">
+                        <p className="text-gray-500 leading-relaxed mb-8 text-sm font-medium flex-1">{post.content}</p>
+                        <div className="flex items-center justify-between pt-5 border-t border-gray-50 mt-auto flex-wrap gap-4">
+                            <div className="flex items-center gap-3 w-full sm:w-auto">
+                                <Link href={`/profile/${post.author_id}`} className="w-8 h-8 shrink-0 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-500 shadow-inner overflow-hidden border border-white cursor-pointer hover:ring-2 hover:ring-indigo-400/50 transition-all">
                                     {post.author_picture ? (
                                         <img src={post.author_picture} alt="" className="w-full h-full object-cover" />
                                     ) : (
@@ -257,7 +257,7 @@ export default function ProjectList({
                             <div className="flex flex-col gap-3 max-h-[60vh] overflow-y-auto pr-2">
                                 {applicantsData.map(app => (
                                     <Link key={app.id} href={`/profile/${app.id}`} className="flex items-center gap-4 p-4 rounded-2xl border border-gray-100 bg-white hover:border-indigo-200 hover:shadow-md transition-all group">
-                                        <div className="w-12 h-12 rounded-full bg-indigo-50 border border-gray-100 overflow-hidden flex items-center justify-center text-indigo-500 shrink-0">
+                                        <div className="w-12 h-12 shrink-0 rounded-full bg-indigo-50 border border-gray-100 overflow-hidden flex items-center justify-center text-indigo-500">
                                             {app.picture ? (
                                                 <img src={app.picture} alt="" className="w-full h-full object-cover" />
                                             ) : (

@@ -368,7 +368,7 @@ function PostCard({
                             <button
                                 onClick={() => setShowDeleteModal(true)}
                                 title="Delete post"
-                                className="ml-2 p-2 rounded-xl text-gray-300 hover:text-red-400 hover:bg-red-50 transition-all shrink-0"
+                                className="ml-2 p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl text-gray-300 hover:text-red-400 hover:bg-red-50 transition-all shrink-0"
                             >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -382,7 +382,7 @@ function PostCard({
                 <div className="px-6 pb-4 flex items-center gap-4">
                     <button
                         onClick={handleToggle}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-2xl text-sm font-bold transition-all ${expanded
+                        className={`flex items-center gap-2 px-4 py-2 min-h-[44px] rounded-2xl text-sm font-bold transition-all ${expanded
                             ? "bg-[#10B981] text-white shadow-sm"
                             : "bg-zinc-50 text-zinc-600 hover:bg-emerald-50 hover:text-emerald-600 ultra-slim-border-hover"
                             }`}
@@ -423,7 +423,7 @@ function PostCard({
                                                         {String(c.author_id) === String(loggedInUser?.id) && editingId !== c.id && (
                                                             <button
                                                                 onClick={() => { setEditingId(c.id); setEditContent(c.content); }}
-                                                                className="opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-[#10B981] transition-all"
+                                                                className="opacity-0 group-hover:opacity-100 p-2 min-h-[44px] min-w-[44px] flex items-center justify-center -ml-2 text-gray-400 hover:text-[#10B981] transition-all"
                                                                 title="Edit assist"
                                                             >
                                                                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -435,7 +435,7 @@ function PostCard({
                                                         {(String(c.author_id) === String(loggedInUser?.id) || isOwner) && editingId !== c.id && (
                                                             <button
                                                                 onClick={() => handleDeleteComment(c.id)}
-                                                                className="opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-red-500 transition-all ml-1"
+                                                                className="opacity-0 group-hover:opacity-100 p-2 min-h-[44px] min-w-[44px] flex items-center justify-center text-gray-400 hover:text-red-500 transition-all ml-1"
                                                                 title="Delete assist"
                                                             >
                                                                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -541,12 +541,12 @@ function PostCard({
                                             onChange={e => setCommentInput(e.target.value)}
                                             onKeyDown={e => e.key === "Enter" && !submitting && handleSubmitComment()}
                                             placeholder="Write an assist…"
-                                            className="w-full flex-1 px-4 py-2.5 rounded-2xl text-sm bg-zinc-50 hairline-mint placeholder-gray-400 ultra-slim-border"
+                                            className="w-full flex-1 px-4 py-2.5 min-h-[44px] rounded-2xl text-sm bg-zinc-50 hairline-mint placeholder-gray-400 ultra-slim-border"
                                         />
                                         <button
                                             onClick={handleSubmitComment}
                                             disabled={submitting || !commentInput.trim()}
-                                            className="px-4 py-2.5 bg-[#10B981] text-white rounded-2xl text-sm font-bold hover:opacity-90 transition-all disabled:opacity-50"
+                                            className="px-4 py-2.5 min-h-[44px] bg-[#10B981] text-white rounded-2xl text-sm font-bold hover:opacity-90 transition-all disabled:opacity-50"
                                         >
                                             {submitting ? "…" : "Post"}
                                         </button>
@@ -608,7 +608,7 @@ export default function ForumList({
                 <h2 className="text-[20px] font-bold text-[#111827] premium-heading">Community Forum</h2>
                 <button
                     onClick={() => { setModalType('discussion'); setShowCreateModal(true); }}
-                    className="px-5 py-2.5 bg-[#10B981] text-white rounded-2xl text-sm font-bold shadow-sm hover:opacity-90 transition-opacity flex items-center gap-2"
+                    className="px-4 md:px-5 py-2.5 min-h-[44px] bg-[#10B981] text-white rounded-2xl text-sm font-bold shadow-sm hover:opacity-90 transition-opacity flex items-center gap-2"
                 >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 4v16m8-8H4" />

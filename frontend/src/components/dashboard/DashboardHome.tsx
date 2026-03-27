@@ -50,7 +50,7 @@ export default function DashboardHome({
         <div className="animate-in fade-in duration-500">
             <div className="mb-10 flex flex-col md:flex-row gap-6 md:items-start">
                 <div className="flex-1">
-                    <h1 className="text-[34px] font-bold text-[#111827] mb-1 flex flex-wrap gap-x-2">
+                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#111827] mb-1 flex flex-wrap gap-x-2">
                         <span className="animate-welcome-part">Welcome back,</span>
                         <span className="animate-welcome-part delay-400">
                             {user?.name ? user.name.split(' ')[0] : 'Student'}
@@ -59,12 +59,12 @@ export default function DashboardHome({
                             {user?.name && user.name.split(' ').length > 1 ? user.name.split(' ').slice(1).join(' ') + '!' : '!'}
                         </span>
                     </h1>
-                    <p className="text-[#6B7280] text-[15px] mb-8">{userBranchName} • {user?.department || 'Member'}</p>
+                    <p className="text-[#6B7280] text-sm md:text-base mb-8">{userBranchName} • {user?.department || 'Member'}</p>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                         {/* Identity Card */}
-                        <div className="bg-white rounded-3xl premium-shadow hairline-border-projects p-8 flex items-center gap-6">
-                            <div className="w-20 h-20 rounded-full bg-indigo-50 flex items-center justify-center text-[#524EEE] text-2xl font-bold shadow-inner overflow-hidden border-4 border-white">
+                        <div className="bg-white rounded-3xl premium-shadow hairline-border-projects p-6 md:p-8 flex items-center gap-4 md:gap-6">
+                            <div className="w-16 h-16 md:w-20 md:h-20 shrink-0 rounded-full bg-indigo-50 flex items-center justify-center text-[#524EEE] text-xl md:text-2xl font-bold shadow-inner overflow-hidden border-4 border-white">
                                 {user?.profile_pic_url && !imgError ? (
                                     <img
                                         src={user.profile_pic_url}
@@ -78,7 +78,7 @@ export default function DashboardHome({
                                 )}
                             </div>
                             <div>
-                                <h2 className="text-2xl premium-heading text-[#111827] mb-1">{user?.name || "Baap Student"}</h2>
+                                <h2 className="text-xl md:text-2xl premium-heading text-[#111827] mb-1">{user?.name || "Baap Student"}</h2>
                                 <p className="text-gray-500 text-sm mb-4 premium-spacing">{user?.email}</p>
                                 <div className="flex items-center gap-3">
                                     <span className="flex items-center gap-1.5 px-3 py-1 bg-gray-50 border border-gray-100 rounded-md text-[11px] font-bold text-gray-600 uppercase">
@@ -94,7 +94,7 @@ export default function DashboardHome({
                         </div>
 
                         {/* College Information Card */}
-                        <div className="bg-white rounded-3xl premium-shadow hairline-border-projects p-8">
+                        <div className="bg-white rounded-3xl premium-shadow hairline-border-projects p-6 md:p-8">
                             <div className="flex items-center gap-3 mb-6">
                                 <div className="p-2 bg-indigo-50 rounded-xl text-xl">🏢</div>
                                 <h3 className="premium-heading text-gray-900 text-sm">College Information</h3>
@@ -159,9 +159,9 @@ export default function DashboardHome({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 <button
                     onClick={() => { setModalType('project'); setShowCreateModal(true); }}
-                    className="flex items-center gap-6 p-8 rounded-3xl hairline-border-projects bg-white hover:border-[#524EEE] premium-shadow premium-hover transition-all group text-left"
+                    className="flex items-center gap-4 md:gap-6 p-6 md:p-8 rounded-3xl hairline-border-projects bg-white hover:border-[#524EEE] premium-shadow premium-hover transition-all group text-left"
                 >
-                    <div className="w-16 h-16 rounded-2xl bg-[#524EEE] text-white flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform shadow-lg shadow-indigo-100">
+                    <div className="w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-2xl bg-[#524EEE] text-white flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg shadow-indigo-100">
                         <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 4v16m8-8H4"></path></svg>
                     </div>
                     <div>
@@ -172,9 +172,9 @@ export default function DashboardHome({
 
                 <button
                     onClick={() => { setModalType('discussion'); setShowCreateModal(true); }}
-                    className="flex items-center gap-6 p-8 rounded-3xl hairline-border-helper bg-white hover:border-[#10B981] premium-shadow premium-hover transition-all group text-left"
+                    className="flex items-center gap-4 md:gap-6 p-6 md:p-8 rounded-3xl hairline-border-helper bg-white hover:border-[#10B981] premium-shadow premium-hover transition-all group text-left"
                 >
-                    <div className="w-16 h-16 rounded-2xl bg-[#10B981] text-white flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform shadow-lg shadow-emerald-100">
+                    <div className="w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-2xl bg-[#10B981] text-white flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg shadow-emerald-100">
                         <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
                     </div>
                     <div>

@@ -39,7 +39,7 @@ export default function LeaderboardPage() {
     return (
         <main className={`min-h-screen bg-[#F8FAFC] pb-20 ${inter.className}`}>
             {/* Header */}
-            <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 h-16 flex items-center px-8 justify-between flex-wrap gap-6">
+            <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 h-16 flex items-center px-4 md:px-8 lg:px-16 justify-between flex-wrap gap-6">
                 <div className="flex items-center gap-3">
                     <Link href="/">
                         <div className="flex items-center gap-2 cursor-pointer">
@@ -54,7 +54,7 @@ export default function LeaderboardPage() {
                 </div>
             </nav>
 
-            <div className="max-w-5xl mx-auto px-10 pt-16">
+            <div className="w-full max-w-5xl mx-auto px-4 md:px-8 lg:px-16 pt-16">
                 <div className="mb-14 text-left">
                     <h1 className="text-6xl font-black tracking-tight text-gray-900 mb-4 animate-welcome-part">
                         Community <span className="text-gray-400">Leaders</span>
@@ -82,26 +82,26 @@ export default function LeaderboardPage() {
                                     animationDelay: `${index * 100 + 600}ms`
                                 } as React.CSSProperties}
                             >
-                                <div className="bg-white p-7 pr-5 rounded-[24px] premium-shadow border border-transparent hover:border-[#10B981]/10 transition-all cursor-pointer flex items-center justify-between group ultra-slim-border-hover">
-                                    <div className="flex items-center gap-6">
-                                        <div className="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center font-black text-xl text-gray-400 group-hover:bg-[#10B981]/10 group-hover:text-[#10B981] transition-colors shadow-inner">
+                                <div className="bg-white p-4 md:p-7 md:pr-5 rounded-[24px] premium-shadow border border-transparent hover:border-[#10B981]/10 transition-all cursor-pointer flex flex-col sm:flex-row items-start sm:items-center justify-between group ultra-slim-border-hover w-full max-w-full gap-4 sm:gap-0">
+                                    <div className="flex items-center gap-4 md:gap-6 w-full sm:w-auto overflow-hidden">
+                                        <div className="w-10 h-10 md:w-12 md:h-12 shrink-0 rounded-full bg-gray-50 flex items-center justify-center font-black text-xl text-gray-400 group-hover:bg-[#10B981]/10 group-hover:text-[#10B981] transition-colors shadow-inner">
                                             {index + 1}
                                         </div>
-                                        <div className="w-14 h-14 rounded-full bg-[#EEF2FF] flex items-center justify-center text-[#4F46E5] font-bold text-xl overflow-hidden shadow-inner ring-4 ring-white">
+                                        <div className="w-12 h-12 md:w-14 md:h-14 shrink-0 rounded-full bg-[#EEF2FF] flex items-center justify-center text-[#4F46E5] font-bold text-xl overflow-hidden shadow-inner ring-4 ring-white">
                                             {member.picture ? (
                                                 <img src={member.picture} alt={member.display_name || member.name} className="w-full h-full object-cover" />
                                             ) : (
                                                 <span>{(member.display_name || member.name || '?').charAt(0)}</span>
                                             )}
                                         </div>
-                                        <div>
-                                            <h3 className="font-extrabold text-xl text-gray-900 group-hover:text-black transition-colors">{member.display_name || member.name || "—"}</h3>
-                                            <p className="text-gray-400 text-sm font-semibold tracking-wide uppercase">{member.department || "General Contributor"}</p>
+                                        <div className="flex-1 min-w-0">
+                                            <h3 className="font-extrabold text-lg md:text-xl text-gray-900 group-hover:text-black transition-colors truncate">{member.display_name || member.name || "—"}</h3>
+                                            <p className="text-gray-400 text-xs md:text-sm font-semibold tracking-wide uppercase truncate">{member.department || "General Contributor"}</p>
                                         </div>
                                     </div>
 
-                                    <div className="text-right">
-                                        <div className="text-3xl font-black text-gray-900 group-hover:text-[#10B981] transition-colors leading-none">
+                                    <div className="text-left sm:text-right shrink-0 w-full sm:w-auto pl-14 sm:pl-0 sm:ml-4 flex items-center sm:block gap-2 sm:gap-0">
+                                        <div className="text-2xl md:text-3xl font-black text-gray-900 group-hover:text-[#10B981] transition-colors leading-none">
                                             {member.reward_points}
                                         </div>
                                         <div className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mt-1">Points</div>
