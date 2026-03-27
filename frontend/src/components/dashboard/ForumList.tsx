@@ -14,6 +14,7 @@ interface ForumListProps {
     onPostDeleted: (postId: number) => void;
     latestWsComment?: {postId: number, comment: any} | null;
     latestWsDeletedComment?: {postId: number, commentId: number} | null;
+    latestWsEditedComment?: {postId: number, comment: any} | null;
 }
 
 function Avatar({ picture, profile_pic_url, name, size = 40, authorId }: { picture?: string | null; profile_pic_url?: string | null; name?: string | null; size?: number; authorId?: string | number }) {
@@ -84,6 +85,7 @@ function PostCard({
     token,
     latestWsComment,
     latestWsDeletedComment,
+    latestWsEditedComment,
 }: {
     post: any;
     loggedInUser: any;
@@ -91,6 +93,7 @@ function PostCard({
     token: string | null;
     latestWsComment?: {postId: number, comment: any} | null;
     latestWsDeletedComment?: {postId: number, commentId: number} | null;
+    latestWsEditedComment?: {postId: number, comment: any} | null;
 }) {
     const [expanded, setExpanded] = useState(false);
     const [comments, setComments] = useState<any[]>([]);
@@ -131,6 +134,15 @@ function PostCard({
             setComments(prev => prev.filter(c => c.id !== latestWsDeletedComment.commentId));
         }
     }, [latestWsDeletedComment, expanded, post.id]);
+
+    // Handle real-time incoming edited comments from WebSocket
+    useEffect(() => {
+        if (expanded && latestWsEditedComment && latestWsEditedComment.postId === post.id) {
+            setComments(prev => prev.map(c => 
+                c.id === latestWsEditedComment.comment.id ? latestWsEditedComment.comment : c
+            ));
+        }
+    }, [latestWsEditedComment, expanded, post.id]);
 
     const fetchComments = async () => {
         setLoadingComments(true);
@@ -585,6 +597,7 @@ export default function ForumList({
     onPostDeleted,
     latestWsComment,
     latestWsDeletedComment,
+    latestWsEditedComment,
 }: ForumListProps) {
     const token = typeof window !== "undefined" ? (localStorage.getItem("baap_token") || localStorage.getItem("token")) : null;
 
@@ -616,6 +629,7 @@ export default function ForumList({
                             token={token}
                             latestWsComment={latestWsComment}
                             latestWsDeletedComment={latestWsDeletedComment}
+                            latestWsEditedComment={latestWsEditedComment}
                         />
                     ))}
                 </div>

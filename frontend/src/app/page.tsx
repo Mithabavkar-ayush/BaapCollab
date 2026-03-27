@@ -43,6 +43,7 @@ export default function Dashboard() {
   const [leaderboard, setLeaderboard] = useState<any[]>([]);
   const [latestWsComment, setLatestWsComment] = useState<{postId: number, comment: any} | null>(null);
   const [latestWsDeletedComment, setLatestWsDeletedComment] = useState<{postId: number, commentId: number} | null>(null);
+  const [latestWsEditedComment, setLatestWsEditedComment] = useState<{postId: number, comment: any} | null>(null);
   const [showGuide, setShowGuide] = useState(false);
   const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'forum' | 'settings'>('dashboard');
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -238,6 +239,7 @@ export default function Dashboard() {
   };
 
   // ── Real-Time WebSocket Updates ──
+
   const handleWsMessage = useCallback((data: any) => {
     if (data.type === "new_post" && data.post) {
       const post = data.post;
@@ -282,6 +284,10 @@ export default function Dashboard() {
       setAllForumPosts(decrementCount);
       setForumPosts(decrementCount);
       setLfmPosts(decrementCount);
+    }
+
+    if (data.type === "edit_comment" && data.post_id && data.comment) {
+      setLatestWsEditedComment({ postId: data.post_id, comment: data.comment });
     }
 
     if (data.type === "delete_post" && data.post_id) {
@@ -596,6 +602,7 @@ export default function Dashboard() {
             onPostDeleted={removePostFromState}
             latestWsComment={latestWsComment}
             latestWsDeletedComment={latestWsDeletedComment}
+            latestWsEditedComment={latestWsEditedComment}
           />
         )}
         {activeTab === 'settings' && (

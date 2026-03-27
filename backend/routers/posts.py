@@ -194,7 +194,7 @@ async def create_comment(post_id: int, comment_data: CommentCreate, current_user
         return comment_dict
 
 @router.patch("/{post_id}/comments/{comment_id}")
-def update_comment(post_id: int, comment_id: int, comment_data: CommentUpdate, current_user: User = Depends(get_current_user)):
+async def update_comment(post_id: int, comment_id: int, comment_data: CommentUpdate, current_user: User = Depends(get_current_user)):
     with Session(engine) as session:
         comment = session.get(Comment, comment_id)
         if not comment:
@@ -217,6 +217,13 @@ def update_comment(post_id: int, comment_id: int, comment_data: CommentUpdate, c
         upvotes = session.exec(select(CommentUpvote).where(CommentUpvote.comment_id == comment_id)).all()
         comment_dict["upvote_count"] = len(upvotes)
         comment_dict["user_has_upvoted"] = any(uv.voter_id == current_user.id for uv in upvotes)
+        
+        # Broadcast edited comment to all connected clients
+        await manager.broadcast({
+            "type": "edit_comment",
+            "post_id": post_id,
+            "comment": comment_dict
+        })
         
         return comment_dict
 
