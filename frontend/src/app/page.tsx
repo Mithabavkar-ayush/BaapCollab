@@ -236,30 +236,21 @@ export default function Dashboard() {
     }
   }, [step, authToken, isLoading, userId]);
 
-  const removePostFromState = (postId: number) => {
+  const removePostFromState = useCallback((postId: number) => {
     setLfmPosts(prev => prev.filter(p => p.id !== postId));
     setForumPosts(prev => prev.filter(p => p.id !== postId));
     setAllForumPosts(prev => prev.filter(p => p.id !== postId));
-  };
+  }, []);
 
   // ── Real-Time WebSocket Updates ──
   const handleWsMessage = useCallback((data: any) => {
     if (data.type === "new_post" && data.post) {
       const post = data.post;
       if (post.type === "FORUM") {
-        setAllForumPosts(prev => {
-          if (prev.some(p => p.id === post.id)) return prev;
-          return [post, ...prev];
-        });
-        setForumPosts(prev => {
-          if (prev.some(p => p.id === post.id)) return prev;
-          return [post, ...prev].slice(0, 4);
-        });
+        setAllForumPosts(prev => prev.some(p => p.id === post.id) ? prev : [post, ...prev]);
+        setForumPosts(prev => prev.some(p => p.id === post.id) ? prev : [post, ...prev].slice(0, 4));
       } else if (post.type === "LFM") {
-        setLfmPosts(prev => {
-          if (prev.some(p => p.id === post.id)) return prev;
-          return [post, ...prev].slice(0, 3);
-        });
+        setLfmPosts(prev => prev.some(p => p.id === post.id) ? prev : [post, ...prev].slice(0, 3));
       }
     }
 
@@ -275,13 +266,15 @@ export default function Dashboard() {
       setLfmPosts(updateCount);
     }
 
-    if (data.type === "delete_post" && data.post_id) {
-      console.log("🔌 [WS] Post deleted, removing from state:", data.post_id);
-      removePostFromState(data.post_id);
+    if ((data.type === "delete_post" && data.post_id) || (data.action === "delete_post" && data.id)) {
+      const idToRemove = data.id || data.post_id;
+      console.log("🔌 [WS] Post deleted, removing from state:", idToRemove);
+      removePostFromState(idToRemove);
     }
-  }, []);
+  }, [removePostFromState]);
 
-  useWebSocket(handleWsMessage, step === 4);
+  const tokenForWs = (typeof window !== "undefined" ? (localStorage.getItem('baap_token') || localStorage.getItem('token')) : null) || authToken;
+  useWebSocket(handleWsMessage, step === 4, tokenForWs);
 
   const handleBranchSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

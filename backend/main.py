@@ -8,14 +8,12 @@ import uvicorn
 # Load environment variables at the very start
 load_dotenv()
 
-from routers import auth, posts, rewards
-from ws_manager import manager
-# from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
+from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 
 app = FastAPI(title="BaapCollab API")
 
-# The following line is a duplicate in the provided edit, keeping original structure
-# from fastapi.middleware.cors import CORSMiddleware
+# Essential for Railway/Vercel proxying
+app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")
 
 app.add_middleware(
     CORSMiddleware,
@@ -23,8 +21,9 @@ app.add_middleware(
         "http://localhost:3000",
         "https://baap-collab.vercel.app",
         "https://baapcollab.vercel.app",
+        "https://baap-collab-frontend.vercel.app",
     ],
-    allow_origin_regex=r"https://baap-collab-.*\.vercel\.app",
+    allow_origin_regex=r"https://baap-collab.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -78,17 +77,43 @@ def debug_db_status():
     except Exception as e:
         return {"status": "error", "message": str(e)}
 
+import asyncio
+
 @app.websocket("/ws/feed")
-async def websocket_feed(websocket: WebSocket):
+async def websocket_feed(websocket: WebSocket, token: Optional[str] = None):
+    # Browser WebSockets don't support custom headers, so token must be in the URL query
+    if token:
+        print(f"🔌 [WS CONNECT] Authorized connection (Token provided)")
+    else:
+        print("🔌 [WS CONNECT] Anonymous connection (No token provided)")
+
     await manager.connect(websocket)
+    
+    # Active Heartbeat Task: Send a server-side ping every 20s to bypass Railway timeouts
+    async def heartbeat():
+        try:
+            while True:
+                await asyncio.sleep(20)
+                if websocket.client_state.value == 1: # WebSocketState.CONNECTED
+                    await websocket.send_text(json.dumps({"type": "ping", "timestamp": "server_to_client"}))
+        except:
+            pass
+
+    heartbeat_task = asyncio.create_task(heartbeat())
+
     try:
         while True:
-            # Keep the connection alive; wait for client messages (ping/pong)
-            await websocket.receive_text()
+            # wait for client messages (ping/pong)
+            data = await websocket.receive_text()
+            if data == "ping":
+                await websocket.send_text("pong")
     except WebSocketDisconnect:
         manager.disconnect(websocket)
-    except Exception:
+    except Exception as e:
+        print(f"🔌 WebSocket Error: {e}")
         manager.disconnect(websocket)
+    finally:
+        heartbeat_task.cancel()
 
 @app.get("/")
 def read_root():

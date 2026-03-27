@@ -135,8 +135,8 @@ async def delete_post(post_id: int, current_user: User = Depends(get_current_use
             session.commit()
             print(f"DEBUG: [DELETE SUCCESS] Post {post_id} removed from database")
             
-            # Broadcast deletion to all connected clients
-            await manager.broadcast({"type": "delete_post", "post_id": post_id})
+            # Broadcast deletion to all connected clients in the standardized "action" format
+            await manager.broadcast({"action": "delete_post", "id": post_id})
             
             return {"message": "Post deleted successfully"}
     except HTTPException:
