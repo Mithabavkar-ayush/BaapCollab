@@ -268,20 +268,26 @@ function PostCard({
     };
 
     const handleDeletePost = async () => {
-        // Instant UI Update
-        onPostDeleted(post.id);
-        setShowDeleteModal(false);
-
+        setIsDeleting(true);
         try {
             const res = await apiFetch(`/posts/${post.id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-            if (!res.ok) {
-                console.error("Failed to delete post from server");
+            if (res.ok) {
+                // Remove from local UI only after confirmed success
+                onPostDeleted(post.id);
+                setShowDeleteModal(false);
+            } else {
+                const errData = await res.json().catch(() => ({}));
+                console.error("Failed to delete post from server", errData);
+                alert(`Failed to delete post: ${errData.detail || "Unknown error"}`);
+                setShowDeleteModal(false);
             }
         } catch (err) {
             console.error("Failed to delete post", err);
+            alert("Connection error: Could not reach server to delete post.");
+            setShowDeleteModal(false);
         } finally {
             setIsDeleting(false);
         }

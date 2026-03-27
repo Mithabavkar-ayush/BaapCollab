@@ -105,32 +105,47 @@ def get_posts(type: Optional[str] = None, current_user_id: Optional[int] = None)
 
 @router.delete("/{post_id}")
 async def delete_post(post_id: int, current_user: User = Depends(get_current_user)):
-    with Session(engine) as session:
-        post = session.get(Post, post_id)
-        if not post:
-            raise HTTPException(status_code=404, detail="Post not found")
-        if post.author_id != current_user.id:
-            raise HTTPException(status_code=403, detail="Not authorized to delete this post")
+    print(f"DEBUG: [DELETE START] User {current_user.id} attempting to delete post {post_id}")
+    try:
+        with Session(engine) as session:
+            post = session.get(Post, post_id)
+            if not post:
+                print(f"DEBUG: [DELETE FAILED] Post {post_id} not found")
+                raise HTTPException(status_code=404, detail="Post not found")
+            
+            if post.author_id != current_user.id:
+                print(f"DEBUG: [DELETE FAILED] User {current_user.id} is not the author (author: {post.author_id})")
+                raise HTTPException(status_code=403, detail="Not authorized to delete this post")
 
-        # Delete upvotes on comments, then comments, then post
-        comments = session.exec(select(Comment).where(Comment.post_id == post_id)).all()
-        for comment in comments:
-            upvotes = session.exec(select(CommentUpvote).where(CommentUpvote.comment_id == comment.id)).all()
-            for uv in upvotes:
-                session.delete(uv)
-            session.delete(comment)
-        # Delete project applicants
-        applicants = session.exec(select(ProjectApplicant).where(ProjectApplicant.post_id == post_id)).all()
-        for applicant in applicants:
-            session.delete(applicant)
+            # Sequential nested deletions for referential integrity
+            print(f"DEBUG: [DELETE] Purging comments and upvotes for post {post_id}...")
+            comments = session.exec(select(Comment).where(Comment.post_id == post_id)).all()
+            for comment in comments:
+                upvotes = session.exec(select(CommentUpvote).where(CommentUpvote.comment_id == comment.id)).all()
+                for uv in upvotes:
+                    session.delete(uv)
+                session.delete(comment)
+            
+            print(f"DEBUG: [DELETE] Purging applicants for post {post_id}...")
+            applicants = session.exec(select(ProjectApplicant).where(ProjectApplicant.post_id == post_id)).all()
+            for applicant in applicants:
+                session.delete(applicant)
 
-        session.delete(post)
-        session.commit()
-        
-        # Broadcast deletion to all connected clients
-        await manager.broadcast({"type": "delete_post", "post_id": post_id})
-        
-        return {"message": "Post deleted successfully"}
+            session.delete(post)
+            session.commit()
+            print(f"DEBUG: [DELETE SUCCESS] Post {post_id} removed from database")
+            
+            # Broadcast deletion to all connected clients
+            await manager.broadcast({"type": "delete_post", "post_id": post_id})
+            
+            return {"message": "Post deleted successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        import traceback
+        print(f"❌ CRITICAL ERROR IN delete_post: {e}")
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Server error during deletion: {str(e)}")
 
 @router.get("/{post_id}/comments")
 def get_comments(post_id: int, current_user_id: Optional[int] = None):
