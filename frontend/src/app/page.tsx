@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Inter } from 'next/font/google';
 import Link from 'next/link';
@@ -16,6 +16,7 @@ import CreatePostModal from "@/components/dashboard/CreatePostModal";
 
 const inter = Inter({ subsets: ['latin'] });
 import { API_BASE, apiFetch } from "@/lib/api";
+import { useWebSocket } from "@/lib/useWebSocket";
 const PRODUCTION_DOMAIN = "localhost:3000";
 
 console.log("PRODUCTION_BUILD_V4_API_CENTRALIZED");
@@ -231,6 +232,42 @@ export default function Dashboard() {
     setForumPosts(prev => prev.filter(p => p.id !== postId));
     setAllForumPosts(prev => prev.filter(p => p.id !== postId));
   };
+
+  // ── Real-Time WebSocket Updates ──
+  const handleWsMessage = useCallback((data: any) => {
+    if (data.type === "new_post" && data.post) {
+      const post = data.post;
+      if (post.type === "FORUM") {
+        setAllForumPosts(prev => {
+          if (prev.some(p => p.id === post.id)) return prev;
+          return [post, ...prev];
+        });
+        setForumPosts(prev => {
+          if (prev.some(p => p.id === post.id)) return prev;
+          return [post, ...prev].slice(0, 4);
+        });
+      } else if (post.type === "LFM") {
+        setLfmPosts(prev => {
+          if (prev.some(p => p.id === post.id)) return prev;
+          return [post, ...prev].slice(0, 3);
+        });
+      }
+    }
+
+    if (data.type === "new_comment" && data.post_id) {
+      const updateCount = (posts: any[]) =>
+        posts.map(p =>
+          p.id === data.post_id
+            ? { ...p, comment_count: (p.comment_count || 0) + 1 }
+            : p
+        );
+      setAllForumPosts(updateCount);
+      setForumPosts(updateCount);
+      setLfmPosts(updateCount);
+    }
+  }, []);
+
+  useWebSocket(handleWsMessage, step === 4);
 
   const handleBranchSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

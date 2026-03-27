@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from database import create_db_and_tables
 from dotenv import load_dotenv
@@ -9,6 +9,7 @@ import uvicorn
 load_dotenv()
 
 from routers import auth, posts, rewards
+from ws_manager import manager
 # from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 
 app = FastAPI(title="BaapCollab API")
@@ -76,6 +77,18 @@ def debug_db_status():
             }
     except Exception as e:
         return {"status": "error", "message": str(e)}
+
+@app.websocket("/ws/feed")
+async def websocket_feed(websocket: WebSocket):
+    await manager.connect(websocket)
+    try:
+        while True:
+            # Keep the connection alive; wait for client messages (ping/pong)
+            await websocket.receive_text()
+    except WebSocketDisconnect:
+        manager.disconnect(websocket)
+    except Exception:
+        manager.disconnect(websocket)
 
 @app.get("/")
 def read_root():

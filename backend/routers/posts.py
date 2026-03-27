@@ -4,6 +4,7 @@ from database import engine, Post, User, Comment, CommentUpvote, RewardLog, Proj
 from typing import Optional
 from auth_utils import get_current_user
 from pydantic import BaseModel
+from ws_manager import manager
 
 router = APIRouter()
 
@@ -27,7 +28,7 @@ class CommentUpdate(BaseModel):
     content: str
 
 @router.post("")
-def create_post(post_data: PostCreate, current_user: User = Depends(get_current_user)):
+async def create_post(post_data: PostCreate, current_user: User = Depends(get_current_user)):
     try:
         with Session(engine) as session:
             db_post = Post(
@@ -41,6 +42,18 @@ def create_post(post_data: PostCreate, current_user: User = Depends(get_current_
             session.commit()
             session.refresh(db_post)
             print(f"DEBUG: ✅ Post created successfully with ID {db_post.id}")
+
+            # Build broadcast payload with author info
+            post_dict = db_post.model_dump()
+            post_dict["author_name"] = get_display_name(current_user)
+            post_dict["author_picture"] = current_user.picture
+            post_dict["profile_pic_url"] = current_user.picture
+            post_dict["comment_count"] = 0
+            post_dict["has_applied"] = False
+
+            # Broadcast to all connected WebSocket clients
+            await manager.broadcast({"type": "new_post", "post": post_dict})
+
             return db_post
     except Exception as e:
         import traceback
@@ -145,7 +158,7 @@ def get_comments(post_id: int, current_user_id: Optional[int] = None):
         return comments_with_data
 
 @router.post("/{post_id}/comments")
-def create_comment(post_id: int, comment_data: CommentCreate, current_user: User = Depends(get_current_user)):
+async def create_comment(post_id: int, comment_data: CommentCreate, current_user: User = Depends(get_current_user)):
     with Session(engine) as session:
         post = session.get(Post, post_id)
         if not post:
@@ -166,6 +179,14 @@ def create_comment(post_id: int, comment_data: CommentCreate, current_user: User
         comment_dict["profile_pic_url"] = current_user.picture or None
         comment_dict["upvote_count"] = 0
         comment_dict["user_has_upvoted"] = False
+
+        # Broadcast new comment to all connected clients
+        await manager.broadcast({
+            "type": "new_comment",
+            "post_id": post_id,
+            "comment": comment_dict
+        })
+
         return comment_dict
 
 @router.patch("/{post_id}/comments/{comment_id}")
