@@ -13,6 +13,7 @@ interface ForumListProps {
     loggedInUser: any;
     onPostDeleted: (postId: number) => void;
     latestWsComment?: {postId: number, comment: any} | null;
+    latestWsDeletedComment?: {postId: number, commentId: number} | null;
 }
 
 function Avatar({ picture, profile_pic_url, name, size = 40, authorId }: { picture?: string | null; profile_pic_url?: string | null; name?: string | null; size?: number; authorId?: string | number }) {
@@ -82,12 +83,14 @@ function PostCard({
     onPostDeleted,
     token,
     latestWsComment,
+    latestWsDeletedComment,
 }: {
     post: any;
     loggedInUser: any;
     onPostDeleted: (postId: number) => void;
     token: string | null;
     latestWsComment?: {postId: number, comment: any} | null;
+    latestWsDeletedComment?: {postId: number, commentId: number} | null;
 }) {
     const [expanded, setExpanded] = useState(false);
     const [comments, setComments] = useState<any[]>([]);
@@ -121,6 +124,13 @@ function PostCard({
             });
         }
     }, [latestWsComment, expanded, post.id]);
+
+    // Handle real-time outgoing (deleted) comments from WebSocket
+    useEffect(() => {
+        if (expanded && latestWsDeletedComment && latestWsDeletedComment.postId === post.id) {
+            setComments(prev => prev.filter(c => c.id !== latestWsDeletedComment.commentId));
+        }
+    }, [latestWsDeletedComment, expanded, post.id]);
 
     const fetchComments = async () => {
         setLoadingComments(true);
@@ -574,6 +584,7 @@ export default function ForumList({
     loggedInUser,
     onPostDeleted,
     latestWsComment,
+    latestWsDeletedComment,
 }: ForumListProps) {
     const token = typeof window !== "undefined" ? (localStorage.getItem("baap_token") || localStorage.getItem("token")) : null;
 
@@ -604,6 +615,7 @@ export default function ForumList({
                             onPostDeleted={onPostDeleted}
                             token={token}
                             latestWsComment={latestWsComment}
+                            latestWsDeletedComment={latestWsDeletedComment}
                         />
                     ))}
                 </div>

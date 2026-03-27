@@ -42,6 +42,7 @@ export default function Dashboard() {
   const [allForumPosts, setAllForumPosts] = useState<any[]>([]);
   const [leaderboard, setLeaderboard] = useState<any[]>([]);
   const [latestWsComment, setLatestWsComment] = useState<{postId: number, comment: any} | null>(null);
+  const [latestWsDeletedComment, setLatestWsDeletedComment] = useState<{postId: number, commentId: number} | null>(null);
   const [showGuide, setShowGuide] = useState(false);
   const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'forum' | 'settings'>('dashboard');
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -268,6 +269,19 @@ export default function Dashboard() {
       setAllForumPosts(updateCount);
       setForumPosts(updateCount);
       setLfmPosts(updateCount);
+    }
+
+    if (data.type === "delete_comment" && data.post_id && data.comment_id) {
+      setLatestWsDeletedComment({ postId: data.post_id, commentId: data.comment_id });
+      const decrementCount = (posts: any[]) =>
+        posts.map(p =>
+          p.id === data.post_id
+            ? { ...p, comment_count: Math.max(0, (p.comment_count || 1) - 1) }
+            : p
+        );
+      setAllForumPosts(decrementCount);
+      setForumPosts(decrementCount);
+      setLfmPosts(decrementCount);
     }
 
     if (data.type === "delete_post" && data.post_id) {
@@ -581,6 +595,7 @@ export default function Dashboard() {
             loggedInUser={user}
             onPostDeleted={removePostFromState}
             latestWsComment={latestWsComment}
+            latestWsDeletedComment={latestWsDeletedComment}
           />
         )}
         {activeTab === 'settings' && (
