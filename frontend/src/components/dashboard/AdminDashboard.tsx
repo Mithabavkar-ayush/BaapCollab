@@ -191,27 +191,92 @@ export default function AdminDashboard({ user, token, setToast, latestWsApproval
 
   return (
     <div className="bg-white rounded-3xl p-6 md:p-10 shadow-sm border border-gray-100">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-2">
         <div>
           <h2 className="text-2xl font-black tracking-tight text-gray-900">Admin Panel</h2>
-          <p className="text-gray-500 mt-1">Manage users, roles, and moderation</p>
+          <p className="text-gray-500 mt-1">Manage users, approvals, and platform moderation</p>
         </div>
+      </div>
+
+      {/* Pending Approvals Section */}
+      {usersList.filter(u => !u.is_approved && !u.is_banned && !resolvedUsers[u.id]).length > 0 && (
+        <div className="mb-10 animate-in fade-in slide-in-from-top-4 duration-500">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="relative flex h-3 w-3">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
+            </span>
+            <h3 className="text-lg font-bold text-amber-800">Pending Approvals</h3>
+          </div>
+          
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {usersList.filter(u => !u.is_approved && !u.is_banned && !resolvedUsers[u.id]).map(u => (
+              <div key={u.id} className="bg-amber-50/50 border border-amber-100 rounded-2xl p-5 hover:shadow-md transition-all">
+                <div className="flex justify-between items-start mb-3">
+                  <div>
+                    <h4 className="font-bold text-gray-900">{u.name || "New User"}</h4>
+                    <p className="text-xs text-gray-500">{u.email}</p>
+                  </div>
+                </div>
+                
+                <div className="space-y-2 mb-4">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-bold text-amber-600 uppercase tracking-wider">Institution:</span>
+                    <span className="text-xs text-gray-700 font-medium">{u.institution || "Not specified"}</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="text-[10px] font-bold text-amber-600 uppercase tracking-wider shrink-0 mt-0.5">Skills:</span>
+                    <span className="text-xs text-gray-700 line-clamp-2">{u.skills || "No skills listed"}</span>
+                  </div>
+                </div>
+
+                <div className="flex gap-2">
+                  <button 
+                    onClick={() => handleApprove(u.id, true)}
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2 rounded-xl transition-colors"
+                  >
+                    Approve
+                  </button>
+                  <button 
+                    onClick={() => handleApprove(u.id, false)}
+                    className="flex-1 bg-white border border-red-200 text-red-600 hover:bg-red-50 text-xs font-bold py-2 rounded-xl transition-colors"
+                  >
+                    Reject
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-8 border-b border-gray-100"></div>
+        </div>
+      )}
+
+      {/* Main User Directory */}
+      <div className="flex items-center gap-2 mb-6">
+        <h3 className="text-lg font-bold text-gray-900">User Directory</h3>
+        <span className="bg-gray-100 text-gray-500 text-[10px] font-bold px-2 py-0.5 rounded-full">
+          {usersList.filter(u => u.is_approved || resolvedUsers[u.id]).length} members
+        </span>
       </div>
 
       <div className="overflow-x-auto">
         <table className="w-full border-collapse min-w-[800px]">
           <thead>
             <tr className="border-b border-gray-100 text-left">
-              <th className="py-4 px-4 font-bold text-gray-500 text-sm">Name</th>
-              <th className="py-4 px-4 font-bold text-gray-500 text-sm">Email</th>
-              <th className="py-4 px-4 font-bold text-gray-500 text-sm">Role</th>
-              <th className="py-4 px-4 font-bold text-gray-500 text-sm">Status</th>
-              <th className="py-4 px-4 font-bold text-gray-500 text-sm text-right">Actions</th>
+              <th className="py-4 px-4 font-bold text-gray-500 text-sm italic">Name</th>
+              <th className="py-4 px-4 font-bold text-gray-500 text-sm italic">Email</th>
+              <th className="py-4 px-4 font-bold text-gray-500 text-sm italic">Institution</th>
+              <th className="py-4 px-4 font-bold text-gray-500 text-sm italic">Skills</th>
+              <th className="py-4 px-4 font-bold text-gray-500 text-sm italic">Status</th>
+              <th className="py-4 px-4 font-bold text-gray-500 text-sm italic text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {usersList.map((u) => {
+            {usersList
+              .filter(u => u.is_approved || resolvedUsers[u.id])
+              .map((u) => {
               const restrictAdminTarget = u.id === user.id || u.role === "SUPERADMIN";
+              const currentSessionStatus = resolvedUsers[u.id];
 
               return (
                 <tr key={u.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
@@ -219,36 +284,29 @@ export default function AdminDashboard({ user, token, setToast, latestWsApproval
                     {u.name ? u.name : <span className="text-gray-400 italic">Pending Setup</span>}
                   </td>
                   <td className="py-4 px-4 text-gray-500 text-sm">{u.email}</td>
-                  <td className="py-4 px-4">
-                    <span className={`px-3 py-1 rounded-full text-[10px] font-black tracking-widest ${u.role === 'SUPERADMIN' ? 'bg-purple-100 text-purple-700' : u.role === 'ADMIN' ? 'bg-indigo-100 text-[#524EEE]' : 'bg-gray-100 text-gray-600'}`}>
-                      {u.role}
-                    </span>
+                  <td className="py-4 px-4 text-gray-700 text-sm">
+                    {u.institution || <span className="text-gray-300">—</span>}
                   </td>
-                  <td className="py-4 px-4 text-sm">{getStatusText(u)}</td>
+                  <td className="py-4 px-4 text-gray-500 text-xs max-w-[200px] truncate">
+                    {u.skills || <span className="text-gray-300">—</span>}
+                  </td>
+                  <td className="py-4 px-4 text-sm">
+                    {currentSessionStatus ? (
+                      <span className={`px-2 py-1 rounded-md font-bold text-[10px] uppercase tracking-wider ${currentSessionStatus.status === 'approved' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}>
+                        {currentSessionStatus.status}
+                      </span>
+                    ) : getStatusText(u)}
+                  </td>
                   <td className="py-4 px-4 text-right">
                     <div className="flex items-center justify-end gap-2">
-                       {/* Pending Approval Actions */}
-                       {!u.is_approved && !u.is_banned && (
-                          resolvedUsers[u.id] ? (
-                            <span className={`px-3 py-1.5 rounded-lg text-xs font-bold ${resolvedUsers[u.id].status === 'approved' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}>
-                              {resolvedUsers[u.id].status === 'approved' ? 'Approved' : 'Rejected'}
-                            </span>
-                          ) : (
-                            <>
-                               <button onClick={() => handleApprove(u.id, true)} className="text-xs bg-emerald-100 text-emerald-700 font-bold px-3 py-1.5 rounded-lg hover:bg-emerald-200">Approve</button>
-                               <button onClick={() => handleApprove(u.id, false)} className="text-xs bg-red-100 text-red-700 font-bold px-3 py-1.5 rounded-lg hover:bg-red-200">Reject</button>
-                            </>
-                          )
-                       )}
-
                        {/* SUPERADMIN ONLY MODERATION ACTIONS */}
-                       {isSuper && (u.is_approved || resolvedUsers[u.id]?.status === 'approved') && (
+                       {isSuper ? (
                          <>
                           {/* Ban Toggle */}
                           <button
                             disabled={restrictAdminTarget}
                             onClick={() => handleBanToggle(u.id, u.is_banned)}
-                            className={`text-xs font-bold px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50 ${u.is_banned ? "bg-gray-800 text-white hover:bg-black" : "bg-red-50 text-red-600 hover:bg-red-100"}`}
+                            className={`text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg transition-colors disabled:opacity-30 ${u.is_banned ? "bg-gray-800 text-white hover:bg-black" : "bg-red-50 text-red-600 hover:bg-red-100"}`}
                           >
                             {u.is_banned ? "Unban" : "Ban"}
                           </button>
@@ -256,16 +314,18 @@ export default function AdminDashboard({ user, token, setToast, latestWsApproval
                           {/* Suspend Toggle */}
                           {!u.is_banned && (
                             u.is_suspended ? (
-                              <button disabled={restrictAdminTarget} onClick={() => handleUnsuspend(u.id)} className="text-xs bg-orange-100 text-orange-700 font-bold px-3 py-1.5 rounded-lg disabled:opacity-50 hover:bg-orange-200">
-                                Lift Susp.
+                              <button disabled={restrictAdminTarget} onClick={() => handleUnsuspend(u.id)} className="text-[10px] bg-orange-100 text-orange-700 font-black uppercase tracking-widest px-3 py-1.5 rounded-lg disabled:opacity-30 hover:bg-orange-200">
+                                Lift
                               </button>
                             ) : (
-                              <button disabled={restrictAdminTarget} onClick={() => setSuspendModal({ isOpen: true, targetId: u.id })} className="text-xs bg-orange-50 text-orange-600 font-bold px-3 py-1.5 rounded-lg disabled:opacity-50 hover:bg-orange-100">
-                                Suspend
+                              <button disabled={restrictAdminTarget} onClick={() => setSuspendModal({ isOpen: true, targetId: u.id })} className="text-[10px] bg-orange-50 text-orange-600 font-black uppercase tracking-widest px-3 py-1.5 rounded-lg disabled:opacity-30 hover:bg-orange-100">
+                                Susp.
                               </button>
                             )
                           )}
                          </>
+                       ) : (
+                         <span className="text-[10px] text-gray-300 font-black uppercase tracking-widest">Locked</span>
                        )}
                     </div>
                   </td>
@@ -274,7 +334,7 @@ export default function AdminDashboard({ user, token, setToast, latestWsApproval
             })}
             {usersList.length === 0 && (
               <tr>
-                 <td colSpan={5} className="py-8 text-center text-gray-400">No users found.</td>
+                 <td colSpan={6} className="py-8 text-center text-gray-400">No users found in the system.</td>
               </tr>
             )}
           </tbody>

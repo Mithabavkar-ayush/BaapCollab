@@ -11,16 +11,9 @@ import asyncio
 
 router = APIRouter()
 
-class UserResponse(BaseModel):
-    id: int
-    name: Optional[str]
-    email: str
-    role: str
-    is_banned: bool
-    is_suspended: bool
-    suspended_until: Optional[datetime]
-    is_verified: bool
     is_approved: bool
+    institution: Optional[str] = None
+    skills: Optional[str] = None
 
 class RoleUpdate(BaseModel):
     role: str
@@ -63,7 +56,15 @@ def get_admin_users(current_user: User = Depends(admin_or_superadmin)):
         if current_user.role == "ADMIN":
             query = query.where(User.role == "STUDENT")
         users = session.exec(query).all()
-        return users
+        
+        resp = []
+        for u in users:
+            u_dict = u.model_dump()
+            u_dict["institution"] = u.branch.name if u.branch else "Baap External"
+            # skills is already a field in User model but might need to be explicitly set if model_dump() doesn't handle Relationships
+            # But skills is on the User table directly, so u_dict["skills"] should be there.
+            resp.append(u_dict)
+        return resp
 
 @router.patch("/users/{user_id}/role")
 def update_role(user_id: int, request: RoleUpdate, background_tasks: BackgroundTasks, current_user: User = Depends(superadmin_only)):
