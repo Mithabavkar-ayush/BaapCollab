@@ -199,7 +199,7 @@ export default function AdminDashboard({ user, token, setToast, latestWsApproval
       </div>
 
       {/* Pending Approvals Section */}
-      {usersList.filter(u => !u.is_approved && !u.is_banned && !resolvedUsers[u.id]).length > 0 && (
+      {usersList.filter(u => !u.is_approved && !u.rejection_handled && !u.is_banned && !resolvedUsers[u.id]).length > 0 && (
         <div className="mb-10 animate-in fade-in slide-in-from-top-4 duration-500">
           <div className="flex items-center gap-2 mb-4">
             <span className="relative flex h-3 w-3">
@@ -210,7 +210,7 @@ export default function AdminDashboard({ user, token, setToast, latestWsApproval
           </div>
           
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {usersList.filter(u => !u.is_approved && !u.is_banned && !resolvedUsers[u.id]).map(u => (
+            {usersList.filter(u => !u.is_approved && !u.rejection_handled && !u.is_banned && !resolvedUsers[u.id]).map(u => (
               <div key={u.id} className="bg-amber-50/50 border border-amber-100 rounded-2xl p-5 hover:shadow-md transition-all">
                 <div className="flex justify-between items-start mb-3">
                   <div>
@@ -263,9 +263,9 @@ export default function AdminDashboard({ user, token, setToast, latestWsApproval
         <table className="w-full border-collapse min-w-[800px]">
           <thead>
             <tr className="border-b border-gray-100 text-left">
-              <th className="py-4 px-2 font-bold text-gray-500 text-xs italic w-[150px]">Name</th>
-              <th className="py-4 px-2 font-bold text-gray-500 text-xs italic w-[180px]">Email</th>
-              <th className="py-4 px-2 font-bold text-gray-500 text-xs italic w-[180px]">Institution</th>
+              <th className="py-4 px-2 font-bold text-gray-500 text-xs italic w-[15%]">Name</th>
+              <th className="py-4 px-2 font-bold text-gray-500 text-xs italic w-[20%]">Email</th>
+              <th className="py-4 px-2 font-bold text-gray-500 text-xs italic w-[20%]">Institution</th>
               <th className="py-4 px-2 font-bold text-gray-500 text-xs italic">Skills</th>
               <th className="py-4 px-2 font-bold text-gray-500 text-xs italic w-[100px]">Status</th>
               {isSuper && <th className="py-4 px-2 font-bold text-gray-500 text-xs italic text-right w-[120px]">Actions</th>}

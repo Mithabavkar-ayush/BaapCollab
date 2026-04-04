@@ -21,6 +21,7 @@ class UserResponse(BaseModel):
     suspended_until: Optional[datetime]
     is_verified: bool
     is_approved: bool
+    rejection_handled: bool
     institution: Optional[str] = None
     skills: Optional[str] = None
 
