@@ -497,7 +497,7 @@ export default function OnboardingSteps({
             <input
               name="name"
               type="text"
-              placeholder="e.g., Ayush Mithabavkar"
+              placeholder="e.g., John Doe"
               className="w-full p-3.5 rounded-lg border border-gray-300 outline-none focus:border-[#524EEE] bg-white transition-all"
               value={profileData.name}
               onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
