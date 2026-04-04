@@ -11,6 +11,15 @@ import asyncio
 
 router = APIRouter()
 
+class UserResponse(BaseModel):
+    id: int
+    name: Optional[str]
+    email: str
+    role: str
+    is_banned: bool
+    is_suspended: bool
+    suspended_until: Optional[datetime]
+    is_verified: bool
     is_approved: bool
     institution: Optional[str] = None
     skills: Optional[str] = None

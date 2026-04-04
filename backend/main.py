@@ -20,12 +20,7 @@ app = FastAPI(title="BaapCollab API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "https://baap-collab.vercel.app",
-        "https://baapcollab.vercel.app",
-        "https://baap-collab-65soex72y-ayushs-projects-1c3d55f9.vercel.app",
-    ],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
