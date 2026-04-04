@@ -263,12 +263,12 @@ export default function AdminDashboard({ user, token, setToast, latestWsApproval
         <table className="w-full border-collapse min-w-[800px]">
           <thead>
             <tr className="border-b border-gray-100 text-left">
-              <th className="py-4 px-4 font-bold text-gray-500 text-sm italic">Name</th>
-              <th className="py-4 px-4 font-bold text-gray-500 text-sm italic">Email</th>
-              <th className="py-4 px-4 font-bold text-gray-500 text-sm italic">Institution</th>
-              <th className="py-4 px-4 font-bold text-gray-500 text-sm italic">Skills</th>
-              <th className="py-4 px-4 font-bold text-gray-500 text-sm italic">Status</th>
-              <th className="py-4 px-4 font-bold text-gray-500 text-sm italic text-right">Actions</th>
+              <th className="py-4 px-2 font-bold text-gray-500 text-xs italic w-[150px]">Name</th>
+              <th className="py-4 px-2 font-bold text-gray-500 text-xs italic w-[180px]">Email</th>
+              <th className="py-4 px-2 font-bold text-gray-500 text-xs italic w-[180px]">Institution</th>
+              <th className="py-4 px-2 font-bold text-gray-500 text-xs italic">Skills</th>
+              <th className="py-4 px-2 font-bold text-gray-500 text-xs italic w-[100px]">Status</th>
+              {isSuper && <th className="py-4 px-2 font-bold text-gray-500 text-xs italic text-right w-[120px]">Actions</th>}
             </tr>
           </thead>
           <tbody>
@@ -277,64 +277,78 @@ export default function AdminDashboard({ user, token, setToast, latestWsApproval
               .map((u) => {
               const restrictAdminTarget = u.id === user.id || u.role === "SUPERADMIN";
               const currentSessionStatus = resolvedUsers[u.id];
+              const skillsArray = u.skills ? u.skills.split(',').map((s: string) => s.trim()).filter((s: string) => s !== "") : [];
 
               return (
                 <tr key={u.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
-                  <td className="py-4 px-4 font-medium text-gray-900">
+                  <td className="py-3 px-2 font-semibold text-gray-900 text-sm">
                     {u.name ? u.name : <span className="text-gray-400 italic">Pending Setup</span>}
                   </td>
-                  <td className="py-4 px-4 text-gray-500 text-sm">{u.email}</td>
-                  <td className="py-4 px-4 text-gray-700 text-sm">
+                  <td className="py-3 px-2 text-gray-400 text-[11px] font-medium truncate max-w-[180px]">
+                    {u.email}
+                  </td>
+                  <td className="py-3 px-2 text-gray-700 text-xs truncate max-w-[180px]" title={u.institution || ""}>
                     {u.institution || <span className="text-gray-300">—</span>}
                   </td>
-                  <td className="py-4 px-4 text-gray-500 text-xs max-w-[200px] truncate">
-                    {u.skills || <span className="text-gray-300">—</span>}
-                  </td>
-                  <td className="py-4 px-4 text-sm">
-                    {currentSessionStatus ? (
-                      <span className={`px-2 py-1 rounded-md font-bold text-[10px] uppercase tracking-wider ${currentSessionStatus.status === 'approved' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}>
-                        {currentSessionStatus.status}
-                      </span>
-                    ) : getStatusText(u)}
-                  </td>
-                  <td className="py-4 px-4 text-right">
-                    <div className="flex items-center justify-end gap-2">
-                       {/* SUPERADMIN ONLY MODERATION ACTIONS */}
-                       {isSuper ? (
-                         <>
-                          {/* Ban Toggle */}
-                          <button
-                            disabled={restrictAdminTarget}
-                            onClick={() => handleBanToggle(u.id, u.is_banned)}
-                            className={`text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg transition-colors disabled:opacity-30 ${u.is_banned ? "bg-gray-800 text-white hover:bg-black" : "bg-red-50 text-red-600 hover:bg-red-100"}`}
-                          >
-                            {u.is_banned ? "Unban" : "Ban"}
-                          </button>
-
-                          {/* Suspend Toggle */}
-                          {!u.is_banned && (
-                            u.is_suspended ? (
-                              <button disabled={restrictAdminTarget} onClick={() => handleUnsuspend(u.id)} className="text-[10px] bg-orange-100 text-orange-700 font-black uppercase tracking-widest px-3 py-1.5 rounded-lg disabled:opacity-30 hover:bg-orange-200">
-                                Lift
-                              </button>
-                            ) : (
-                              <button disabled={restrictAdminTarget} onClick={() => setSuspendModal({ isOpen: true, targetId: u.id })} className="text-[10px] bg-orange-50 text-orange-600 font-black uppercase tracking-widest px-3 py-1.5 rounded-lg disabled:opacity-30 hover:bg-orange-100">
-                                Susp.
-                              </button>
-                            )
-                          )}
-                         </>
-                       ) : (
-                         <span className="text-[10px] text-gray-300 font-black uppercase tracking-widest">Locked</span>
-                       )}
+                  <td className="py-3 px-2">
+                    <div className="flex flex-wrap gap-1">
+                      {skillsArray.slice(0, 2).map((skill: string, idx: number) => (
+                        <span key={idx} className="px-2 py-0.5 bg-indigo-50 text-[#524EEE] text-[10px] font-bold rounded-md border border-indigo-100/50">
+                          {skill}
+                        </span>
+                      ))}
+                      {skillsArray.length > 2 && (
+                        <span className="text-[10px] font-black text-gray-400 self-center">
+                          +{skillsArray.length - 2} more
+                        </span>
+                      )}
+                      {skillsArray.length === 0 && <span className="text-gray-300">—</span>}
                     </div>
                   </td>
+                  <td className="py-3 px-2 text-xs">
+                    {currentSessionStatus ? (
+                      <span className={`px-2 py-1 rounded-md font-bold text-[9px] uppercase tracking-wider ${currentSessionStatus.status === 'approved' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}>
+                        {currentSessionStatus.status}
+                      </span>
+                    ) : (
+                        <div className="scale-90 origin-left whitespace-nowrap">
+                            {getStatusText(u)}
+                        </div>
+                    )}
+                  </td>
+                  {isSuper && (
+                    <td className="py-3 px-2 text-right">
+                        <div className="flex items-center justify-end gap-1.5">
+                            {/* Ban Toggle */}
+                            <button
+                                disabled={restrictAdminTarget}
+                                onClick={() => handleBanToggle(u.id, u.is_banned)}
+                                className={`text-[9px] font-black uppercase tracking-wider px-2 py-1.5 rounded-lg transition-colors disabled:opacity-30 ${u.is_banned ? "bg-gray-800 text-white hover:bg-black" : "bg-red-50 text-red-600 hover:bg-red-100"}`}
+                            >
+                                {u.is_banned ? "Unban" : "Ban"}
+                            </button>
+
+                            {/* Suspend Toggle */}
+                            {!u.is_banned && (
+                                u.is_suspended ? (
+                                <button disabled={restrictAdminTarget} onClick={() => handleUnsuspend(u.id)} className="text-[9px] bg-orange-100 text-orange-700 font-black uppercase tracking-wider px-2 py-1.5 rounded-lg disabled:opacity-30 hover:bg-orange-200">
+                                    Lift
+                                </button>
+                                ) : (
+                                <button disabled={restrictAdminTarget} onClick={() => setSuspendModal({ isOpen: true, targetId: u.id })} className="text-[9px] bg-orange-50 text-orange-600 font-black uppercase tracking-wider px-2 py-1.5 rounded-lg disabled:opacity-30 hover:bg-orange-100">
+                                    Susp.
+                                </button>
+                                )
+                            )}
+                        </div>
+                    </td>
+                  )}
                 </tr>
               );
             })}
             {usersList.length === 0 && (
               <tr>
-                 <td colSpan={6} className="py-8 text-center text-gray-400">No users found in the system.</td>
+                 <td colSpan={isSuper ? 6 : 5} className="py-8 text-center text-gray-400">No users found in the system.</td>
               </tr>
             )}
           </tbody>
