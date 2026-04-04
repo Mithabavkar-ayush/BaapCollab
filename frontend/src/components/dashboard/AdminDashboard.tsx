@@ -263,12 +263,11 @@ export default function AdminDashboard({ user, token, setToast, latestWsApproval
         <table className="w-full border-collapse min-w-[800px]">
           <thead>
             <tr className="border-b border-gray-100 text-left">
-              <th className="py-4 px-2 font-bold text-gray-500 text-xs italic w-[15%]">Name</th>
-              <th className="py-4 px-2 font-bold text-gray-500 text-xs italic w-[20%]">Email</th>
-              <th className="py-4 px-2 font-bold text-gray-500 text-xs italic w-[20%]">Institution</th>
-              <th className="py-4 px-2 font-bold text-gray-500 text-xs italic">Skills</th>
-              <th className="py-4 px-2 font-bold text-gray-500 text-xs italic w-[100px]">Status</th>
-              {isSuper && <th className="py-4 px-2 font-bold text-gray-500 text-xs italic text-right w-[120px]">Actions</th>}
+              <th className="py-4 px-3 font-bold text-gray-500 text-xs italic w-1/4">Name</th>
+              <th className="py-4 px-3 font-bold text-gray-500 text-xs italic w-1/4">Email</th>
+              <th className="py-4 px-3 font-bold text-gray-500 text-xs italic w-1/4">Institution</th>
+              <th className="py-4 px-3 font-bold text-gray-500 text-xs italic w-1/4">Status</th>
+              {isSuper && <th className="py-4 px-3 font-bold text-gray-500 text-xs italic text-right w-[120px]">Actions</th>}
             </tr>
           </thead>
           <tbody>
@@ -277,35 +276,19 @@ export default function AdminDashboard({ user, token, setToast, latestWsApproval
               .map((u) => {
               const restrictAdminTarget = u.id === user.id || u.role === "SUPERADMIN";
               const currentSessionStatus = resolvedUsers[u.id];
-              const skillsArray = u.skills ? u.skills.split(',').map((s: string) => s.trim()).filter((s: string) => s !== "") : [];
 
               return (
                 <tr key={u.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
-                  <td className="py-3 px-2 font-semibold text-gray-900 text-sm">
+                  <td className="py-4 px-3 font-semibold text-gray-900 text-sm">
                     {u.name ? u.name : <span className="text-gray-400 italic">Pending Setup</span>}
                   </td>
-                  <td className="py-3 px-2 text-gray-400 text-[11px] font-medium truncate max-w-[180px]">
+                  <td className="py-4 px-3 text-gray-400 text-[11px] font-medium">
                     {u.email}
                   </td>
-                  <td className="py-3 px-2 text-gray-700 text-xs truncate max-w-[180px]" title={u.institution || ""}>
+                  <td className="py-4 px-3 text-gray-700 text-xs font-medium" title={u.institution || ""}>
                     {u.institution || <span className="text-gray-300">—</span>}
                   </td>
-                  <td className="py-3 px-2">
-                    <div className="flex flex-wrap gap-1">
-                      {skillsArray.slice(0, 2).map((skill: string, idx: number) => (
-                        <span key={idx} className="px-2 py-0.5 bg-indigo-50 text-[#524EEE] text-[10px] font-bold rounded-md border border-indigo-100/50">
-                          {skill}
-                        </span>
-                      ))}
-                      {skillsArray.length > 2 && (
-                        <span className="text-[10px] font-black text-gray-400 self-center">
-                          +{skillsArray.length - 2} more
-                        </span>
-                      )}
-                      {skillsArray.length === 0 && <span className="text-gray-300">—</span>}
-                    </div>
-                  </td>
-                  <td className="py-3 px-2 text-xs">
+                  <td className="py-4 px-3 text-xs">
                     {currentSessionStatus ? (
                       <span className={`px-2 py-1 rounded-md font-bold text-[9px] uppercase tracking-wider ${currentSessionStatus.status === 'approved' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}>
                         {currentSessionStatus.status}
@@ -317,7 +300,7 @@ export default function AdminDashboard({ user, token, setToast, latestWsApproval
                     )}
                   </td>
                   {isSuper && (
-                    <td className="py-3 px-2 text-right">
+                    <td className="py-4 px-3 text-right">
                         <div className="flex items-center justify-end gap-1.5">
                             {/* Ban Toggle */}
                             <button
