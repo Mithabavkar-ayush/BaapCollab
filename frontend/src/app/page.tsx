@@ -687,7 +687,13 @@ export default function Dashboard() {
                       </div>
                       <p className="text-[11px] text-gray-500 line-clamp-2 mt-0.5">{n.message}</p>
                       <p className="text-[10px] text-gray-400 font-medium mt-1">
-                        {formatDistanceToNow(parseISO(n.created_at), { addSuffix: true })}
+                        {(() => {
+                           // Ensure n.created_at is treated as UTC if it lacks a timezone indicator
+                           const utcStr = n.created_at.includes('T') && !n.created_at.endsWith('Z') && !n.created_at.includes('+') 
+                               ? `${n.created_at}Z` 
+                               : n.created_at;
+                           return formatDistanceToNow(parseISO(utcStr), { addSuffix: true });
+                        })()}
                       </p>
                     </div>
                   ))

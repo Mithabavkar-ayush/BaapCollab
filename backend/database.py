@@ -137,6 +137,7 @@ class Notification(SQLModel, table=True):
     message: str
     is_read: bool = Field(default=False)
     type: str # approve, role, project, post, assist
+    related_id: Optional[int] = Field(default=None)
     created_at: datetime = Field(
         sa_column=Column(DateTime(timezone=True), server_default=func.now()),
         default_factory=lambda: datetime.now(timezone.utc)

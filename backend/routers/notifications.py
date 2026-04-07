@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select, desc
 from database import engine, Notification, User
 from auth_utils import get_current_user
-from typing import List
+from typing import List, Optional
 
 router = APIRouter()
 
@@ -35,13 +35,14 @@ def mark_all_as_read(current_user: User = Depends(get_current_user)):
         session.commit()
         return {"status": "success", "count": len(unread)}
 
-def create_notification(session: Session, user_id: int, title: str, message: str, type: str):
+def create_notification(session: Session, user_id: int, title: str, message: str, type: str, related_id: Optional[int] = None):
     """Internal helper to create a notification within an existing session transaction."""
     notification = Notification(
         user_id=user_id,
         title=title,
         message=message,
-        type=type
+        type=type,
+        related_id=related_id
     )
     session.add(notification)
     return notification

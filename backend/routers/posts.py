@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
-from database import engine, Post, User, Comment, CommentUpvote, RewardLog, ProjectApplicant
+from database import engine, Post, User, Comment, CommentUpvote, RewardLog, ProjectApplicant, Notification
 from typing import Optional
 from auth_utils import get_current_user
 from pydantic import BaseModel
@@ -389,9 +389,28 @@ def apply_to_project(post_id: int, current_user: User = Depends(get_current_user
         applicant = ProjectApplicant(post_id=post_id, user_id=current_user.id)
         session.add(applicant)
         
-        # Create Notification for project OWNER
-        student_name = get_display_name(current_user)
-        create_notification(session, post.author_id, "New Enrollment", f"{student_name} enrolled in your project: {post.title}", "project")
+        # Create Notification for project OWNER — check for duplicates first
+        # We only notify if they haven't been notified about this specific project/user combo before
+        # Using type='project' and related_id=post.id
+        existing_notif = session.exec(
+            select(Notification).where(
+                Notification.user_id == post.author_id,
+                Notification.type == "project",
+                Notification.related_id == post.id,
+                Notification.message.contains(get_display_name(current_user))
+            )
+        ).first()
+
+        if not existing_notif:
+            student_name = get_display_name(current_user)
+            create_notification(
+                session, 
+                post.author_id, 
+                "New Enrollment", 
+                f"{student_name} enrolled in your project: {post.title}", 
+                "project",
+                related_id=post.id
+            )
         
         session.commit()
         return {"message": "Successfully applied to project", "has_applied": True}
