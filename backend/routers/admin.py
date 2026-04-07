@@ -118,9 +118,8 @@ def update_role(user_id: int, request: RoleUpdate, background_tasks: BackgroundT
 
         try:
             loop = asyncio.get_running_loop()
-            loop.create_task(manager.broadcast_json({
+            loop.create_task(manager.send_to_user(target.id, {
                 "type": "role_update",
-                "user_id": target.id,
                 "new_role": request.role
             }))
         except RuntimeError:
@@ -212,9 +211,8 @@ def approve_new_user(user_id: int, current_user: User = Depends(admin_or_superad
 
         try:
             loop = asyncio.get_running_loop()
-            loop.create_task(manager.broadcast_json({
+            loop.create_task(manager.send_to_user(target.id, {
                 "type": "approval_update",
-                "user_id": target.id,
                 "status": "approved",
                 "acted_by": current_user.name
             }))
@@ -242,9 +240,8 @@ def reject_new_user(user_id: int, current_user: User = Depends(admin_or_superadm
 
         try:
             loop = asyncio.get_running_loop()
-            loop.create_task(manager.broadcast_json({
+            loop.create_task(manager.send_to_user(target.id, {
                 "type": "approval_update",
-                "user_id": target.id,
                 "status": "rejected",
                 "acted_by": current_user.name
             }))

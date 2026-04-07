@@ -10,7 +10,8 @@ import { API_BASE } from "@/lib/api";
  */
 export function useWebSocket(
   onMessage: (data: any) => void,
-  enabled: boolean = true
+  enabled: boolean = true,
+  userId?: number | null
 ) {
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -26,10 +27,14 @@ export function useWebSocket(
     if (!enabled) return;
 
     // Derive WS URL from API_BASE (http→ws, https→wss)
-    const wsUrl = API_BASE
+    let wsUrl = API_BASE
       .replace(/^https:\/\//, "wss://")
       .replace(/^http:\/\//, "ws://")
       + "/ws/feed";
+
+    if (userId) {
+      wsUrl += `?user_id=${userId}`;
+    }
 
 
 

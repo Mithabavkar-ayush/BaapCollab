@@ -77,16 +77,16 @@ def debug_db_status():
         return {"status": "error", "message": str(e)}
 
 @app.websocket("/ws/feed")
-async def websocket_feed(websocket: WebSocket, token: Optional[str] = Query(default=None)):
-    await manager.connect(websocket)
+async def websocket_feed(websocket: WebSocket, user_id: Optional[int] = Query(default=None)):
+    await manager.connect(websocket, user_id)
     try:
         while True:
             # Keep the connection alive; wait for client messages (ping/pong)
             await websocket.receive_text()
     except WebSocketDisconnect:
-        manager.disconnect(websocket)
+        manager.disconnect(websocket, user_id)
     except Exception:
-        manager.disconnect(websocket)
+        manager.disconnect(websocket, user_id)
 
 @app.get("/")
 def read_root():

@@ -49,6 +49,7 @@ export default function Dashboard() {
   const [latestWsApproval, setLatestWsApproval] = useState<{userId: number, status: string, actedBy: string} | null>(null);
   const [showGuide, setShowGuide] = useState(false);
   const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'forum' | 'settings' | 'admin'>('dashboard');
+  const [showRoleModal, setShowRoleModal] = useState<{ isOpen: boolean; role: string; type: 'role' | 'approval' } | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [modalType, setModalType] = useState<'project' | 'discussion'>('project');
   const [authError, setAuthError] = useState<string | null>(null);
@@ -412,8 +413,7 @@ export default function Dashboard() {
       removePostFromState(data.post_id);
     }
 
-    if (data.type === "role_update" && data.user_id && data.new_role) {
-      if (userId === data.user_id) {
+    if (data.type === "role_update" && data.new_role) {
         // Update local state immediately for navbar and dashboard reactivity
         setUser((prev: any) => {
           const updated = { ...prev, role: data.new_role };
@@ -428,44 +428,30 @@ export default function Dashboard() {
           return updated;
         });
 
+        // Show the beautiful modal
+        setShowRoleModal({ isOpen: true, role: data.new_role, type: 'role' });
+
         if (data.new_role === "ADMIN") {
-          // Check has_seen_admin_welcome from the LATEST state (passed in closure or prev)
-          // Note: prev might be more reliable in the setUser callback
-          setUser((currentUser: any) => {
-            if (!currentUser?.has_seen_admin_welcome) {
-              setToast({ message: "🎉 Congratulations! You are now an Admin of BaapCollab!", type: 'success' });
-              
-              // Mark as seen on backend to prevent duplicate toasts on re-login
-              apiFetch(`/admin/users/${data.user_id}/welcome-seen`, {
-                method: 'PATCH',
-                headers: { 'Authorization': `Bearer ${authToken}` }
-              }).catch(err => console.error("Failed to sync welcome-seen:", err));
-              
-              return { ...currentUser, has_seen_admin_welcome: true };
-            }
-            return currentUser;
-          });
+          setActiveTab('admin'); // Auto-switch to admin panel on promotion
         } else if (data.new_role === "STUDENT") {
-          setToast({ message: "Note: Your role has been updated to Student.", type: 'error' });
           if (activeTab === 'admin') setActiveTab('dashboard');
         }
-      }
     }
 
-    if (data.type === "approval_update" && data.user_id && data.status) {
-      setLatestWsApproval({ userId: data.user_id, status: data.status, actedBy: data.acted_by });
-      if (userId !== data.user_id) {
-        // Don't toast the person who was just approved (they get an email or redirect)
-        // But toast other admins
-        if (user?.role === 'ADMIN' || user?.role === 'SUPERADMIN') {
-           const targetUser = data.user_name || "A user";
-           setToast({ message: `${targetUser} was ${data.status} by ${data.acted_by}`, type: 'success' });
-        }
+    if (data.type === "approval_update" && data.status) {
+      // If we are getting this targeted message, it means WE are the one being approved
+      if (data.status === 'approved') {
+        setStep(4);
+        fetchData();
+        setShowRoleModal({ isOpen: true, role: 'STUDENT', type: 'approval' });
+      } else if (data.status === 'rejected') {
+          // Handle rejection if we were active
+          window.location.reload(); 
       }
     }
-  }, [userId, authToken, user, activeTab]);
+  }, [userId, authToken, user, activeTab, step]);
 
-  useWebSocket(handleWsMessage, step === 4);
+  useWebSocket(handleWsMessage, step === 4, user?.id);
 
   const handleBranchSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -896,6 +882,41 @@ export default function Dashboard() {
           modalType={modalType} setShowCreateModal={setShowCreateModal}
           authToken={authToken} onSuccess={fetchData} setToast={setToast}
         />
+      )}
+
+      {/* Real-time Status Update Modal (Promotion/Approval) */}
+      {showRoleModal?.isOpen && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+              <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={() => setShowRoleModal(null)}></div>
+              <div className="bg-white rounded-[40px] w-full max-w-sm p-10 relative z-10 shadow-[0_20px_50px_rgba(0,0,0,0.2)] animate-in fade-in zoom-in-95 duration-300 text-center overflow-hidden">
+                  {/* Background Glow */}
+                  <div className={`absolute -top-24 -left-24 w-48 h-48 rounded-full blur-3xl opacity-20 ${showRoleModal.role === 'ADMIN' ? 'bg-purple-500' : 'bg-emerald-500'}`}></div>
+                  <div className={`absolute -bottom-24 -right-24 w-48 h-48 rounded-full blur-3xl opacity-20 ${showRoleModal.role === 'ADMIN' ? 'bg-indigo-500' : 'bg-blue-500'}`}></div>
+
+                  <div className={`w-24 h-24 rounded-3xl flex items-center justify-center mx-auto mb-8 text-5xl shadow-inner ${showRoleModal.role === 'ADMIN' ? 'bg-purple-50' : 'bg-emerald-50'}`}>
+                      {showRoleModal.type === 'approval' ? '🎉' : (showRoleModal.role === 'ADMIN' ? '👑' : '🎓')}
+                  </div>
+                  
+                  <h3 className="text-3xl font-black text-gray-900 mb-4 tracking-tight leading-tight">
+                      {showRoleModal.type === 'approval' ? "You're Approved!" : (showRoleModal.role === 'ADMIN' ? "Promoted to Admin!" : "Role Updated")}
+                  </h3>
+                  
+                  <p className="text-gray-500 mb-10 text-lg leading-relaxed font-medium">
+                      {showRoleModal.type === 'approval' 
+                          ? "Welcome to BaapCollab! Your account has been verified and you now have full access." 
+                          : (showRoleModal.role === 'ADMIN' 
+                                ? "You've been promoted. The Admin Panel is now unlocked for you." 
+                                : "Your account status has been updated to Student.")}
+                  </p>
+                  
+                  <button 
+                      onClick={() => setShowRoleModal(null)}
+                      className={`w-full py-5 text-white font-bold rounded-[24px] transition-all text-lg shadow-xl active:scale-95 ${showRoleModal.role === 'ADMIN' ? 'bg-[#4F46E5] hover:bg-indigo-600 shadow-indigo-200' : 'bg-[#10B981] hover:bg-emerald-600 shadow-emerald-200'}`}
+                  >
+                      Got it!
+                  </button>
+              </div>
+          </div>
       )}
     </div>
   );
