@@ -453,7 +453,7 @@ export default function Dashboard() {
   }, [authToken, user?.id, step, setShowRoleModal]);
 
   console.log("[WS] Calling useWebSocket, step:", step, "user?.id:", user?.id);
-  useWebSocket(handleWsMessage, step === 4, user?.id);
+  useWebSocket(handleWsMessage, step === 4 && !!user?.id, user?.id);
 
   const handleBranchSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
