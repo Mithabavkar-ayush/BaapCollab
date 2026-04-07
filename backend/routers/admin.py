@@ -78,7 +78,7 @@ def get_admin_users(current_user: User = Depends(admin_or_superadmin)):
         return resp
 
 @router.patch("/users/{user_id}/role")
-def update_role(user_id: int, request: RoleUpdate, background_tasks: BackgroundTasks, current_user: User = Depends(superadmin_only)):
+async def update_role(user_id: int, request: RoleUpdate, background_tasks: BackgroundTasks, current_user: User = Depends(superadmin_only)):
     if current_user.id == user_id:
         raise HTTPException(status_code=400, detail="Cannot change your own role.")
     if request.role not in ["ADMIN", "STUDENT"]:
@@ -116,14 +116,10 @@ def update_role(user_id: int, request: RoleUpdate, background_tasks: BackgroundT
         session.add(target)
         session.commit()
 
-        try:
-            loop = asyncio.get_running_loop()
-            loop.create_task(manager.send_to_user(target.id, {
-                "type": "role_update",
-                "new_role": request.role
-            }))
-        except RuntimeError:
-            pass # fallback if not in event loop
+        await manager.send_to_user(target.id, {
+            "type": "role_update",
+            "new_role": request.role
+        })
 
         return {"message": "Role successfully updated."}
 
