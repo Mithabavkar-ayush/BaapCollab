@@ -414,6 +414,7 @@ export default function Dashboard() {
     }
 
     if (data.type === "role_update" && data.new_role) {
+        console.log("[WS] role_update received:", data);
         // Update local state immediately for navbar and dashboard reactivity
         setUser((prev: any) => {
           const updated = { ...prev, role: data.new_role };
