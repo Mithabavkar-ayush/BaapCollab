@@ -5,6 +5,7 @@ Tracks connected clients and broadcasts events (new posts, comments, etc.)
 
 from fastapi import WebSocket
 import json
+from typing import Optional
 
 
 class ConnectionManager:
