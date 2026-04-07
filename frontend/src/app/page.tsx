@@ -77,7 +77,8 @@ export default function Dashboard() {
     skills: "",
     bio: "",
     linkedin_url: "",
-    github_url: ""
+    github_url: "",
+    profile_pic_url: ""
   });
 
   useEffect(() => {
@@ -90,7 +91,8 @@ export default function Dashboard() {
         skills: user.skills || "",
         bio: user.bio || "",
         linkedin_url: user.linkedin_url || "",
-        github_url: user.github_url || ""
+        github_url: user.github_url || "",
+        profile_pic_url: user.profile_pic_url || ""
       });
     }
   }, [user]);
@@ -401,7 +403,8 @@ export default function Dashboard() {
       skills: profileData.skills,
       bio: profileData.bio,
       linkedin_url: profileData.linkedin_url,
-      github_url: profileData.github_url
+      github_url: profileData.github_url,
+      profile_pic_url: profileData.profile_pic_url
     };
 
     try {
@@ -603,8 +606,8 @@ export default function Dashboard() {
             onClick={() => setActiveTab('settings')}
             className="w-10 h-10 shrink-0 rounded-full bg-orange-500 flex items-center justify-center overflow-hidden border-2 border-white shadow-md hover:scale-105 transition-transform cursor-pointer group"
           >
-            {user?.picture ? (
-              <img src={user.picture} alt="" className="w-full h-full object-cover" />
+            {user?.profile_pic_url || user?.picture ? (
+              <img src={user?.profile_pic_url || user?.picture} alt="" className="w-full h-full object-cover" />
             ) : (
               <span className="text-white font-bold text-sm">{(user?.name || "?").charAt(0)}</span>
             )}

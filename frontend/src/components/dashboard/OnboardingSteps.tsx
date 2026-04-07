@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { SUPPORTED_BRANCHES } from "@/data/institutions";
@@ -58,6 +58,9 @@ export default function OnboardingSteps({
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState("");
   const [otpError, setOtpError] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [otpSuccess, setOtpSuccess] = useState(false);
   const [pendingAuthData, setPendingAuthData] = useState<any>(null);
 
@@ -485,6 +488,75 @@ export default function OnboardingSteps({
         <p className="text-center text-[#6B7280] mb-8 text-[16px]">Final Step: Let the network know who you are</p>
 
         <form onSubmit={handleProfileComplete} className="w-full max-w-[600px] px-4 flex flex-col gap-6">
+          {/* Avatar Upload UI */}
+          <div className="flex flex-col items-center mb-4">
+            <div 
+              className="relative w-24 h-24 rounded-full bg-[#F3F4F6] border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer overflow-hidden group hover:border-[#524EEE] transition-all"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              {profileData.profile_pic_url ? (
+                <img src={profileData.profile_pic_url} alt="Preview" className="w-full h-full object-cover" />
+              ) : isUploading ? (
+                <div className="flex flex-col items-center">
+                  <div className="w-6 h-6 border-2 border-[#524EEE] border-t-transparent rounded-full animate-spin"></div>
+                </div>
+              ) : (
+                <svg className="w-8 h-8 text-gray-400 group-hover:text-[#524EEE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              )}
+              
+              {/* Purple Plus Button Overlay */}
+              <div className="absolute bottom-0 right-0 bg-[#524EEE] w-7 h-7 rounded-full border-2 border-white flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
+                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M12 4v16m8-8H4" />
+                </svg>
+              </div>
+            </div>
+            
+            <input 
+              type="file" 
+              ref={fileInputRef} 
+              className="hidden" 
+              accept="image/jpeg,image/png,image/webp"
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                
+                if (file.size > 5 * 1024 * 1024) {
+                  setUploadError("Image must be less than 5MB");
+                  return;
+                }
+                
+                setUploadError(null);
+                setIsUploading(true);
+                
+                const formData = new FormData();
+                formData.append("file", file);
+                formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "");
+                
+                try {
+                  const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+                  const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+                    method: "POST",
+                    body: formData
+                  });
+                  const data = await res.json();
+                  if (data.secure_url) {
+                    setProfileData({ ...profileData, profile_pic_url: data.secure_url });
+                  } else {
+                    setUploadError("Upload failed. Please try again.");
+                  }
+                } catch (err) {
+                  setUploadError("Network error. Please try again.");
+                } finally {
+                  setIsUploading(false);
+                }
+              }}
+            />
+            {uploadError && <p className="text-red-500 text-xs mt-2 font-medium">{uploadError}</p>}
+            {!uploadError && !profileData.profile_pic_url && !isUploading && <p className="text-gray-400 text-xs mt-2">Add profile picture (optional)</p>}
+          </div>
           <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex gap-3 text-amber-800 text-sm">
             <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />

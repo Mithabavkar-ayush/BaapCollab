@@ -47,7 +47,7 @@ async def create_post(post_data: PostCreate, current_user: User = Depends(get_cu
             post_dict = db_post.model_dump()
             post_dict["author_name"] = get_display_name(current_user)
             post_dict["author_picture"] = current_user.picture
-            post_dict["profile_pic_url"] = current_user.picture
+            post_dict["profile_pic_url"] = current_user.profile_pic_url
             post_dict["comment_count"] = 0
             post_dict["has_applied"] = False
 
@@ -83,7 +83,7 @@ def get_posts(type: Optional[str] = None, current_user_id: Optional[int] = None)
                     post_dict = post.model_dump()
                     post_dict["author_name"] = get_display_name(post.author)
                     post_dict["author_picture"] = post.author.picture if post.author else None
-                    post_dict["profile_pic_url"] = post.author.picture if post.author else None
+                    post_dict["profile_pic_url"] = post.author.profile_pic_url if post.author else None
                     post_dict["comment_count"] = len(post.comments) if post.comments else 0
                     
                     # Check if current user has applied
@@ -146,7 +146,7 @@ def get_comments(post_id: int, current_user_id: Optional[int] = None):
             author = session.get(User, comment.author_id)
             comment_dict["author_name"] = get_display_name(author)
             comment_dict["author_picture"] = author.picture if author else None
-            comment_dict["profile_pic_url"] = author.picture if author else None
+            comment_dict["profile_pic_url"] = author.profile_pic_url if author else None
 
             # Upvote data
             upvotes = session.exec(select(CommentUpvote).where(CommentUpvote.comment_id == comment.id)).all()
@@ -180,7 +180,7 @@ async def create_comment(post_id: int, comment_data: CommentCreate, current_user
         comment_dict = db_comment.model_dump()
         comment_dict["author_name"] = get_display_name(current_user)
         comment_dict["author_picture"] = current_user.picture or None
-        comment_dict["profile_pic_url"] = current_user.picture or None
+        comment_dict["profile_pic_url"] = current_user.profile_pic_url or None
         comment_dict["upvote_count"] = 0
         comment_dict["user_has_upvoted"] = False
 
@@ -403,7 +403,8 @@ def get_project_applicants(post_id: int, current_user: User = Depends(get_curren
                     "id": user.id,
                     "name": user.name,
                     "email": user.email,
-                    "picture": user.picture
+                    "picture": user.picture,
+                    "profile_pic_url": user.profile_pic_url
                 })
                 
         return applicant_data

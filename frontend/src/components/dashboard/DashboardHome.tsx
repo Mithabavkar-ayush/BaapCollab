@@ -366,7 +366,9 @@ export default function DashboardHome({
                     </div>
                     <Link href={leaderboard[0] ? `/profile/${leaderboard[0].id}` : "#"} className="p-6 flex-1 flex flex-col items-center justify-center text-center cursor-pointer group">
                         <div className="w-24 h-24 rounded-full bg-indigo-50 flex items-center justify-center text-[#524EEE] text-3xl font-bold shadow-inner mb-4 overflow-hidden border-4 border-white shrink-0 group-hover:scale-105 transition-transform">
-                            {leaderboard[0]?.display_name ? (
+                            {leaderboard[0]?.profile_pic_url ? (
+                                <img src={leaderboard[0].profile_pic_url} alt="" className="w-full h-full object-cover" />
+                            ) : leaderboard[0]?.display_name ? (
                                 <div className="w-full h-full flex items-center justify-center bg-indigo-100 text-[#524EEE]">
                                     {leaderboard[0].display_name.substring(0, 2).toUpperCase()}
                                 </div>

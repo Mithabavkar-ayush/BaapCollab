@@ -39,6 +39,7 @@ def get_leaderboard():
                 "name": u.name,
                 "display_name": display_name,
                 "picture": u.picture,
+                "profile_pic_url": u.profile_pic_url,
                 "reward_points": points or 0,
                 "department": u.department,
                 "branch_id": u.branch_id,

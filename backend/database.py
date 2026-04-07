@@ -42,6 +42,7 @@ class UserBase(SQLModel):
     bio: Optional[str] = Field(default=None, max_length=255)
     linkedin_url: Optional[str] = Field(default=None, max_length=255)
     github_url: Optional[str] = Field(default=None, max_length=255)
+    profile_pic_url: Optional[str] = Field(default=None)
     reward_points: int = Field(default=0)
     is_first_login: bool = Field(default=True)
     is_approved: bool = Field(default=False)

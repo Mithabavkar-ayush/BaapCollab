@@ -65,7 +65,7 @@ def signup(request: UserSignup, background_tasks: BackgroundTasks):
                 "has_seen_welcome": user.has_seen_welcome,
                 "reward_points": user.reward_points,
                 "picture": user.picture,
-                "profile_pic_url": user.picture,
+                "profile_pic_url": user.profile_pic_url,
                 "role": user.role,
             },
             "requires_onboarding": True,
@@ -176,7 +176,7 @@ def login(request: UserLogin, response: Response, background_tasks: BackgroundTa
                 "has_seen_welcome": user.has_seen_welcome,
                 "reward_points": user.reward_points,
                 "picture": user.picture,
-                "profile_pic_url": user.picture,
+                "profile_pic_url": user.profile_pic_url,
                 "role": user.role,
             },
             "requires_onboarding": user.branch_id is None
@@ -288,6 +288,7 @@ class ProfileUpdate(BaseModel):
     bio: Optional[str] = None
     linkedin_url: Optional[str] = None
     github_url: Optional[str] = None
+    profile_pic_url: Optional[str] = None
 
 @router.patch("/profile")
 def update_profile(details: ProfileUpdate, current_user: User = Depends(get_current_user)):
@@ -310,6 +311,9 @@ def update_profile(details: ProfileUpdate, current_user: User = Depends(get_curr
             user.linkedin_url = details.linkedin_url
         if details.github_url is not None:
             user.github_url = details.github_url
+        if details.profile_pic_url is not None:
+            user.profile_pic_url = details.profile_pic_url
+            user.picture = details.profile_pic_url # Keep picture in sync as fallback
             
         session.add(user)
         session.commit()
@@ -350,6 +354,7 @@ class ProfileDetails(BaseModel):
     bio: str
     linkedin_url: Optional[str] = None
     github_url: Optional[str] = None
+    profile_pic_url: Optional[str] = None
 
 @router.post("/onboarding/details")
 def complete_profile(details: ProfileDetails, background_tasks: BackgroundTasks, current_user: User = Depends(get_current_user)):
@@ -366,6 +371,8 @@ def complete_profile(details: ProfileDetails, background_tasks: BackgroundTasks,
         user.bio = details.bio
         user.linkedin_url = details.linkedin_url
         user.github_url = details.github_url
+        user.profile_pic_url = details.profile_pic_url
+        user.picture = details.profile_pic_url # Keep picture in sync as fallback
         user.has_seen_welcome = False # Ensure guide shows up initially
         user.is_approved = False      # Atomic Lockdown: Trigger verification mandatory
         
@@ -435,7 +442,7 @@ def get_profile(user_id: int):
             "github_url": user.github_url,
             "reward_points": user.reward_points,
             "role": user.role,
-            "profile_pic_url": user.picture,
+            "profile_pic_url": user.profile_pic_url,
         }
 
 @router.patch("/admin/role")

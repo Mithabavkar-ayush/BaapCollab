@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useRef } from "react";
 import { API_BASE, apiFetch } from "@/lib/api";
 
 interface ProfileSettingsProps {
@@ -27,6 +28,9 @@ export default function ProfileSettings({
     setUser,
     setToast
 }: ProfileSettingsProps) {
+    const [isUploading, setIsUploading] = useState(false);
+    const [uploadError, setUploadError] = useState<string | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
     return (
         <div className="lg:col-span-3 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="flex items-center justify-between mb-4">
@@ -35,19 +39,75 @@ export default function ProfileSettings({
 
             {/* Identity Card */}
             <div className="bg-white rounded-3xl premium-shadow premium-hover p-6 md:p-8 flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-6 text-center md:text-left">
-                <div className="w-20 h-20 md:w-24 md:h-24 shrink-0 rounded-full bg-indigo-50 flex items-center justify-center text-[#524EEE] text-2xl md:text-3xl font-bold shadow-inner overflow-hidden">
-                    {user?.picture && !imgError ? (
+                <div 
+                    className="relative w-20 h-20 md:w-24 md:h-24 shrink-0 rounded-full bg-indigo-50 flex items-center justify-center text-[#524EEE] text-2xl md:text-3xl font-bold shadow-inner overflow-hidden border-4 border-white cursor-pointer group"
+                    onClick={() => fileInputRef.current?.click()}
+                >
+                    {profileData.profile_pic_url ? (
                         <img
-                            src={user.picture}
+                            src={profileData.profile_pic_url}
                             alt=""
                             className="w-full h-full object-cover"
                             referrerPolicy="no-referrer"
-                            onError={() => setImgError(true)}
                         />
                     ) : (
                         initials
                     )}
+                    
+                    {/* Upload Overlay */}
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                    </div>
+                    
+                    {isUploading && (
+                        <div className="absolute inset-0 bg-white/60 flex items-center justify-center">
+                            <div className="w-6 h-6 border-2 border-[#524EEE] border-t-transparent rounded-full animate-spin"></div>
+                        </div>
+                    )}
                 </div>
+                
+                <input 
+                    type="file" 
+                    ref={fileInputRef} 
+                    className="hidden" 
+                    accept="image/jpeg,image/png,image/webp"
+                    onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        
+                        if (file.size > 5 * 1024 * 1024) {
+                            setToast({ message: "Image must be less than 5MB", type: 'error' });
+                            return;
+                        }
+                        
+                        setIsUploading(true);
+                        const formData = new FormData();
+                        formData.append("file", file);
+                        formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "");
+                        
+                        try {
+                            const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+                            const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+                                method: "POST",
+                                body: formData
+                            });
+                            const data = await res.json();
+                            if (data.secure_url) {
+                                setProfileData({ ...profileData, profile_pic_url: data.secure_url });
+                                setToast({ message: "Image uploaded! Save changes to apply.", type: 'success' });
+                            } else {
+                                setToast({ message: "Upload failed", type: 'error' });
+                            }
+                        } catch (err) {
+                            setToast({ message: "Network error during upload", type: 'error' });
+                        } finally {
+                            setIsUploading(false);
+                        }
+                    }}
+                />
                 <div>
                     <h2 className="text-2xl font-bold text-[#111827]">{user?.name || "Baap Student"}</h2>
                     <p className="text-gray-500 mb-3">{user?.email}</p>
@@ -88,10 +148,10 @@ export default function ProfileSettings({
                         name: user?.name,
                         department: profileData.dept,
                         graduation_year: parseInt(profileData.year),
-                        skills: profileData.skills,
                         bio: profileData.bio,
                         linkedin_url: profileData.linkedin_url,
-                        github_url: profileData.github_url
+                        github_url: profileData.github_url,
+                        profile_pic_url: profileData.profile_pic_url
                     };
 
                     try {

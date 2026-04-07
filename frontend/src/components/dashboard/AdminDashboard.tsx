@@ -213,9 +213,18 @@ export default function AdminDashboard({ user, token, setToast, latestWsApproval
             {usersList.filter(u => !u.is_approved && !u.rejection_handled && !u.is_banned && !resolvedUsers[u.id]).map(u => (
               <div key={u.id} className="bg-amber-50/50 border border-amber-100 rounded-2xl p-5 hover:shadow-md transition-all">
                 <div className="flex justify-between items-start mb-3">
-                  <div>
-                    <h4 className="font-bold text-gray-900">{u.name || "New User"}</h4>
-                    <p className="text-xs text-gray-500">{u.email}</p>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 overflow-hidden shrink-0 border border-amber-200">
+                      {u.profile_pic_url ? (
+                        <img src={u.profile_pic_url} alt="" className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="font-bold text-xs">{(u.name || "?").charAt(0)}</span>
+                      )}
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-gray-900">{u.name || "New User"}</h4>
+                      <p className="text-xs text-gray-500">{u.email}</p>
+                    </div>
                   </div>
                 </div>
                 
@@ -263,6 +272,7 @@ export default function AdminDashboard({ user, token, setToast, latestWsApproval
         <table className="w-full border-collapse min-w-[800px]">
           <thead>
             <tr className="border-b border-gray-100 text-left">
+              <th className="py-4 px-3 font-bold text-gray-500 text-xs italic w-[60px]">Avatar</th>
               <th className="py-4 px-3 font-bold text-gray-500 text-xs italic w-1/4">Name</th>
               <th className="py-4 px-3 font-bold text-gray-500 text-xs italic w-1/4">Email</th>
               <th className="py-4 px-3 font-bold text-gray-500 text-xs italic w-1/4">Institution</th>
@@ -279,6 +289,15 @@ export default function AdminDashboard({ user, token, setToast, latestWsApproval
 
               return (
                 <tr key={u.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
+                  <td className="py-4 px-3">
+                    <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 overflow-hidden border border-gray-100 shadow-sm">
+                      {u.profile_pic_url ? (
+                        <img src={u.profile_pic_url} alt="" className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="font-bold text-xs">{(u.name || "?").charAt(0)}</span>
+                      )}
+                    </div>
+                  </td>
                   <td className="py-4 px-3 font-semibold text-gray-900 text-sm">
                     {u.name ? u.name : <span className="text-gray-400 italic">Pending Setup</span>}
                   </td>

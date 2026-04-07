@@ -162,8 +162,8 @@ export default function ProjectList({
                         <div className="flex items-center justify-between pt-5 border-t border-gray-50 mt-auto flex-wrap gap-4">
                             <div className="flex items-center gap-3 w-full sm:w-auto">
                                 <Link href={`/profile/${post.author_id}`} className="w-8 h-8 shrink-0 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-500 shadow-inner overflow-hidden border border-white cursor-pointer hover:ring-2 hover:ring-indigo-400/50 transition-all">
-                                    {post.author_picture ? (
-                                        <img src={post.author_picture} alt="" className="w-full h-full object-cover" />
+                                    {post.profile_pic_url ? (
+                                        <img src={post.profile_pic_url} alt="" className="w-full h-full object-cover" />
                                     ) : (
                                         <span className="font-bold text-xs">{(post.author_name || "?").charAt(0)}</span>
                                     )}
@@ -258,8 +258,8 @@ export default function ProjectList({
                                 {applicantsData.map(app => (
                                     <Link key={app.id} href={`/profile/${app.id}`} className="flex items-center gap-4 p-4 rounded-2xl border border-gray-100 bg-white hover:border-indigo-200 hover:shadow-md transition-all group">
                                         <div className="w-12 h-12 shrink-0 rounded-full bg-indigo-50 border border-gray-100 overflow-hidden flex items-center justify-center text-indigo-500">
-                                            {app.picture ? (
-                                                <img src={app.picture} alt="" className="w-full h-full object-cover" />
+                                            {app.profile_pic_url ? (
+                                                <img src={app.profile_pic_url} alt="" className="w-full h-full object-cover" />
                                             ) : (
                                                 <span className="font-bold text-lg">{app.name.charAt(0)}</span>
                                             )}
