@@ -47,6 +47,7 @@ export function useWebSocket(
     };
 
     ws.onmessage = (event) => {
+      console.log("[WS] Raw message received:", event.data);
       try {
         const data = JSON.parse(event.data);
 
