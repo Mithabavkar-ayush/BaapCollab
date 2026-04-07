@@ -270,7 +270,7 @@ export default function Dashboard() {
     const currentToken = tokenOverride || (typeof window !== "undefined" ? (localStorage.getItem('baap_token') || localStorage.getItem('token')) : null) || authToken;
     if (!currentToken || isLoading) return;
     try {
-      const fetchUrl = `/posts?t=${Date.now()}`;
+      const fetchUrl = `/posts?t=${Date.now()}${userId ? `&current_user_id=${userId}` : ''}`;
       const headers = { 'Authorization': `Bearer ${currentToken}` };
       const [postsRes, leaderRes] = await Promise.all([
         apiFetch(fetchUrl, {

@@ -39,11 +39,11 @@ export default function ProjectList({
         e.stopPropagation(); // prevent card click
         if (!loggedInUser) return; // silently ignore if not logged in
 
-        const isUnenrolling = localPosts.find(p => p.id === postId)?.has_applied;
+        const isUnenrolling = localPosts.find(p => p.id === postId)?.is_enrolled;
 
         // Optimistically toggle UI before API response
         setLocalPosts(prev => prev.map(p =>
-            p.id === postId ? { ...p, has_applied: !isUnenrolling } : p
+            p.id === postId ? { ...p, is_enrolled: !isUnenrolling } : p
         ));
         setApplyingId(postId);
 
@@ -59,14 +59,14 @@ export default function ProjectList({
             if (!res.ok) {
                 // Revert optimistic update silently on failure
                 setLocalPosts(prev => prev.map(p =>
-                    p.id === postId ? { ...p, has_applied: isUnenrolling } : p
+                    p.id === postId ? { ...p, is_enrolled: isUnenrolling } : p
                 ));
                 console.error("Enrollment update failed:", await res.json().catch(() => ({})));
             }
         } catch (error) {
             // Revert on network error
             setLocalPosts(prev => prev.map(p =>
-                p.id === postId ? { ...p, has_applied: isUnenrolling } : p
+                p.id === postId ? { ...p, is_enrolled: isUnenrolling } : p
             ));
             console.error("Network error during enrollment:", error);
         } finally {
@@ -187,7 +187,7 @@ export default function ProjectList({
                                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                                     </button>
                                 </div>
-                            ) : post.has_applied ? (
+                            ) : post.is_enrolled ? (
                                 <button
                                     onClick={(e) => handleApply(e, post.id)}
                                     disabled={applyingId === post.id}

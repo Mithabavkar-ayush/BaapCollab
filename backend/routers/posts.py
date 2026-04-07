@@ -111,6 +111,9 @@ def get_posts(type: Optional[str] = None, current_user_id: Optional[int] = None)
                         post_dict["has_applied"] = any(applicant.user_id == current_user_id for applicant in post.applicants)
                     else:
                         post_dict["has_applied"] = False
+                    
+                    # Alias for frontend consistency
+                    post_dict["is_enrolled"] = post_dict["has_applied"]
                         
                     posts_with_authors.append(post_dict)
                 except Exception as e:
