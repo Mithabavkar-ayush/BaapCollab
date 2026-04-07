@@ -108,6 +108,32 @@ export default function Dashboard() {
     } catch (err) {}
   };
 
+  const handleNotificationClick = async (n: any) => {
+    // 1. Mark as read if unread
+    if (!n.is_read) {
+      await markNotificationAsRead(n.id);
+    }
+
+    // 2. Redirect based on type
+    // Backend types: project, post, assist, approve, role
+    switch (n.type) {
+      case 'post':
+      case 'assist':
+        setActiveTab('forum');
+        break;
+      case 'project':
+        setActiveTab('projects');
+        break;
+      case 'approve':
+      case 'role':
+        setActiveTab('dashboard');
+        fetchData(); // Refresh dashboard data if moving there
+        break;
+      default:
+        setActiveTab('dashboard');
+    }
+  };
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
@@ -652,12 +678,12 @@ export default function Dashboard() {
                   notifications.map((n) => (
                     <div 
                       key={n.id} 
-                      onClick={() => !n.is_read && markNotificationAsRead(n.id)}
-                      className={`px-4 py-3 rounded-xl transition-colors cursor-pointer group/item relative ${n.is_read ? 'opacity-60 bg-white' : 'bg-indigo-50/30 hover:bg-indigo-50/50'}`}
+                      onClick={() => handleNotificationClick(n)}
+                      className={`px-4 py-3 rounded-xl transition-all cursor-pointer group/item relative border border-transparent ${n.is_read ? 'opacity-60 bg-white hover:bg-gray-50' : 'bg-indigo-50/30 hover:bg-indigo-50/60 border-indigo-100/20'}`}
                     >
                       <div className="flex justify-between items-start gap-2">
-                        <p className={`text-sm font-bold ${n.is_read ? 'text-gray-600' : 'text-gray-900 group-hover/item:text-[#524EEE]'}`}>{n.title}</p>
-                        {!n.is_read && <span className="w-2 h-2 rounded-full bg-indigo-500 mt-1.5 shrink-0"></span>}
+                        <p className={`text-sm font-bold ${n.is_read ? 'text-gray-600' : 'text-gray-900 group-hover/item:text-[#4F46E5]'}`}>{n.title}</p>
+                        {!n.is_read && <span className="w-2.5 h-2.5 rounded-full bg-[#4F46E5] mt-1.5 shrink-0 shadow-sm border border-white"></span>}
                       </div>
                       <p className="text-[11px] text-gray-500 line-clamp-2 mt-0.5">{n.message}</p>
                       <p className="text-[10px] text-gray-400 font-medium mt-1">
