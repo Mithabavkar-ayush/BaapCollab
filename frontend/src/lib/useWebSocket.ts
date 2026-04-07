@@ -65,7 +65,7 @@ export function useWebSocket(
       console.error("🔌 [WS] Error:", err);
       ws.close();
     };
-  }, [enabled]);
+  }, [enabled, userId]);
 
   const scheduleReconnect = useCallback(() => {
     if (reconnectTimer.current) clearTimeout(reconnectTimer.current);

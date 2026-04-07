@@ -28,7 +28,6 @@ export default function Dashboard() {
   const [step, setStep] = useState(1);
   const [authToken, setAuthToken] = useState<string | null>(null);
   const [user, setUser] = useState<any>(null);
-  const [userId, setUserId] = useState<number | null>(null);
 
   // Debug mode toggle (hidden)
   useEffect(() => {
@@ -261,7 +260,6 @@ export default function Dashboard() {
       if (res.ok) {
         const userData = await res.json();
         setUser(userData);
-        setUserId(userData.id);
 
         if (userData.branch_id === null) {
           router.push("/onboarding");
@@ -305,7 +303,7 @@ export default function Dashboard() {
     const currentToken = tokenOverride || (typeof window !== "undefined" ? (localStorage.getItem('baap_token') || localStorage.getItem('token')) : null) || authToken;
     if (!currentToken || isLoading) return;
     try {
-      const fetchUrl = `/posts?t=${Date.now()}${userId ? `&current_user_id=${userId}` : ''}`;
+      const fetchUrl = `/posts?t=${Date.now()}${user?.id ? `&current_user_id=${user.id}` : ''}`;
       const headers = { 'Authorization': `Bearer ${currentToken}` };
       const [postsRes, leaderRes] = await Promise.all([
         apiFetch(fetchUrl, {
@@ -349,7 +347,7 @@ export default function Dashboard() {
     if (step === 4 && token && !isLoading) {
       fetchData(token);
     }
-  }, [step, authToken, isLoading, userId]);
+  }, [step, authToken, isLoading, user?.id]);
 
   const removePostFromState = (postId: number) => {
     setLfmPosts(prev => prev.filter(p => p.id !== postId));
@@ -449,7 +447,7 @@ export default function Dashboard() {
           window.location.reload(); 
       }
     }
-  }, [userId, authToken, user, activeTab, step]);
+  }, [authToken, user?.id, activeTab, step, setShowRoleModal]);
 
   useWebSocket(handleWsMessage, step === 4, user?.id);
 
@@ -519,7 +517,6 @@ export default function Dashboard() {
       if (res.ok) {
         const updatedUser = await res.json();
         setUser(updatedUser);
-        setUserId(updatedUser.id);
         setStep(4);
         if (!updatedUser.has_seen_welcome) setShowGuide(true);
       } else if (res.status === 401 || res.status === 403) {
@@ -559,7 +556,6 @@ export default function Dashboard() {
           localStorage.setItem('baap_step', '4');
         }
         setStep(4);
-        setUserId(authData.user.id);
         if (!authData.user.has_seen_welcome) {
           setShowGuide(true);
         }
