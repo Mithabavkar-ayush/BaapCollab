@@ -64,6 +64,7 @@ class User(UserBase, table=True):
     reward_logs: List["RewardLog"] = Relationship(back_populates="user")
     comment_upvotes: List["CommentUpvote"] = Relationship(back_populates="voter")
     applications: List["ProjectApplicant"] = Relationship(back_populates="user")
+    notifications: List["Notification"] = Relationship(back_populates="user")
 
 class PostBase(SQLModel):
     title: str
@@ -127,6 +128,20 @@ class AuditLog(SQLModel, table=True):
         default_factory=lambda: datetime.now(timezone.utc)
     )
     details: Optional[str] = Field(default=None)
+
+class Notification(SQLModel, table=True):
+    __tablename__ = "notifications"
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: int = Field(foreign_key="user.id")
+    title: str
+    message: str
+    is_read: bool = Field(default=False)
+    type: str # approve, role, project, post, assist
+    created_at: datetime = Field(
+        sa_column=Column(DateTime(timezone=True), server_default=func.now()),
+        default_factory=lambda: datetime.now(timezone.utc)
+    )
+    user: User = Relationship(back_populates="notifications")
 
 def create_db_and_tables():
     try:

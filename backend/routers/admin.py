@@ -7,6 +7,7 @@ from database import engine, User, AuditLog
 from auth_utils import get_current_user
 from email_utils import send_role_update_email, send_promotion_confirmation_email
 from ws_manager import manager
+from routers.notifications import create_notification
 import asyncio
 
 router = APIRouter()
@@ -105,6 +106,16 @@ def update_role(user_id: int, request: RoleUpdate, background_tasks: BackgroundT
         timestamp_str = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
         background_tasks.add_task(send_promotion_confirmation_email, current_user.email, target.name or 'User', target.email, request.role, timestamp_str)
 
+        # Create Notification for Target User
+        notification_title = "Role Updated"
+        if request.role == "ADMIN":
+            notification_message = "You have been promoted to Admin. You now have access to the Admin Panel."
+        else:
+            notification_message = "Your role has been changed to Student."
+        create_notification(session, target.id, notification_title, notification_message, "role")
+        session.add(target)
+        session.commit()
+
         try:
             loop = asyncio.get_running_loop()
             loop.create_task(manager.broadcast_json({
@@ -193,6 +204,11 @@ def approve_new_user(user_id: int, current_user: User = Depends(admin_or_superad
         
         log_audit(session, "APPROVE_USER", current_user.id, target.id)
         send_access_granted(target.email)
+
+        # Create Notification for Target User
+        create_notification(session, target.id, "Account Approved 🎉", "Your account has been verified. Welcome to BaapCollab!", "approve")
+        session.add(target)
+        session.commit()
 
         try:
             loop = asyncio.get_running_loop()

@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Inter } from 'next/font/google';
 import Link from 'next/link';
+import { formatDistanceToNow, parseISO } from "date-fns";
 import { SUPPORTED_BRANCHES } from "@/data/institutions";
 
 // Modular Components
@@ -53,6 +54,59 @@ export default function Dashboard() {
   const [authError, setAuthError] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
   const [imgError, setImgError] = useState(false);
+
+  // Notification State
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  const fetchNotifications = useCallback(async () => {
+    if (typeof window === "undefined") return;
+    const token = localStorage.getItem('baap_token') || localStorage.getItem('token');
+    if (!token) return;
+
+    try {
+      const res = await apiFetch(`/notifications?t=${Date.now()}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setNotifications(data);
+        setUnreadCount(data.filter((n: any) => !n.is_read).length);
+      }
+    } catch (err) {
+      console.error("Failed to fetch notifications", err);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (authToken && user) {
+      fetchNotifications();
+      const interval = setInterval(fetchNotifications, 30000);
+      return () => clearInterval(interval);
+    }
+  }, [authToken, user, fetchNotifications]);
+
+  const markNotificationAsRead = async (id: number) => {
+    if (!authToken) return;
+    try {
+      const res = await apiFetch(`/notifications/${id}/read`, {
+          method: 'PATCH',
+          headers: { Authorization: `Bearer ${authToken}` }
+      });
+      if (res.ok) fetchNotifications();
+    } catch (err) {}
+  };
+
+  const markAllNotificationsAsRead = async () => {
+    if (!authToken) return;
+    try {
+      const res = await apiFetch(`/notifications/read-all`, {
+          method: 'PATCH',
+          headers: { Authorization: `Bearer ${authToken}` }
+      });
+      if (res.ok) fetchNotifications();
+    } catch (err) {}
+  };
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -573,31 +627,48 @@ export default function Dashboard() {
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
               </svg>
-              <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-[#524EEE] text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-white">
-                3
-              </span>
+              {unreadCount > 0 && (
+                <>
+                  <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-[#4F46E5] text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-white z-10">
+                    {unreadCount}
+                  </span>
+                  <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-[#4F46E5] rounded-full animate-ping border-2 border-white pointer-events-none"></span>
+                </>
+              )}
             </button>
 
             {/* Notifications Dropdown */}
             <div className="absolute right-0 mt-2 w-72 bg-white rounded-2xl shadow-xl border border-gray-100 py-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right group-hover:translate-y-0 translate-y-2 z-[1100]">
-              <div className="px-5 py-2 border-b border-gray-50 mb-2">
+              <div className="px-5 py-2 border-b border-gray-50 mb-2 flex justify-between items-center">
                 <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Notifications</span>
+                {unreadCount > 0 && (
+                  <button onClick={markAllNotificationsAsRead} className="text-[9px] font-bold text-indigo-600 hover:underline">Mark all read</button>
+                )}
               </div>
-              <div className="px-2 space-y-1">
-                {[
-                  { title: "New project invite", disc: "You have been invited to 'AI Research'", time: "2m ago" },
-                  { title: "System update", disc: "Dashboard v3.5 is now live", time: "1h ago" },
-                  { title: "Task assigned", disc: "Complete the UI injection task", time: "3h ago" }
-                ].map((n, i) => (
-                  <div key={i} className="px-4 py-3 hover:bg-gray-50 rounded-xl transition-colors cursor-pointer group/item">
-                    <p className="text-sm font-bold text-gray-700 group-hover/item:text-[#524EEE]">{n.title}</p>
-                    <p className="text-[11px] text-gray-500 line-clamp-1">{n.disc}</p>
-                    <p className="text-[10px] text-gray-400 font-medium mt-1">{n.time}</p>
-                  </div>
-                ))}
+              <div className="px-2 space-y-1 max-h-[320px] overflow-y-auto custom-scrollbar">
+                {notifications.length === 0 ? (
+                   <div className="py-8 text-center text-gray-400 text-xs italic">No notifications yet</div>
+                ) : (
+                  notifications.map((n) => (
+                    <div 
+                      key={n.id} 
+                      onClick={() => !n.is_read && markNotificationAsRead(n.id)}
+                      className={`px-4 py-3 rounded-xl transition-colors cursor-pointer group/item relative ${n.is_read ? 'opacity-60 bg-white' : 'bg-indigo-50/30 hover:bg-indigo-50/50'}`}
+                    >
+                      <div className="flex justify-between items-start gap-2">
+                        <p className={`text-sm font-bold ${n.is_read ? 'text-gray-600' : 'text-gray-900 group-hover/item:text-[#524EEE]'}`}>{n.title}</p>
+                        {!n.is_read && <span className="w-2 h-2 rounded-full bg-indigo-500 mt-1.5 shrink-0"></span>}
+                      </div>
+                      <p className="text-[11px] text-gray-500 line-clamp-2 mt-0.5">{n.message}</p>
+                      <p className="text-[10px] text-gray-400 font-medium mt-1">
+                        {formatDistanceToNow(parseISO(n.created_at), { addSuffix: true })}
+                      </p>
+                    </div>
+                  ))
+                )}
               </div>
               <div className="px-5 py-2 mt-2 border-t border-gray-50 text-center">
-                <button className="text-[10px] font-bold text-[#524EEE] hover:text-[#433fd1] uppercase tracking-widest w-full">View All Activity</button>
+                <button onClick={markAllNotificationsAsRead} className="text-[10px] font-bold text-[#524EEE] hover:text-[#433fd1] uppercase tracking-widest w-full">View All Activity</button>
               </div>
             </div>
           </div>

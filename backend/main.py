@@ -9,7 +9,7 @@ import uvicorn
 # Load environment variables at the very start
 load_dotenv()
 
-from routers import auth, posts, rewards, admin
+from routers import auth, posts, rewards, admin, notifications
 from ws_manager import manager
 # from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 
@@ -52,6 +52,7 @@ app.include_router(auth.router, prefix="/auth", tags=["auth"])
 app.include_router(posts.router, prefix="/posts", tags=["posts"])
 app.include_router(rewards.router, prefix="/rewards", tags=["rewards"])
 app.include_router(admin.router, prefix="/admin", tags=["admin"])
+app.include_router(notifications.router, prefix="/notifications", tags=["notifications"])
 
 # Google OAuth Config
 @app.get("/debug/db-status")

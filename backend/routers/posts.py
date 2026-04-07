@@ -4,6 +4,7 @@ from database import engine, Post, User, Comment, CommentUpvote, RewardLog, Proj
 from typing import Optional
 from auth_utils import get_current_user
 from pydantic import BaseModel
+from routers.notifications import create_notification
 from ws_manager import manager
 
 router = APIRouter()
@@ -50,6 +51,25 @@ async def create_post(post_data: PostCreate, current_user: User = Depends(get_cu
             post_dict["profile_pic_url"] = current_user.profile_pic_url
             post_dict["comment_count"] = 0
             post_dict["has_applied"] = False
+
+            # Create Notification for ALL verified users except creator
+            creator_name = get_display_name(current_user)
+            if post_data.type == "LFM":
+                title = "New Project Posted"
+                message = f"{creator_name} posted a new project: {db_post.title}"
+                type_str = "project"
+            else:
+                title = "New Forum Post"
+                message = f"{creator_name} posted in the forum: {db_post.title}"
+                type_str = "post"
+            
+            verified_users = session.exec(select(User).where(User.is_verified == True, User.id != current_user.id)).all()
+            for u in verified_users:
+                create_notification(session, u.id, title, message, type_str)
+            
+            # Save all notifications
+            session.commit()
+            session.refresh(db_post)
 
             # Broadcast to all connected WebSocket clients
             await manager.broadcast({"type": "new_post", "post": post_dict})
@@ -183,6 +203,12 @@ async def create_comment(post_id: int, comment_data: CommentCreate, current_user
         comment_dict["profile_pic_url"] = current_user.profile_pic_url or None
         comment_dict["upvote_count"] = 0
         comment_dict["user_has_upvoted"] = False
+
+        # Create Notification for post OWNER (if not the one commenting)
+        if post.author_id != current_user.id:
+            student_name = get_display_name(current_user)
+            create_notification(session, post.author_id, "New Assist", f"{student_name} assisted on your post: {post.title}", "assist")
+            session.commit()
 
         # Broadcast new comment to all connected clients
         await manager.broadcast({
@@ -359,6 +385,11 @@ def apply_to_project(post_id: int, current_user: User = Depends(get_current_user
             
         applicant = ProjectApplicant(post_id=post_id, user_id=current_user.id)
         session.add(applicant)
+        
+        # Create Notification for project OWNER
+        student_name = get_display_name(current_user)
+        create_notification(session, post.author_id, "New Enrollment", f"{student_name} enrolled in your project: {post.title}", "project")
+        
         session.commit()
         return {"message": "Successfully applied to project", "has_applied": True}
 
