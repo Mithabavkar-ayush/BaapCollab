@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Inter } from 'next/font/google';
 import Link from 'next/link';
@@ -48,6 +48,8 @@ export default function Dashboard() {
   const [latestWsApproval, setLatestWsApproval] = useState<{userId: number, status: string, actedBy: string} | null>(null);
   const [showGuide, setShowGuide] = useState(false);
   const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'forum' | 'settings' | 'admin'>('dashboard');
+  const activeTabRef = useRef(activeTab);
+  useEffect(() => { activeTabRef.current = activeTab; }, [activeTab]);
   const [showRoleModal, setShowRoleModal] = useState<{ isOpen: boolean; role: string; type: 'role' | 'approval' } | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [modalType, setModalType] = useState<'project' | 'discussion'>('project');
@@ -432,7 +434,7 @@ export default function Dashboard() {
         if (data.new_role === "ADMIN") {
           setActiveTab('admin'); // Auto-switch to admin panel on promotion
         } else if (data.new_role === "STUDENT") {
-          if (activeTab === 'admin') setActiveTab('dashboard');
+          if (activeTabRef.current === 'admin') setActiveTab('dashboard');
         }
     }
 
@@ -447,7 +449,7 @@ export default function Dashboard() {
           window.location.reload(); 
       }
     }
-  }, [authToken, user?.id, activeTab, step, setShowRoleModal]);
+  }, [authToken, user?.id, step, setShowRoleModal]);
 
   useWebSocket(handleWsMessage, step === 4, user?.id);
 
