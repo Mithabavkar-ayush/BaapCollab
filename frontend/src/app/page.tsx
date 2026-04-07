@@ -108,6 +108,40 @@ export default function Dashboard() {
     } catch (err) {}
   };
 
+  const deleteNotification = async (e: React.MouseEvent, id: number) => {
+    e.stopPropagation();
+    if (!authToken) return;
+    
+    const target = notifications.find(n => n.id === id);
+    setNotifications(prev => prev.filter(n => n.id !== id));
+    if (target && !target.is_read) {
+      setUnreadCount(prev => Math.max(0, prev - 1));
+    }
+
+    try {
+      await apiFetch(`/notifications/${id}`, {
+          method: 'DELETE',
+          headers: { Authorization: `Bearer ${authToken}` }
+      });
+    } catch (err) {
+      fetchNotifications(); // Rollback/Sync
+    }
+  };
+
+  const clearAllNotifications = async () => {
+    if (!authToken) return;
+    setNotifications([]);
+    setUnreadCount(0);
+    try {
+      await apiFetch(`/notifications/clear-all`, {
+          method: 'DELETE',
+          headers: { Authorization: `Bearer ${authToken}` }
+      });
+    } catch (err) {
+      fetchNotifications();
+    }
+  };
+
   const handleNotificationClick = async (n: any) => {
     // 1. Mark as read if unread
     if (!n.is_read) {
@@ -667,9 +701,14 @@ export default function Dashboard() {
             <div className="absolute right-0 mt-2 w-72 bg-white rounded-2xl shadow-xl border border-gray-100 py-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right group-hover:translate-y-0 translate-y-2 z-[1100]">
               <div className="px-5 py-2 border-b border-gray-50 mb-2 flex justify-between items-center">
                 <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Notifications</span>
-                {unreadCount > 0 && (
-                  <button onClick={markAllNotificationsAsRead} className="text-[9px] font-bold text-indigo-600 hover:underline">Mark all read</button>
-                )}
+                <div className="flex items-center gap-2">
+                  {unreadCount > 0 && (
+                    <button onClick={markAllNotificationsAsRead} className="text-[9px] font-bold text-indigo-600 hover:underline">Mark all read</button>
+                  )}
+                  {notifications.length > 0 && (
+                    <button onClick={clearAllNotifications} className="text-[9px] font-bold text-red-500 hover:underline">Clear All</button>
+                  )}
+                </div>
               </div>
               <div className="px-2 space-y-1 max-h-[320px] overflow-y-auto custom-scrollbar">
                 {notifications.length === 0 ? (
@@ -682,8 +721,18 @@ export default function Dashboard() {
                       className={`px-4 py-3 rounded-xl transition-all cursor-pointer group/item relative border border-transparent ${n.is_read ? 'opacity-60 bg-white hover:bg-gray-50' : 'bg-indigo-50/30 hover:bg-indigo-50/60 border-indigo-100/20'}`}
                     >
                       <div className="flex justify-between items-start gap-2">
-                        <p className={`text-sm font-bold ${n.is_read ? 'text-gray-600' : 'text-gray-900 group-hover/item:text-[#4F46E5]'}`}>{n.title}</p>
-                        {!n.is_read && <span className="w-2.5 h-2.5 rounded-full bg-[#4F46E5] mt-1.5 shrink-0 shadow-sm border border-white"></span>}
+                        <div className="flex-1 min-w-0">
+                          <p className={`text-sm font-bold truncate ${n.is_read ? 'text-gray-600' : 'text-gray-900 group-hover/item:text-[#4F46E5]'}`}>{n.title}</p>
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0">
+                          {!n.is_read && <span className="w-2 h-2 rounded-full bg-[#4F46E5] shadow-sm border border-white"></span>}
+                          <button 
+                            onClick={(e) => deleteNotification(e, n.id)}
+                            className="opacity-0 group-hover/item:opacity-100 p-1 hover:bg-gray-100 rounded-lg transition-all text-gray-400 hover:text-red-500"
+                          >
+                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                          </button>
+                        </div>
                       </div>
                       <p className="text-[11px] text-gray-500 line-clamp-2 mt-0.5">{n.message}</p>
                       <p className="text-[10px] text-gray-400 font-medium mt-1">

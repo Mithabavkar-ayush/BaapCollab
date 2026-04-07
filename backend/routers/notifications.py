@@ -35,6 +35,26 @@ def mark_all_as_read(current_user: User = Depends(get_current_user)):
         session.commit()
         return {"status": "success", "count": len(unread)}
 
+@router.delete("/clear-all")
+def clear_all_notifications(current_user: User = Depends(get_current_user)):
+    with Session(engine) as session:
+        statement = select(Notification).where(Notification.user_id == current_user.id)
+        notifications = session.exec(statement).all()
+        for n in notifications:
+            session.delete(n)
+        session.commit()
+        return {"status": "success", "count": len(notifications)}
+
+@router.delete("/{notification_id}")
+def delete_notification(notification_id: int, current_user: User = Depends(get_current_user)):
+    with Session(engine) as session:
+        notification = session.get(Notification, notification_id)
+        if not notification or notification.user_id != current_user.id:
+            raise HTTPException(status_code=404, detail="Notification not found")
+        session.delete(notification)
+        session.commit()
+        return {"status": "success"}
+
 def create_notification(session: Session, user_id: int, title: str, message: str, type: str, related_id: Optional[int] = None):
     """Internal helper to create a notification within an existing session transaction."""
     notification = Notification(
