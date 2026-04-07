@@ -5,6 +5,7 @@ import { Inter } from 'next/font/google';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { API_BASE, apiFetch } from "@/lib/api";
+import ConfirmModal from "@/components/ui/ConfirmModal";
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -15,6 +16,19 @@ export default function ProfilePage() {
     const [loading, setLoading] = useState(true);
     const [currentUser, setCurrentUser] = useState<any>(null);
     const [actionLoading, setActionLoading] = useState(false);
+    const [confirmModal, setConfirmModal] = useState<{
+        isOpen: boolean;
+        title: string;
+        description: string;
+        onConfirm: () => void;
+        variant: "primary" | "danger" | "warning";
+    }>({
+        isOpen: false,
+        title: "",
+        description: "",
+        onConfirm: () => {},
+        variant: "primary",
+    });
 
     useEffect(() => {
         if (!id) return;
@@ -195,22 +209,29 @@ export default function ProfilePage() {
                                     {currentUser?.role === "SUPERADMIN" && (
                                         <button
                                             disabled={actionLoading}
-                                            onClick={async () => {
-                                                if (!confirm(`Are you sure you want to PERMANENTLY delete ${profile.name}?`)) return;
-                                                setActionLoading(true);
-                                                const token = localStorage.getItem('baap_token') || localStorage.getItem('token');
-                                                try {
-                                                    const res = await apiFetch(`/auth/admin/users/${profile.id}`, {
-                                                        method: 'DELETE',
-                                                        headers: { 'Authorization': `Bearer ${token}` }
-                                                    });
-                                                    if (res.ok) {
-                                                        alert("User deleted.");
-                                                        window.location.href = "/";
+                                            onClick={() => {
+                                                setConfirmModal({
+                                                    isOpen: true,
+                                                    variant: "danger",
+                                                    title: "Delete User Permanently?",
+                                                    description: `This will immediately and permanently erase ${profile.name}'s account and all associated data from BaapCollab. This action cannot be undone.`,
+                                                    onConfirm: async () => {
+                                                        setConfirmModal(prev => ({ ...prev, isOpen: false }));
+                                                        setActionLoading(true);
+                                                        const token = localStorage.getItem('baap_token') || localStorage.getItem('token');
+                                                        try {
+                                                            const res = await apiFetch(`/auth/admin/users/${profile.id}`, {
+                                                                method: 'DELETE',
+                                                                headers: { 'Authorization': `Bearer ${token}` }
+                                                            });
+                                                            if (res.ok) {
+                                                                window.location.href = "/";
+                                                            }
+                                                        } finally {
+                                                            setActionLoading(false);
+                                                        }
                                                     }
-                                                } finally {
-                                                    setActionLoading(false);
-                                                }
+                                                });
                                             }}
                                             className="px-6 py-3 bg-red-500 text-white rounded-2xl font-bold flex items-center gap-2 hover:bg-red-600 transition-all shadow-lg shadow-red-200"
                                         >
@@ -223,6 +244,15 @@ export default function ProfilePage() {
                     </div>
                 </div>
             </div>
+            
+            <ConfirmModal
+                isOpen={confirmModal.isOpen}
+                variant={confirmModal.variant}
+                title={confirmModal.title}
+                description={confirmModal.description}
+                onConfirm={confirmModal.onConfirm}
+                onCancel={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}
+            />
         </main>
     );
 }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { apiFetch } from "@/lib/api";
+import ConfirmModal from "@/components/ui/ConfirmModal";
 
 interface AdminDashboardProps {
   user: any;
@@ -14,6 +15,19 @@ export default function AdminDashboard({ user, token, setToast, latestWsApproval
   const [loading, setLoading] = useState(true);
   const [suspendModal, setSuspendModal] = useState<{ isOpen: boolean; targetId: number | null }>({ isOpen: false, targetId: null });
   const [suspendDays, setSuspendDays] = useState<string>("3");
+  const [confirmModal, setConfirmModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    description: string;
+    onConfirm: () => void;
+    variant: "primary" | "danger" | "warning";
+  }>({
+    isOpen: false,
+    title: "",
+    description: "",
+    onConfirm: () => {},
+    variant: "primary",
+  });
 
   const isSuper = user?.role === "SUPERADMIN";
 
@@ -59,31 +73,41 @@ export default function AdminDashboard({ user, token, setToast, latestWsApproval
   const handleBanToggle = async (userId: number, currentlyBanned: boolean) => {
     if (!token || !isSuper) return;
     const action = currentlyBanned ? "unban" : "ban";
-    if (!window.confirm(`Are you sure you want to ${action} this user?`)) return;
-
-    try {
-      const res = await apiFetch(`/admin/users/${userId}/ban`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ ban: !currentlyBanned }),
-      });
-      if (res.ok) {
-        setToast({ message: `User ${action}ned successfully`, type: "success" });
-        fetchUsers();
-      } else {
-        if (res.status === 403) setToast({ message: "You do not have permission to perform this action.", type: "error" });
-        else if (res.status === 404) setToast({ message: "User not found.", type: "error" });
-        else {
-          const e = await res.json();
-          setToast({ message: e.detail || `Failed to ${action} user`, type: "error" });
+    
+    setConfirmModal({
+      isOpen: true,
+      variant: currentlyBanned ? "primary" : "danger",
+      title: currentlyBanned ? "Restore User Access?" : "Ban this user?",
+      description: currentlyBanned 
+        ? "This user will regain access to all BaapCollab features immediately."
+        : "This will immediately revoke their access to the platform. They will be notified via email.",
+      onConfirm: async () => {
+        setConfirmModal(prev => ({ ...prev, isOpen: false }));
+        try {
+          const res = await apiFetch(`/admin/users/${userId}/ban`, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ ban: !currentlyBanned }),
+          });
+          if (res.ok) {
+            setToast({ message: `User ${action}ned successfully`, type: "success" });
+            fetchUsers();
+          } else {
+            if (res.status === 403) setToast({ message: "You do not have permission to perform this action.", type: "error" });
+            else if (res.status === 404) setToast({ message: "User not found.", type: "error" });
+            else {
+              const e = await res.json().catch(() => ({}));
+              setToast({ message: e.detail || `Failed to ${action} user`, type: "error" });
+            }
+          }
+        } catch (err) {
+          setToast({ message: "Network error.", type: "error" });
         }
       }
-    } catch (err) {
-      setToast({ message: "Network error.", type: "error" });
-    }
+    });
   };
 
   const handleSuspend = async (e: React.FormEvent) => {
@@ -123,56 +147,74 @@ export default function AdminDashboard({ user, token, setToast, latestWsApproval
 
   const handleUnsuspend = async (userId: number) => {
     if (!token || !isSuper) return;
-    if (!window.confirm(`Are you sure you want to unsuspend this user?`)) return;
-
-    try {
-      const res = await apiFetch(`/admin/users/${userId}/suspend`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ suspend: false }),
-      });
-      if (res.ok) {
-        setToast({ message: "User unsuspended successfully", type: "success" });
-        fetchUsers();
-      } else {
-        if (res.status === 403) setToast({ message: "You do not have permission.", type: "error" });
-        else {
-          const e = await res.json();
-          setToast({ message: e.detail || "Error unsuspending", type: "error" });
+    
+    setConfirmModal({
+      isOpen: true,
+      variant: "primary",
+      title: "Lift Suspension?",
+      description: "Their account will be fully restored and their suspension period will be cleared immediately.",
+      onConfirm: async () => {
+        setConfirmModal(prev => ({ ...prev, isOpen: false }));
+        try {
+          const res = await apiFetch(`/admin/users/${userId}/suspend`, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ suspend: false }),
+          });
+          if (res.ok) {
+            setToast({ message: "User unsuspended successfully", type: "success" });
+            fetchUsers();
+          } else {
+            if (res.status === 403) setToast({ message: "You do not have permission.", type: "error" });
+            else {
+              const e = await res.json().catch(() => ({}));
+              setToast({ message: e.detail || "Error unsuspending", type: "error" });
+            }
+          }
+        } catch (err) {
+          setToast({ message: "Network error.", type: "error" });
         }
       }
-    } catch (err) {
-      setToast({ message: "Network error.", type: "error" });
-    }
+    });
   };
 
   const handleApprove = async (userId: number, approved: boolean) => {
     if (!token) return;
     const action = approved ? "approve" : "reject";
-    if (!window.confirm(`Are you sure you want to ${action} this new user?`)) return;
-
-    try {
-      const res = await apiFetch(`/admin/users/${userId}/${action}`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (res.ok) {
-        setToast({ message: `User ${action}d successfully.`, type: "success" });
-        setResolvedUsers(prev => ({
-          ...prev,
-          [userId]: { status: approved ? "approved" : "rejected", actedBy: user.name }
-        }));
-      } else {
-        const data = await res.json().catch(() => ({}));
-        if (res.status === 403) setToast({ message: "Permission denied", type: "error" });
-        else setToast({ message: data.detail || `Failed to ${action}`, type: "error" });
+    
+    setConfirmModal({
+      isOpen: true,
+      variant: approved ? "primary" : "danger",
+      title: approved ? "Approve User?" : "Reject Applicant?",
+      description: approved 
+        ? "They will gain full access to the community projects and forum immediately."
+        : "Their application will be permanently rejected. This action cannot be undone.",
+      onConfirm: async () => {
+        setConfirmModal(prev => ({ ...prev, isOpen: false }));
+        try {
+          const res = await apiFetch(`/admin/users/${userId}/${action}`, {
+            method: "POST",
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          if (res.ok) {
+            setToast({ message: `User ${action}d successfully.`, type: "success" });
+            setResolvedUsers(prev => ({
+              ...prev,
+              [userId]: { status: approved ? "approved" : "rejected", actedBy: user.name }
+            }));
+          } else {
+            const data = await res.json().catch(() => ({}));
+            if (res.status === 403) setToast({ message: "Permission denied", type: "error" });
+            else setToast({ message: data.detail || `Failed to ${action}`, type: "error" });
+          }
+        } catch (err) {
+          setToast({ message: "Network error.", type: "error" });
+        }
       }
-    } catch (err) {
-      setToast({ message: "Network error.", type: "error" });
-    }
+    });
   };
 
   const getStatusText = (u: any) => {
@@ -381,6 +423,15 @@ export default function AdminDashboard({ user, token, setToast, latestWsApproval
           </div>
         </div>
       )}
+      {/* Custom Confirmation Modal */}
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        variant={confirmModal.variant}
+        title={confirmModal.title}
+        description={confirmModal.description}
+        onConfirm={confirmModal.onConfirm}
+        onCancel={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}
+      />
     </div>
   );
 }
