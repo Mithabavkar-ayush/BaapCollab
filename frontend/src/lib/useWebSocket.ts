@@ -13,6 +13,7 @@ export function useWebSocket(
   enabled: boolean = true,
   userId?: number | null
 ) {
+  console.log("[WS] Hook called, enabled:", enabled, "userId:", userId);
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const reconnectDelay = useRef(1000);
@@ -42,7 +43,7 @@ export function useWebSocket(
     wsRef.current = ws;
 
     ws.onopen = () => {
-
+      console.log("🔌 [WS] Connected to", wsUrl);
       reconnectDelay.current = 1000; // Reset backoff on successful connect
     };
 
