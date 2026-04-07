@@ -86,7 +86,7 @@ export default function Dashboard() {
       const interval = setInterval(fetchNotifications, 30000);
       return () => clearInterval(interval);
     }
-  }, [authToken, user, fetchNotifications]);
+  }, [authToken, user?.id]);
 
   const markNotificationAsRead = async (id: number) => {
     if (!authToken) return;
@@ -211,7 +211,7 @@ export default function Dashboard() {
         profile_pic_url: user.profile_pic_url || ""
       });
     }
-  }, [user]);
+  }, [user?.id]);
 
   // Auto-hide toast
   useEffect(() => {
@@ -450,9 +450,8 @@ export default function Dashboard() {
           window.location.reload(); 
       }
     }
-  }, [authToken, user?.id, step, setShowRoleModal]);
+  }, [setUser, setShowRoleModal, setActiveTab]);
 
-  console.log("[WS] Calling useWebSocket, step:", step, "user?.id:", user?.id);
   useWebSocket(handleWsMessage, step === 4 && !!user?.id, user?.id);
 
   const handleBranchSubmit = async (e: React.FormEvent) => {
