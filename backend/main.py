@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect, Query
+from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect, Query, Depends
 from typing import Optional
 from fastapi.middleware.cors import CORSMiddleware
 from database import create_db_and_tables
@@ -87,6 +87,115 @@ async def websocket_feed(websocket: WebSocket, user_id: Optional[int] = Query(de
         manager.disconnect(websocket, user_id)
     except Exception:
         manager.disconnect(websocket, user_id)
+
+@app.websocket("/ws/chat/general")
+async def websocket_chat_general(websocket: WebSocket, user_id: Optional[int] = Query(default=None)):
+    await manager.connect(websocket, user_id, room="general")
+    try:
+        from database import ChatMessage, User, engine
+        from sqlmodel import Session, select
+        
+        with Session(engine) as session:
+            stmt = (
+                select(ChatMessage, User)
+                .join(User, ChatMessage.user_id == User.id)
+                .where(ChatMessage.room == "general")
+                .order_by(ChatMessage.created_at.desc())
+                .limit(50)
+            )
+            results = session.exec(stmt).all()
+            
+            history_messages = []
+            for msg, u in reversed(results):
+                history_messages.append({
+                    "id": msg.id,
+                    "user_id": msg.user_id,
+                    "full_name": u.name,
+                    "avatar_url": u.profile_pic_url or u.picture,
+                    "content": msg.content,
+                    "created_at": msg.created_at.isoformat()
+                })
+            
+            await websocket.send_json({
+                "type": "message_history",
+                "messages": history_messages
+            })
+
+        while True:
+            data = await websocket.receive_text()
+            if not data or not data.strip():
+                continue
+                
+            from datetime import datetime, timezone
+            now = datetime.now(timezone.utc)
+            
+            with Session(engine) as session:
+                if user_id is None:
+                    continue
+                    
+                recent_stmt = (
+                    select(ChatMessage)
+                    .where(ChatMessage.user_id == user_id)
+                    .where(ChatMessage.room == "general")
+                    .order_by(ChatMessage.created_at.desc())
+                )
+                last_msg = session.exec(recent_stmt).first()
+                if last_msg:
+                    diff = (now - last_msg.created_at).total_seconds()
+                    if diff < 300:
+                        await websocket.send_json({
+                            "type": "slowmode_error",
+                            "retry_after": int(300 - diff)
+                        })
+                        continue
+                        
+                new_msg = ChatMessage(user_id=user_id, room="general", content=data.strip())
+                session.add(new_msg)
+                session.commit()
+                session.refresh(new_msg)
+                
+                user = session.get(User, user_id)
+                
+                await manager.broadcast({
+                    "type": "new_message",
+                    "id": new_msg.id,
+                    "user_id": new_msg.user_id,
+                    "full_name": user.name if user else "Unknown",
+                    "avatar_url": user.profile_pic_url or user.picture if user else None,
+                    "content": new_msg.content,
+                    "created_at": new_msg.created_at.isoformat()
+                }, room="general")
+                
+    except WebSocketDisconnect:
+        manager.disconnect(websocket, user_id, room="general")
+    except Exception as e:
+        print(f"Chat WS error: {e}")
+        manager.disconnect(websocket, user_id, room="general")
+
+@app.get("/chat/general/history")
+def get_chat_history(before_id: Optional[int] = None, current_user=Depends(auth.get_current_user_no_exception if hasattr(auth, 'get_current_user_no_exception') else (lambda: None))):
+    from auth_utils import get_current_user
+    from database import ChatMessage, User, engine
+    from sqlmodel import Session, select
+    
+    with Session(engine) as session:
+        stmt = select(ChatMessage, User).join(User, ChatMessage.user_id == User.id).where(ChatMessage.room == "general")
+        if before_id:
+            stmt = stmt.where(ChatMessage.id < before_id)
+        stmt = stmt.order_by(ChatMessage.created_at.desc()).limit(50)
+        
+        results = session.exec(stmt).all()
+        history_messages = []
+        for msg, u in reversed(results):
+            history_messages.append({
+                "id": msg.id,
+                "user_id": msg.user_id,
+                "full_name": u.name,
+                "avatar_url": u.profile_pic_url or u.picture,
+                "content": msg.content,
+                "created_at": msg.created_at.isoformat()
+            })
+        return history_messages
 
 @app.get("/")
 def read_root():

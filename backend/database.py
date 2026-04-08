@@ -144,6 +144,18 @@ class Notification(SQLModel, table=True):
     )
     user: User = Relationship(back_populates="notifications")
 
+class ChatMessage(SQLModel, table=True):
+    __tablename__ = "chat_messages"
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: int = Field(foreign_key="user.id", ondelete="CASCADE")
+    room: str = Field(default="general", index=True)
+    content: str
+    created_at: datetime = Field(
+        sa_column=Column(DateTime(timezone=True), server_default=func.now(), index=True),
+        default_factory=lambda: datetime.now(timezone.utc)
+    )
+    user: User = Relationship()
+
 def create_db_and_tables():
     try:
         SQLModel.metadata.create_all(engine)

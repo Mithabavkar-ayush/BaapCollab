@@ -11,7 +11,8 @@ import { API_BASE } from "@/lib/api";
 export function useWebSocket(
   onMessage: (data: any) => void,
   enabled: boolean = true,
-  userId?: number | null
+  userId?: number | null,
+  endpoint: string = "/ws/feed"
 ) {
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -30,7 +31,7 @@ export function useWebSocket(
     let wsUrl = API_BASE
       .replace(/^https:\/\//, "wss://")
       .replace(/^http:\/\//, "ws://")
-      + "/ws/feed";
+      + endpoint;
 
     if (userId) {
       wsUrl += `?user_id=${userId}`;
@@ -75,6 +76,18 @@ export function useWebSocket(
     }, reconnectDelay.current);
   }, [connect]);
 
+  const send = useCallback((message: string | object) => {
+    if (wsRef.current?.readyState === WebSocket.OPEN) {
+      if (typeof message === 'string') {
+          wsRef.current.send(message);
+      } else {
+          wsRef.current.send(JSON.stringify(message));
+      }
+    } else {
+      console.warn("🔌 [WS] Cannot send message, WebSocket is not open.");
+    }
+  }, []);
+
   useEffect(() => {
     connect();
 
@@ -94,4 +107,6 @@ export function useWebSocket(
       }
     };
   }, [connect]);
+
+  return { send };
 }

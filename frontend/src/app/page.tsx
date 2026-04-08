@@ -12,6 +12,7 @@ import OnboardingSteps from "@/components/dashboard/OnboardingSteps";
 import DashboardHome from "@/components/dashboard/DashboardHome";
 import ProjectList from "@/components/dashboard/ProjectList";
 import ForumList from "@/components/dashboard/ForumList";
+import ChatRoom from "@/components/dashboard/ChatRoom";
 import ProfileSettings from "@/components/dashboard/ProfileSettings";
 import CreatePostModal from "@/components/dashboard/CreatePostModal";
 import AdminDashboard from "@/components/dashboard/AdminDashboard";
@@ -47,7 +48,7 @@ export default function Dashboard() {
   const [latestWsEditedComment, setLatestWsEditedComment] = useState<{postId: number, comment: any} | null>(null);
   const [latestWsApproval, setLatestWsApproval] = useState<{userId: number, status: string, actedBy: string} | null>(null);
   const [showGuide, setShowGuide] = useState(false);
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'forum' | 'settings' | 'admin'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'forum' | 'chat' | 'settings' | 'admin'>('dashboard');
   const activeTabRef = useRef(activeTab);
   useEffect(() => { activeTabRef.current = activeTab; }, [activeTab]);
   const [showRoleModal, setShowRoleModal] = useState<{ isOpen: boolean; role: string; type: 'role' | 'approval' } | null>(null);
@@ -655,6 +656,12 @@ export default function Dashboard() {
           >
             Forum
           </button>
+          <button
+            onClick={() => setActiveTab('chat')}
+            className={`px-5 py-2 rounded-[14px] text-sm font-bold transition-all whitespace-nowrap ${activeTab === 'chat' ? 'bg-white text-[#524EEE] shadow-sm ring-1 ring-gray-100' : 'text-gray-500 hover:text-black hover:bg-white/50'}`}
+          >
+            Chat
+          </button>
           {(user?.role === 'ADMIN' || user?.role === 'SUPERADMIN') && (
             <button
               onClick={() => setActiveTab('admin')}
@@ -808,6 +815,12 @@ export default function Dashboard() {
             latestWsEditedComment={latestWsEditedComment}
           />
         )}
+        {activeTab === 'chat' && (
+          <ChatRoom
+            loggedInUser={user}
+            token={authToken}
+          />
+        )}
         {activeTab === 'settings' && (
           <ProfileSettings
             user={user} initials={initials} imgError={imgError} setImgError={setImgError}
@@ -853,6 +866,13 @@ export default function Dashboard() {
         >
           <svg className="w-6 h-6 mb-1" fill={activeTab === 'forum' ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={activeTab === 'forum' ? "1.5" : "2"} d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" /></svg>
           <span className="text-[10px] font-bold uppercase tracking-wider">Forum</span>
+        </button>
+        <button
+          onClick={() => setActiveTab('chat')}
+          className={`flex flex-col items-center justify-center p-2 min-h-[44px] min-w-[44px] rounded-xl transition-all ${activeTab === 'chat' ? 'text-[#524EEE] scale-110' : 'text-gray-400 hover:text-gray-600'}`}
+        >
+          <svg className="w-6 h-6 mb-1" fill={activeTab === 'chat' ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={activeTab === 'chat' ? "1.5" : "2"} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+          <span className="text-[10px] font-bold uppercase tracking-wider">Chat</span>
         </button>
         {(user?.role === 'ADMIN' || user?.role === 'SUPERADMIN') && (
           <button
