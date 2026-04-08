@@ -126,6 +126,9 @@ async def websocket_chat_general(websocket: WebSocket, user_id: Optional[int] = 
             if not data or not data.strip():
                 continue
                 
+            if data.strip().lower() == "ping":
+                continue
+                
             from datetime import datetime, timezone
             now = datetime.now(timezone.utc)
             
