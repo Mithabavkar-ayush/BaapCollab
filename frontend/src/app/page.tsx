@@ -20,6 +20,7 @@ import AdminDashboard from "@/components/dashboard/AdminDashboard";
 const inter = Inter({ subsets: ['latin'] });
 import { API_BASE, apiFetch } from "@/lib/api";
 import { useWebSocket } from "@/lib/useWebSocket";
+import { MessageSquare } from "lucide-react";
 const PRODUCTION_DOMAIN = "localhost:3000";
 
 console.log("PRODUCTION_BUILD_V4_API_CENTRALIZED");
@@ -61,6 +62,7 @@ export default function Dashboard() {
   // Notification State
   const [notifications, setNotifications] = useState<any[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [unreadChatCount, setUnreadChatCount] = useState(0);
 
   const fetchNotifications = useCallback(async () => {
     if (typeof window === "undefined") return;
@@ -455,6 +457,23 @@ export default function Dashboard() {
 
   useWebSocket(handleWsMessage, step === 4 && !!user?.id, user?.id);
 
+  const handleChatWsMessage = useCallback((data: any) => {
+    if (data.type === "new_message") {
+      // Don't flag as unread if the message is from ourselves
+      if (data.user_id !== user?.id && activeTabRef.current !== 'chat') {
+        setUnreadChatCount(prev => prev + 1);
+      }
+    }
+  }, [user?.id]);
+  
+  useWebSocket(handleChatWsMessage, step === 4 && !!user?.id, user?.id, "/ws/chat/general");
+
+  useEffect(() => {
+    if (activeTab === 'chat') {
+      setUnreadChatCount(0);
+    }
+  }, [activeTab]);
+
   const handleBranchSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const token = (typeof window !== "undefined" ? (localStorage.getItem('baap_token') || localStorage.getItem('token')) : null) || authToken;
@@ -673,6 +692,23 @@ export default function Dashboard() {
         </nav>
 
         <div className="flex items-center gap-4 shrink-0 justify-end">
+          {/* Chat Icon */}
+          <button 
+            onClick={() => setActiveTab('chat')} 
+            className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-gray-50 rounded-xl transition-all relative group"
+            title="General Chat"
+          >
+            <MessageSquare className="w-5 h-5 md:w-6 md:h-6" strokeWidth={2} />
+            {unreadChatCount > 0 && (
+              <>
+                <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-rose-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-white z-10 transition-transform group-active:scale-95">
+                  {unreadChatCount > 9 ? '9+' : unreadChatCount}
+                </span>
+                <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-rose-500 rounded-full animate-ping border-2 border-white pointer-events-none opacity-75"></span>
+              </>
+            )}
+          </button>
+
           {/* Notifications Trigger */}
           <div className="relative group">
             <button className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-gray-50 rounded-xl transition-all relative">

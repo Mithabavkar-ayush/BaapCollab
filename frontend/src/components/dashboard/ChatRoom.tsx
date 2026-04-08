@@ -183,8 +183,8 @@ export default function ChatRoom({ loggedInUser, token }: ChatRoomProps) {
     };
 
     return (
-        <div className="animate-in fade-in duration-500 h-[calc(100vh-140px)] flex flex-col">
-            <div className="flex items-center justify-between mb-4 shrink-0">
+        <div className="animate-in fade-in duration-500 h-[400px] w-full flex flex-col">
+            <div className="flex items-center justify-between mb-4 shrink-0 px-1">
                 <h2 className="text-[20px] font-bold text-[#111827] premium-heading flex items-center gap-2">
                     <span className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.6)]"></span>
                     General Room
@@ -192,7 +192,7 @@ export default function ChatRoom({ loggedInUser, token }: ChatRoomProps) {
                 <div className="text-xs text-gray-400 font-medium">Public Chat</div>
             </div>
 
-            <div className="forum-card flex-1 flex flex-col overflow-hidden shadow-md">
+            <div className="flex-1 flex flex-col overflow-hidden shadow-sm bg-white border border-gray-200 rounded-lg w-full">
                 <div 
                     ref={containerRef}
                     onScroll={handleScroll}
