@@ -19,6 +19,7 @@ import AdminDashboard from "@/components/dashboard/AdminDashboard";
 const inter = Inter({ subsets: ['latin'] });
 import { API_BASE, apiFetch } from "@/lib/api";
 import { useWebSocket } from "@/lib/useWebSocket";
+import { MessageSquare } from "lucide-react";
 const PRODUCTION_DOMAIN = "localhost:3000";
 
 console.log("PRODUCTION_BUILD_V4_API_CENTRALIZED");
@@ -60,6 +61,9 @@ export default function Dashboard() {
   // Notification State
   const [notifications, setNotifications] = useState<any[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isChatJoined, setIsChatJoined] = useState(false);
+  const [unreadChatCount, setUnreadChatCount] = useState(0);
 
   const fetchNotifications = useCallback(async () => {
     if (typeof window === "undefined") return;
@@ -454,6 +458,22 @@ export default function Dashboard() {
 
   useWebSocket(handleWsMessage, step === 4 && !!user?.id, user?.id);
 
+  const handleChatWsMessage = useCallback((data: any) => {
+    if (data.type === "new_message") {
+        if (!isChatOpen && String(data.user_id) !== String(user?.id)) {
+            setUnreadChatCount(prev => prev + 1);
+        }
+    }
+  }, [isChatOpen, user?.id]);
+
+  useWebSocket(handleChatWsMessage, step === 4 && !!user?.id, user?.id, "/ws/chat/general");
+
+  useEffect(() => {
+    if (isChatOpen) {
+      setUnreadChatCount(0);
+    }
+  }, [isChatOpen]);
+
   const handleBranchSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const token = (typeof window !== "undefined" ? (localStorage.getItem('baap_token') || localStorage.getItem('token')) : null) || authToken;
@@ -739,6 +759,23 @@ export default function Dashboard() {
             </div>
           </div>
 
+          {/* Chat Drawer Toggle */}
+          <button 
+            onClick={() => setIsChatOpen(true)} 
+            className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-gray-50 rounded-xl transition-all relative group"
+            title="General Chat"
+          >
+            <MessageSquare className="w-5 h-5 md:w-6 md:h-6" strokeWidth={2} />
+            {unreadChatCount > 0 && (
+              <>
+                <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-rose-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-white z-10 transition-transform group-active:scale-95">
+                  {unreadChatCount > 9 ? '9+' : unreadChatCount}
+                </span>
+                <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-rose-500 rounded-full animate-ping border-2 border-white pointer-events-none opacity-75"></span>
+              </>
+            )}
+          </button>
+
           <div
             onClick={() => setActiveTab('settings')}
             className="w-10 h-10 shrink-0 rounded-full bg-orange-500 flex items-center justify-center overflow-hidden border-2 border-white shadow-md hover:scale-105 transition-transform cursor-pointer group"
@@ -784,7 +821,6 @@ export default function Dashboard() {
             setModalType={setModalType}
             setShowCreateModal={setShowCreateModal}
             setToast={setToast}
-            authToken={authToken}
           />
         )}
         {activeTab === 'projects' && (
@@ -919,6 +955,16 @@ export default function Dashboard() {
               </div>
           </div>
       )}
+
+      {/* Side Chat Drawer */}
+      <ChatRoom 
+        loggedInUser={user} 
+        token={authToken}
+        isOpen={isChatOpen}
+        onClose={() => setIsChatOpen(false)}
+        isJoined={isChatJoined}
+        onJoin={() => setIsChatJoined(true)}
+      />
     </div>
   );
 }
