@@ -16,11 +16,9 @@ import ChatRoom from "@/components/dashboard/ChatRoom";
 import ProfileSettings from "@/components/dashboard/ProfileSettings";
 import CreatePostModal from "@/components/dashboard/CreatePostModal";
 import AdminDashboard from "@/components/dashboard/AdminDashboard";
-
 const inter = Inter({ subsets: ['latin'] });
 import { API_BASE, apiFetch } from "@/lib/api";
 import { useWebSocket } from "@/lib/useWebSocket";
-import { MessageSquare } from "lucide-react";
 const PRODUCTION_DOMAIN = "localhost:3000";
 
 console.log("PRODUCTION_BUILD_V4_API_CENTRALIZED");
@@ -49,7 +47,7 @@ export default function Dashboard() {
   const [latestWsEditedComment, setLatestWsEditedComment] = useState<{postId: number, comment: any} | null>(null);
   const [latestWsApproval, setLatestWsApproval] = useState<{userId: number, status: string, actedBy: string} | null>(null);
   const [showGuide, setShowGuide] = useState(false);
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'forum' | 'chat' | 'settings' | 'admin'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'forum' | 'settings' | 'admin'>('dashboard');
   const activeTabRef = useRef(activeTab);
   useEffect(() => { activeTabRef.current = activeTab; }, [activeTab]);
   const [showRoleModal, setShowRoleModal] = useState<{ isOpen: boolean; role: string; type: 'role' | 'approval' } | null>(null);
@@ -62,7 +60,6 @@ export default function Dashboard() {
   // Notification State
   const [notifications, setNotifications] = useState<any[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [unreadChatCount, setUnreadChatCount] = useState(0);
 
   const fetchNotifications = useCallback(async () => {
     if (typeof window === "undefined") return;
@@ -457,23 +454,6 @@ export default function Dashboard() {
 
   useWebSocket(handleWsMessage, step === 4 && !!user?.id, user?.id);
 
-  const handleChatWsMessage = useCallback((data: any) => {
-    if (data.type === "new_message") {
-      // Don't flag as unread if the message is from ourselves
-      if (data.user_id !== user?.id && activeTabRef.current !== 'chat') {
-        setUnreadChatCount(prev => prev + 1);
-      }
-    }
-  }, [user?.id]);
-  
-  useWebSocket(handleChatWsMessage, step === 4 && !!user?.id, user?.id, "/ws/chat/general");
-
-  useEffect(() => {
-    if (activeTab === 'chat') {
-      setUnreadChatCount(0);
-    }
-  }, [activeTab]);
-
   const handleBranchSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const token = (typeof window !== "undefined" ? (localStorage.getItem('baap_token') || localStorage.getItem('token')) : null) || authToken;
@@ -675,12 +655,6 @@ export default function Dashboard() {
           >
             Forum
           </button>
-          <button
-            onClick={() => setActiveTab('chat')}
-            className={`px-5 py-2 rounded-[14px] text-sm font-bold transition-all whitespace-nowrap ${activeTab === 'chat' ? 'bg-white text-[#524EEE] shadow-sm ring-1 ring-gray-100' : 'text-gray-500 hover:text-black hover:bg-white/50'}`}
-          >
-            Chat
-          </button>
           {(user?.role === 'ADMIN' || user?.role === 'SUPERADMIN') && (
             <button
               onClick={() => setActiveTab('admin')}
@@ -692,23 +666,6 @@ export default function Dashboard() {
         </nav>
 
         <div className="flex items-center gap-4 shrink-0 justify-end">
-          {/* Chat Icon */}
-          <button 
-            onClick={() => setActiveTab('chat')} 
-            className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-gray-50 rounded-xl transition-all relative group"
-            title="General Chat"
-          >
-            <MessageSquare className="w-5 h-5 md:w-6 md:h-6" strokeWidth={2} />
-            {unreadChatCount > 0 && (
-              <>
-                <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-rose-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-white z-10 transition-transform group-active:scale-95">
-                  {unreadChatCount > 9 ? '9+' : unreadChatCount}
-                </span>
-                <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-rose-500 rounded-full animate-ping border-2 border-white pointer-events-none opacity-75"></span>
-              </>
-            )}
-          </button>
-
           {/* Notifications Trigger */}
           <div className="relative group">
             <button className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-gray-50 rounded-xl transition-all relative">
@@ -827,6 +784,7 @@ export default function Dashboard() {
             setModalType={setModalType}
             setShowCreateModal={setShowCreateModal}
             setToast={setToast}
+            authToken={authToken}
           />
         )}
         {activeTab === 'projects' && (
@@ -851,12 +809,7 @@ export default function Dashboard() {
             latestWsEditedComment={latestWsEditedComment}
           />
         )}
-        {activeTab === 'chat' && (
-          <ChatRoom
-            loggedInUser={user}
-            token={authToken}
-          />
-        )}
+
         {activeTab === 'settings' && (
           <ProfileSettings
             user={user} initials={initials} imgError={imgError} setImgError={setImgError}
@@ -902,13 +855,6 @@ export default function Dashboard() {
         >
           <svg className="w-6 h-6 mb-1" fill={activeTab === 'forum' ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={activeTab === 'forum' ? "1.5" : "2"} d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" /></svg>
           <span className="text-[10px] font-bold uppercase tracking-wider">Forum</span>
-        </button>
-        <button
-          onClick={() => setActiveTab('chat')}
-          className={`flex flex-col items-center justify-center p-2 min-h-[44px] min-w-[44px] rounded-xl transition-all ${activeTab === 'chat' ? 'text-[#524EEE] scale-110' : 'text-gray-400 hover:text-gray-600'}`}
-        >
-          <svg className="w-6 h-6 mb-1" fill={activeTab === 'chat' ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={activeTab === 'chat' ? "1.5" : "2"} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
-          <span className="text-[10px] font-bold uppercase tracking-wider">Chat</span>
         </button>
         {(user?.role === 'ADMIN' || user?.role === 'SUPERADMIN') && (
           <button

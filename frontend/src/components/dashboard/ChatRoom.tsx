@@ -5,6 +5,7 @@ import Link from "next/link";
 import { formatDistanceToNow, parseISO } from "date-fns";
 import { useWebSocket } from "@/lib/useWebSocket";
 import { API_BASE, apiFetch } from "@/lib/api";
+import { ChevronUp, ChevronDown, MessageSquare, X } from "lucide-react";
 
 interface ChatRoomProps {
     loggedInUser: any;
@@ -48,6 +49,11 @@ export default function ChatRoom({ loggedInUser, token }: ChatRoomProps) {
     const [fetchingOlder, setFetchingOlder] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     
+    // UI States
+    const [isJoined, setIsJoined] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(false);
+    const [hasUnread, setHasUnread] = useState(false);
+    
     // Slow Mode State
     const [slowModeSeconds, setSlowModeSeconds] = useState(0);
     
@@ -72,7 +78,6 @@ export default function ChatRoom({ loggedInUser, token }: ChatRoomProps) {
         messagesEndRef.current?.scrollIntoView({ behavior });
     };
 
-    // Auto-scroll logic when new messages arrive
     const shouldAutoScroll = () => {
         if (!containerRef.current) return true;
         const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
@@ -84,12 +89,10 @@ export default function ChatRoom({ loggedInUser, token }: ChatRoomProps) {
             setMessages(data.messages);
             setLoading(false);
             
-            // Check for initial slowmode prepopulation
             if (loggedInUser) {
-                // Find the latest message by the current user
                 const userMessages = data.messages.filter((m: any) => String(m.user_id) === String(loggedInUser.id));
                 if (userMessages.length > 0) {
-                    const latestMsg = userMessages[userMessages.length - 1]; // Array is ordered ascending
+                    const latestMsg = userMessages[userMessages.length - 1];
                     const utcStr = latestMsg.created_at.includes('T') && !latestMsg.created_at.endsWith('Z') && !latestMsg.created_at.includes('+') 
                         ? `${latestMsg.created_at}Z` 
                         : latestMsg.created_at;
@@ -107,6 +110,11 @@ export default function ChatRoom({ loggedInUser, token }: ChatRoomProps) {
         } else if (data.type === "new_message") {
             const autoScroll = shouldAutoScroll();
             
+            // Check for unread if minimized
+            if (!isExpanded && String(data.user_id) !== String(loggedInUser?.id)) {
+                setHasUnread(true);
+            }
+
             setMessages(prev => {
                 if (prev.some(m => m.id === data.id)) return prev;
                 return [...prev, data];
@@ -118,19 +126,16 @@ export default function ChatRoom({ loggedInUser, token }: ChatRoomProps) {
         } else if (data.type === "slowmode_error") {
             setSlowModeSeconds(data.retry_after);
         }
-    }, [loggedInUser]);
+    }, [loggedInUser, isExpanded]);
 
-    const { send } = useWebSocket(handleWsMessage, !!loggedInUser, loggedInUser?.id, "/ws/chat/general");
+    const { send } = useWebSocket(handleWsMessage, !!loggedInUser && isJoined, loggedInUser?.id, "/ws/chat/general");
 
-    // Fetch initial history via REST fallback (though WS will also yield it, 
-    // depending on connection speed. We rely on WS for the initial load here)
     useEffect(() => {
         if (!token) {
             setLoading(false);
         }
     }, [token]);
 
-    // Timer countdown for slow mode
     useEffect(() => {
         if (slowModeSeconds > 0) {
             const timer = setInterval(() => {
@@ -142,7 +147,6 @@ export default function ChatRoom({ loggedInUser, token }: ChatRoomProps) {
 
     const sendMessage = () => {
         if (!input.trim() || !loggedInUser || slowModeSeconds > 0) return;
-        
         send(input.trim());
         setInput("");
     };
@@ -157,17 +161,12 @@ export default function ChatRoom({ loggedInUser, token }: ChatRoomProps) {
                 if (res.ok) {
                     const olderMessages = await res.json();
                     if (olderMessages.length < 50) setHasMore(false);
-                    
                     const prevScrollHeight = containerRef.current.scrollHeight;
-                    
                     setMessages(prev => {
-                        // Filter out any potential duplicates from WS
                         const existingIds = new Set(prev.map(m => m.id));
                         const uniqueOlder = olderMessages.filter((m: any) => !existingIds.has(m.id));
                         return [...uniqueOlder, ...prev];
                     });
-                    
-                    // Maintain visual scroll position
                     requestAnimationFrame(() => {
                         if (containerRef.current) {
                             containerRef.current.scrollTop = containerRef.current.scrollHeight - prevScrollHeight;
@@ -182,30 +181,78 @@ export default function ChatRoom({ loggedInUser, token }: ChatRoomProps) {
         }
     };
 
+    const handleExpandToggle = () => {
+        if (!isExpanded) {
+            setIsExpanded(true);
+            setHasUnread(false);
+            setTimeout(() => scrollToBottom("auto"), 300);
+        } else {
+            setIsExpanded(false);
+        }
+    };
+
+    const handleJoin = () => {
+        setIsJoined(true);
+        setIsExpanded(true);
+    };
+
+    // Glassmorphism classes
+    const glassClasses = "bg-white/70 backdrop-blur-md border border-white shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] rounded-3xl overflow-hidden transition-all duration-300 ease-in-out";
+
     return (
-        <div className="animate-in fade-in duration-500 h-[400px] w-full flex flex-col">
-            <div className="flex items-center justify-between mb-4 shrink-0 px-1">
-                <h2 className="text-[20px] font-bold text-[#111827] premium-heading flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.6)]"></span>
-                    General Room
-                </h2>
-                <div className="text-xs text-gray-400 font-medium">Public Chat</div>
+        <div 
+            className={`${glassClasses} ${isExpanded ? 'h-[400px]' : 'h-[72px] cursor-pointer hover:bg-white/80 active:scale-[0.99]'} w-full flex flex-col relative`}
+            onClick={!isExpanded ? handleExpandToggle : undefined}
+        >
+            {/* Header / Minimized Bar Content */}
+            <div className={`flex items-center justify-between px-6 shrink-0 transition-all ${isExpanded ? 'py-4 border-b border-gray-100/50' : 'h-full'}`}>
+                <div className="flex items-center gap-3">
+                    <div className="relative">
+                        <div className={`w-3 h-3 rounded-full animate-pulse transition-colors ${hasUnread ? 'bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.6)]' : 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]'}`}></div>
+                        {hasUnread && <div className="absolute inset-0 rounded-full animate-ping bg-rose-500 opacity-75"></div>}
+                    </div>
+                    <h2 className={`font-bold text-[#111827] flex items-center gap-2 ${isExpanded ? 'text-lg' : 'text-base'}`}>
+                        General Room
+                        {!isExpanded && hasUnread && <span className="text-[10px] bg-rose-500 text-white px-1.5 py-0.5 rounded-full ml-1">New</span>}
+                    </h2>
+                    {!isExpanded && <span className="hidden md:block text-xs text-gray-400 font-medium">Public community chat • Join to participate</span>}
+                </div>
+
+                <div className="flex items-center gap-3" onClick={(e) => e.stopPropagation()}>
+                    {!isJoined ? (
+                        <button 
+                            onClick={handleJoin}
+                            className="bg-[#524EEE] hover:bg-[#433fd1] text-white px-6 py-2 rounded-xl text-sm font-bold shadow-lg shadow-indigo-100 transition-all active:scale-95 flex items-center gap-2"
+                        >
+                            <MessageSquare className="w-4 h-4" />
+                            Join Chat
+                        </button>
+                    ) : (
+                        <button 
+                            onClick={handleExpandToggle}
+                            className="p-2 text-gray-400 hover:text-[#524EEE] hover:bg-indigo-50 rounded-xl transition-all"
+                        >
+                            {isExpanded ? <ChevronDown className="w-6 h-6" /> : <ChevronUp className="w-6 h-6" />}
+                        </button>
+                    )}
+                </div>
             </div>
 
-            <div className="flex-1 flex flex-col overflow-hidden shadow-sm bg-white border border-gray-200 rounded-lg w-full">
+            {/* Chat Content (Expanded Only) */}
+            <div className={`flex-1 flex flex-col overflow-hidden transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
                 <div 
                     ref={containerRef}
                     onScroll={handleScroll}
-                    className="flex-1 overflow-y-auto p-6 space-y-5 custom-scrollbar bg-[#FAFAFA]"
+                    className="flex-1 overflow-y-auto p-6 space-y-5 custom-scrollbar bg-white/30"
                 >
-                    {loading ? (
+                    {loading && isJoined ? (
                         <div className="h-full flex items-center justify-center text-gray-400 text-sm">
                             <div className="w-5 h-5 border-2 border-indigo-300 border-t-transparent rounded-full animate-spin mr-3" />
-                            Connecting to Chat...
+                            Connecting...
                         </div>
                     ) : messages.length === 0 ? (
                         <div className="h-full flex flex-col items-center justify-center text-gray-400 text-sm italic">
-                            <div className="w-16 h-16 bg-indigo-50 rounded-full flex items-center justify-center text-3xl mb-4">👋</div>
+                            <div className="w-16 h-16 bg-white/50 rounded-full flex items-center justify-center text-3xl mb-4 border border-white/50 shadow-sm">👋</div>
                             No messages here yet. Say hello!
                         </div>
                     ) : (
@@ -233,14 +280,14 @@ export default function ChatRoom({ loggedInUser, token }: ChatRoomProps) {
                                         </div>
                                         <div className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
                                             <div className="flex items-baseline gap-2 mb-1">
-                                                <span className="text-xs font-bold text-gray-700">{isMe ? 'You' : msg.full_name}</span>
+                                                <span className="text-xs font-bold text-gray-700/80">{isMe ? 'You' : msg.full_name}</span>
                                                 <span className="text-[10px] text-gray-400 font-medium">{timeAgo(msg.created_at)}</span>
                                             </div>
                                             <div 
                                                 className={`px-4 py-2.5 rounded-2xl text-[15px] leading-relaxed shadow-sm ${
                                                     isMe 
-                                                    ? 'bg-[#524EEE] text-white rounded-tr-sm' 
-                                                    : 'bg-white border border-gray-100 text-gray-800 rounded-tl-sm'
+                                                    ? 'bg-[#524EEE] text-white rounded-tr-sm shadow-indigo-100' 
+                                                    : 'bg-white/80 border border-white/50 text-gray-800 rounded-tl-sm'
                                                 }`}
                                             >
                                                 {msg.content}
@@ -256,9 +303,9 @@ export default function ChatRoom({ loggedInUser, token }: ChatRoomProps) {
                 </div>
 
                 {/* Input Area */}
-                <div className="p-4 bg-white border-t border-gray-100 shrink-0">
+                <div className="p-4 bg-white/50 border-t border-gray-100/50 shrink-0">
                     {!token ? (
-                        <div className="w-full py-3 bg-gray-50 rounded-xl text-center text-sm text-gray-500 font-medium">
+                        <div className="w-full py-3 bg-gray-50/50 rounded-xl text-center text-sm text-gray-500 font-medium border border-gray-100">
                             Please log in to participate in the chat.
                         </div>
                     ) : (
@@ -275,7 +322,7 @@ export default function ChatRoom({ loggedInUser, token }: ChatRoomProps) {
                                     }}
                                     disabled={slowModeSeconds > 0}
                                     placeholder={slowModeSeconds > 0 ? "Slow mode active..." : "Type your message..."}
-                                    className={`w-full min-h-[44px] max-h-32 px-4 py-3 bg-zinc-50 border ${slowModeSeconds > 0 ? 'border-orange-200 bg-orange-50/30 text-orange-700' : 'border-gray-200'} rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#524EEE]/30 transition-all resize-none custom-scrollbar`}
+                                    className={`w-full min-h-[44px] max-h-32 px-4 py-3 bg-white/80 border ${slowModeSeconds > 0 ? 'border-orange-200 bg-orange-50/30 text-orange-700' : 'border-gray-200 focus:border-[#524EEE]'} rounded-2xl text-sm focus:outline-none focus:ring-4 focus:ring-[#524EEE]/10 transition-all resize-none custom-scrollbar`}
                                     rows={1}
                                     style={{ height: input ? 'auto' : '44px' }}
                                 />
@@ -289,7 +336,7 @@ export default function ChatRoom({ loggedInUser, token }: ChatRoomProps) {
                             <button
                                 onClick={sendMessage}
                                 disabled={!input.trim() || slowModeSeconds > 0}
-                                className="w-11 h-11 shrink-0 bg-[#524EEE] text-white rounded-xl flex items-center justify-center hover:opacity-90 transition-all disabled:opacity-50 active:scale-95 shadow-sm"
+                                className="w-11 h-11 shrink-0 bg-[#524EEE] text-white rounded-xl flex items-center justify-center hover:bg-[#433fd1] hover:shadow-lg hover:shadow-indigo-100 transition-all disabled:opacity-50 active:scale-95 shadow-sm"
                             >
                                 <svg className="w-5 h-5 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>

@@ -13,15 +13,18 @@ interface DashboardHomeProps {
     lfmPosts: any[];
     forumPosts: any[];
     leaderboard: any[];
-    setActiveTab: (tab: 'dashboard' | 'projects' | 'forum' | 'chat' | 'settings') => void;
+    setActiveTab: (tab: 'dashboard' | 'projects' | 'forum' | 'settings' | 'admin') => void;
     setModalType: (type: 'project' | 'discussion') => void;
     setShowCreateModal: (show: boolean) => void;
     setToast: (toast: { message: string; type: 'success' | 'error' } | null) => void;
+    authToken: string | null;
 }
 
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { API_BASE, apiFetch } from "@/lib/api";
+
+import ChatRoom from "./ChatRoom";
 
 export default function DashboardHome({
     user,
@@ -35,7 +38,8 @@ export default function DashboardHome({
     setActiveTab,
     setModalType,
     setShowCreateModal,
-    setToast
+    setToast,
+    authToken
 }: DashboardHomeProps) {
     const router = useRouter();
 
@@ -388,6 +392,10 @@ export default function DashboardHome({
                         </span>
                     </Link>
                 </div>
+            </div>
+
+            <div className="mt-12 w-full">
+                <ChatRoom loggedInUser={user} token={authToken} />
             </div>
         </div>
     );
