@@ -19,10 +19,9 @@ interface DashboardHomeProps {
     setToast: (toast: { message: string; type: 'success' | 'error' } | null) => void;
 }
 
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { API_BASE, apiFetch } from "@/lib/api";
-import { useWebSocket } from "@/lib/useWebSocket";
 
 export default function DashboardHome({
     user,
@@ -125,23 +124,6 @@ export default function DashboardHome({
     });
 
     if (user && !user.is_approved) return null; // Prevent flash of dashboard
-
-    const [chatPreview, setChatPreview] = useState<any[]>([]);
-
-    const handleChatWsMessage = useCallback((data: any) => {
-        if (data.type === "message_history" && data.messages) {
-            // Keep the latest 4 messages for preview
-            setChatPreview(data.messages.slice(Math.max(data.messages.length - 4, 0)));
-        } else if (data.type === "new_message") {
-            setChatPreview(prev => {
-                if (prev.some(m => m.id === data.id)) return prev;
-                const newPreview = [...prev, data];
-                return newPreview.slice(Math.max(newPreview.length - 4, 0));
-            });
-        }
-    }, []);
-
-    useWebSocket(handleChatWsMessage, true, user?.id, "/ws/chat/general");
 
     return (
         <div className="animate-in fade-in duration-500">
@@ -311,7 +293,7 @@ export default function DashboardHome({
                 </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch w-full">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch w-full">
                 {/* Position 1: Recent Projects */}
                 <div className="bg-white rounded-3xl premium-shadow hairline-border-projects hover:border-[#6366F1] premium-hover overflow-hidden h-full flex flex-col">
                     <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-gray-50/30">
@@ -376,39 +358,7 @@ export default function DashboardHome({
                     </div>
                 </div>
                 
-                {/* Position 3: General Room Chat Preview */}
-                <div className="bg-white rounded-3xl premium-shadow border border-indigo-100 hover:border-[#524EEE] premium-hover overflow-hidden h-full flex flex-col">
-                    <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-gray-50/30 shrink-0">
-                        <h2 className="text-lg premium-heading text-[#111827] flex items-center gap-2">
-                            <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-                            General Chat
-                        </h2>
-                        {/* Note: setActiveTab to 'chat' must be passed as prop if available, or handled */}
-                        <button onClick={() => setActiveTab('chat')} className="text-sm text-[#524EEE] font-bold hover:underline transition-all">Join</button>
-                    </div>
-                    <div className="flex-1 p-5 space-y-3 overflow-hidden flex flex-col justify-end bg-zinc-50/50">
-                        {chatPreview.length > 0 ? chatPreview.map((msg: any) => (
-                            <div key={msg.id} className="flex gap-3 text-sm animate-in fade-in slide-in-from-bottom-2">
-                                <div className="w-6 h-6 rounded-full bg-indigo-100 shrink-0 flex items-center justify-center overflow-hidden">
-                                    {msg.avatar_url ? <img src={msg.avatar_url} alt="" className="w-full h-full object-cover" /> : <span className="text-[9px] font-bold text-indigo-500">{(msg.full_name || 'U')[0]}</span>}
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-1.5 mb-0.5">
-                                        <span className="font-bold text-[#111827] text-xs truncate">{msg.full_name}</span>
-                                    </div>
-                                    <p className="text-gray-600 line-clamp-2 leading-relaxed text-[13px]">{msg.content}</p>
-                                </div>
-                            </div>
-                        )) : (
-                            <div className="flex flex-col items-center justify-center h-full text-gray-400">
-                                <span className="text-2xl mb-2 text-indigo-100">💬</span>
-                                <span className="text-xs font-medium">No recent messages</span>
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                {/* Position 4: Helper of the Week */}
+                {/* Position 3: Helper of the Week */}
                 <div className="bg-white rounded-3xl premium-shadow hairline-border-helper hover:border-[#10B981] premium-hover overflow-hidden h-full flex flex-col">
                     <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-gray-50/30 shrink-0">
                         <h2 className="text-lg premium-heading text-[#111827]">Helper of the Week</h2>
