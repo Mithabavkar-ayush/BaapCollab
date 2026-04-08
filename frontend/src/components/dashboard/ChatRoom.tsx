@@ -12,8 +12,6 @@ interface ChatRoomProps {
     token: string | null;
     isOpen: boolean;
     onClose: () => void;
-    isJoined: boolean;
-    onJoin: () => void;
 }
 
 function Avatar({ picture, profile_pic_url, name, size = 40, userId }: { picture?: string | null; profile_pic_url?: string | null; name?: string | null; size?: number; userId?: string | number }) {
@@ -46,7 +44,7 @@ function Avatar({ picture, profile_pic_url, name, size = 40, userId }: { picture
     return content;
 }
 
-export default function ChatRoom({ loggedInUser, token, isOpen, onClose, isJoined, onJoin }: ChatRoomProps) {
+export default function ChatRoom({ loggedInUser, token, isOpen, onClose }: ChatRoomProps) {
     const [messages, setMessages] = useState<any[]>([]);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(true);
@@ -122,7 +120,7 @@ export default function ChatRoom({ loggedInUser, token, isOpen, onClose, isJoine
         }
     }, [loggedInUser]);
 
-    const { send } = useWebSocket(handleWsMessage, !!loggedInUser && isJoined && isOpen, loggedInUser?.id, "/ws/chat/general");
+    const { send } = useWebSocket(handleWsMessage, !!loggedInUser && isOpen, loggedInUser?.id, "/ws/chat/general");
 
     useEffect(() => {
         if (!token) {
@@ -177,7 +175,7 @@ export default function ChatRoom({ loggedInUser, token, isOpen, onClose, isJoine
 
     // Auto-scroll when opened
     useEffect(() => {
-        if (isOpen && isJoined) {
+        if (isOpen) {
             setTimeout(() => scrollToBottom("auto"), 300);
         }
     }, [isOpen]);
@@ -208,19 +206,8 @@ export default function ChatRoom({ loggedInUser, token, isOpen, onClose, isJoine
                     </button>
                 </div>
 
-                {!isJoined ? (
-                    <div className="flex-1 flex flex-col items-center justify-center p-12 text-center animate-in fade-in zoom-in duration-300">
-                        <button 
-                            onClick={onJoin}
-                            className="bg-[#524EEE] hover:bg-[#433fd1] text-white px-10 py-3.5 rounded-2xl font-bold shadow-xl shadow-indigo-100 transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
-                        >
-                            <MessageSquare className="w-5 h-5" />
-                            Join General Chat
-                        </button>
-                    </div>
-                ) : (
-                    <>
-                        {/* Messages List */}
+                <>
+                    {/* Messages List */}
                         <div 
                             ref={containerRef}
                             onScroll={handleScroll}
@@ -325,8 +312,7 @@ export default function ChatRoom({ loggedInUser, token, isOpen, onClose, isJoine
                             )}
                         </div>
                     </>
-                )}
-            </div>
+                </div>
         </>
     );
 }

@@ -62,7 +62,6 @@ export default function Dashboard() {
   const [notifications, setNotifications] = useState<any[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [isChatJoined, setIsChatJoined] = useState(false);
   const [unreadChatCount, setUnreadChatCount] = useState(0);
 
   const fetchNotifications = useCallback(async () => {
@@ -768,10 +767,10 @@ export default function Dashboard() {
             <MessageSquare className="w-6 h-6" strokeWidth={2} />
             {unreadChatCount > 0 && (
               <>
-                <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-rose-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-white z-10 transition-transform group-active:scale-95">
+                <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-[#4F46E5] text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-white z-10 transition-transform group-active:scale-95">
                   {unreadChatCount > 9 ? '9+' : unreadChatCount}
                 </span>
-                <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-rose-500 rounded-full animate-ping border-2 border-white pointer-events-none opacity-75"></span>
+                <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-[#4F46E5] rounded-full animate-ping border-2 border-white pointer-events-none opacity-75"></span>
               </>
             )}
           </button>
@@ -962,8 +961,6 @@ export default function Dashboard() {
         token={authToken}
         isOpen={isChatOpen}
         onClose={() => setIsChatOpen(false)}
-        isJoined={isChatJoined}
-        onJoin={() => setIsChatJoined(true)}
       />
     </div>
   );
