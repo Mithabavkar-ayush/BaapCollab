@@ -765,7 +765,7 @@ export default function Dashboard() {
             className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-gray-50 rounded-xl transition-all relative group"
             title="General Chat"
           >
-            <MessageSquare className="w-5 h-5 md:w-6 md:h-6" strokeWidth={2} />
+            <MessageSquare className="w-6 h-6" strokeWidth={2} />
             {unreadChatCount > 0 && (
               <>
                 <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-rose-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-white z-10 transition-transform group-active:scale-95">

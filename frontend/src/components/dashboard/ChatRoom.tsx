@@ -99,8 +99,8 @@ export default function ChatRoom({ loggedInUser, token, isOpen, onClose, isJoine
                     const now = Date.now();
                     const diffSeconds = Math.floor((now - createdTime) / 1000);
                     
-                    if (diffSeconds < 300) {
-                        setSlowModeSeconds(300 - diffSeconds);
+                    if (diffSeconds < 60) {
+                        setSlowModeSeconds(60 - diffSeconds);
                     }
                 }
             }
@@ -210,9 +210,6 @@ export default function ChatRoom({ loggedInUser, token, isOpen, onClose, isJoine
 
                 {!isJoined ? (
                     <div className="flex-1 flex flex-col items-center justify-center p-12 text-center animate-in fade-in zoom-in duration-300">
-                        <div className="w-20 h-20 bg-indigo-50 rounded-3xl flex items-center justify-center text-4xl mb-6 shadow-inner ring-4 ring-indigo-50/50">💬</div>
-                        <h3 className="text-xl font-bold text-gray-900 mb-2">Welcome to General Chat</h3>
-                        <p className="text-gray-500 text-sm mb-8 leading-relaxed">Join the community conversation to share ideas and collaborate in real-time.</p>
                         <button 
                             onClick={onJoin}
                             className="bg-[#524EEE] hover:bg-[#433fd1] text-white px-10 py-3.5 rounded-2xl font-bold shadow-xl shadow-indigo-100 transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
@@ -236,8 +233,6 @@ export default function ChatRoom({ loggedInUser, token, isOpen, onClose, isJoine
                                 </div>
                             ) : messages.length === 0 ? (
                                 <div className="h-full flex flex-col items-center justify-center text-gray-400 text-sm italic">
-                                    <div className="w-16 h-16 bg-white/50 rounded-full flex items-center justify-center text-3xl mb-4 border border-white/50 shadow-sm">👋</div>
-                                    No messages here yet. Say hello!
                                 </div>
                             ) : (
                                 <>
@@ -268,9 +263,9 @@ export default function ChatRoom({ loggedInUser, token, isOpen, onClose, isJoine
                                                         <span className="text-[10px] text-gray-400 font-medium">{timeAgo(msg.created_at)}</span>
                                                     </div>
                                                     <div 
-                                                        className={`px-4 py-2.5 rounded-2xl text-[15px] leading-relaxed shadow-sm ${
+                                                        className={`px-4 py-2.5 rounded-2xl text-[15px] leading-relaxed ${
                                                             isMe 
-                                                            ? 'bg-[#524EEE] text-white rounded-tr-sm shadow-indigo-100' 
+                                                            ? 'bg-[#524EEE] text-white rounded-tr-sm' 
                                                             : 'bg-white/80 border border-white/50 text-gray-800 rounded-tl-sm'
                                                         }`}
                                                     >

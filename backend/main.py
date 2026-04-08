@@ -145,10 +145,10 @@ async def websocket_chat_general(websocket: WebSocket, user_id: Optional[int] = 
                 last_msg = session.exec(recent_stmt).first()
                 if last_msg:
                     diff = (now - last_msg.created_at).total_seconds()
-                    if diff < 300:
+                    if diff < 60:
                         await websocket.send_json({
                             "type": "slowmode_error",
-                            "retry_after": int(300 - diff)
+                            "retry_after": int(60 - diff)
                         })
                         continue
                         
