@@ -767,10 +767,10 @@ export default function Dashboard() {
             <MessageSquare className="w-6 h-6" strokeWidth={2} />
             {unreadChatCount > 0 && (
               <>
-                <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-[#4F46E5] text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-white z-10 transition-transform group-active:scale-95">
+                <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-[#4F46E5] text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-white z-10">
                   {unreadChatCount > 9 ? '9+' : unreadChatCount}
                 </span>
-                <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-[#4F46E5] rounded-full animate-ping border-2 border-white pointer-events-none opacity-75"></span>
+                <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-[#4F46E5] rounded-full animate-ping border-2 border-white pointer-events-none"></span>
               </>
             )}
           </button>
