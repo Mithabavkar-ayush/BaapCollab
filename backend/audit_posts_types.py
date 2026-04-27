@@ -1,6 +1,6 @@
 import requests
 
-url = "https://baapcollab-backend-production.up.railway.app/posts"
+url = "https://baapcollab-backend.onrender.com/posts"
 try:
     r = requests.get(url, timeout=10)
     if r.ok:

@@ -33,7 +33,7 @@ BaapCollab is a centralized web application for knowledge exchange, project coll
 ## 4. Technical Stack
 - **Frontend**: React.js, Tailwind CSS, Three.js (for 3D components).
 - **Backend**: Python (FastAPI).
-- **Database**: PostgreSQL (hosted on Railway/Neon).
+- **Database**: PostgreSQL (hosted on Render/Neon).
 - **Time Management**: `pytz` for IST conversion.
 
 ## 5. Deployment Constraints
