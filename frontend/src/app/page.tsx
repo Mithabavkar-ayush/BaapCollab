@@ -639,14 +639,14 @@ export default function Dashboard() {
 
   return (
     <div className={`min-h-screen bg-[#F8FAFC] ${inter.className}`}>
-      <header className="fixed top-0 left-0 right-0 min-h-[5rem] bg-white/80 backdrop-blur-md z-[1000] border-b border-gray-100/50 flex items-center justify-between px-4 md:px-8 lg:px-16 py-4 flex-nowrap gap-6">
-        <div className="flex items-center gap-3 shrink-0 flex-shrink-0">
+      <header className="fixed top-0 left-0 right-0 min-h-[5rem] bg-white/80 backdrop-blur-md z-[1000] border-b border-gray-100/50 flex items-center justify-between px-2 sm:px-3 md:px-8 lg:px-16 py-3.5 flex-nowrap gap-1 sm:gap-2 md:gap-6">
+        <div className="flex items-center gap-1 sm:gap-1.5 md:gap-3 shrink-0 flex-shrink-0">
           <Link href="/">
-            <div className="flex items-center gap-2 group transition-transform hover:scale-105 active:scale-95 cursor-pointer">
+            <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2 group transition-transform hover:scale-105 active:scale-95 cursor-pointer">
               <div className="w-8 h-8 md:w-10 md:h-10 bg-white rounded-xl flex items-center justify-center shadow-sm group-hover:bg-gray-50 transition-colors">
                 <img src="/baap-logo.jpg" alt="Logo" className="w-5 h-5 md:w-6 md:h-6 object-contain" />
               </div>
-              <span className="font-black text-lg md:text-xl tracking-tighter text-gray-900">BaapCollab</span>
+              <span className="font-black text-sm sm:text-base md:text-xl tracking-tighter text-gray-900">BaapCollab</span>
             </div>
           </Link>
           <div className="hidden sm:block h-6 w-px bg-gray-100 mx-2"></div>
@@ -684,10 +684,10 @@ export default function Dashboard() {
           )}
         </nav>
 
-        <div className="flex items-center gap-4 shrink-0 justify-end">
+        <div className="flex items-center gap-1.5 sm:gap-3 md:gap-4 shrink-0 justify-end">
           {/* Notifications Trigger */}
           <div className="relative group">
-            <button className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-gray-50 rounded-xl transition-all relative">
+            <button className="w-11 h-11 flex items-center justify-center p-0 text-gray-400 hover:text-indigo-600 hover:bg-gray-50 rounded-xl transition-all relative">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
               </svg>
@@ -702,7 +702,7 @@ export default function Dashboard() {
             </button>
 
             {/* Notifications Dropdown */}
-            <div className="absolute right-0 mt-2 w-72 bg-white rounded-2xl shadow-xl border border-gray-100 py-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right group-hover:translate-y-0 translate-y-2 z-[1100]">
+            <div className="absolute right-[-48px] sm:right-0 mt-2 w-80 max-w-[calc(100vw-24px)] bg-white rounded-2xl shadow-xl border border-gray-100 py-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right group-hover:translate-y-0 translate-y-2 z-[1100]">
               <div className="px-5 py-2 border-b border-gray-50 mb-2 flex justify-between items-center">
                 <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Notifications</span>
                 <div className="flex items-center gap-2">
@@ -757,11 +757,13 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
+        </div>
 
-          {/* Chat Drawer Toggle */}
+        {/* Chat Drawer Toggle */}
+        <div className="flex items-center gap-1.5 sm:gap-2">
           <button 
             onClick={() => setIsChatOpen(true)} 
-            className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-gray-50 rounded-xl transition-all relative group"
+            className="w-11 h-11 flex items-center justify-center p-0 text-gray-400 hover:text-indigo-600 hover:bg-gray-50 rounded-xl transition-all relative group"
             title="General Chat"
           >
             <MessageSquare className="w-6 h-6" strokeWidth={2} />
@@ -777,7 +779,7 @@ export default function Dashboard() {
 
           <div
             onClick={() => setActiveTab('settings')}
-            className="w-10 h-10 shrink-0 rounded-full bg-orange-500 flex items-center justify-center overflow-hidden border-2 border-white shadow-md hover:scale-105 transition-transform cursor-pointer group"
+            className="w-11 h-11 shrink-0 rounded-full bg-orange-500 flex items-center justify-center overflow-hidden border-2 border-white shadow-md hover:scale-105 transition-transform cursor-pointer group"
           >
             {user?.profile_pic_url || user?.picture ? (
               <img src={user?.profile_pic_url || user?.picture} alt="" className="w-full h-full object-cover" />
@@ -794,7 +796,7 @@ export default function Dashboard() {
               }
               window.location.reload();
             }}
-            className="p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
+            className="w-11 h-11 flex items-center justify-center p-0 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
             title="Logout"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -805,7 +807,7 @@ export default function Dashboard() {
       </header>
 
 
-      <main className="w-full max-w-[1920px] mx-auto pt-[100px] pb-[100px] md:pb-20 px-4 md:px-8 lg:px-16 overflow-x-hidden">
+      <main className="w-full max-w-[1920px] mx-auto pt-[100px] pb-32 md:pb-20 px-2 sm:px-3 md:px-8 lg:px-16 overflow-x-hidden">
         {activeTab === 'dashboard' && (
           <DashboardHome
             user={user}
@@ -869,35 +871,35 @@ export default function Dashboard() {
       )}
 
       {/* Mobile Bottom Navigation Bar */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-20 bg-white/90 backdrop-blur-md border-t border-gray-100 shadow-[0_-10px_40px_rgba(0,0,0,0.05)] z-[1000] flex justify-around items-center px-4 pb-2">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-20 bg-white/90 backdrop-blur-md border-t border-gray-100 shadow-[0_-10px_40px_rgba(0,0,0,0.05)] z-[1000] flex justify-around items-center px-1 pb-2">
         <button
           onClick={() => { setActiveTab('dashboard'); fetchData(); }}
-          className={`flex flex-col items-center justify-center p-2 min-h-[44px] min-w-[44px] rounded-xl transition-all ${activeTab === 'dashboard' ? 'text-[#524EEE] scale-110' : 'text-gray-400 hover:text-gray-600'}`}
+          className={`flex-1 flex flex-col items-center justify-center py-2 min-h-[48px] rounded-xl transition-all ${activeTab === 'dashboard' ? 'text-[#524EEE] scale-105 font-bold' : 'text-gray-400 hover:text-gray-600'}`}
         >
           <svg className="w-6 h-6 mb-1" fill={activeTab === 'dashboard' ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={activeTab === 'dashboard' ? "1.5" : "2"} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
-          <span className="text-[10px] font-bold uppercase tracking-wider">Home</span>
+          <span className="text-[10px] uppercase tracking-wider">Home</span>
         </button>
         <button
           onClick={() => setActiveTab('projects')}
-          className={`flex flex-col items-center justify-center p-2 min-h-[44px] min-w-[44px] rounded-xl transition-all ${activeTab === 'projects' ? 'text-[#524EEE] scale-110' : 'text-gray-400 hover:text-gray-600'}`}
+          className={`flex-1 flex flex-col items-center justify-center py-2 min-h-[48px] rounded-xl transition-all ${activeTab === 'projects' ? 'text-[#524EEE] scale-105 font-bold' : 'text-gray-400 hover:text-gray-600'}`}
         >
           <svg className="w-6 h-6 mb-1" fill={activeTab === 'projects' ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={activeTab === 'projects' ? "1.5" : "2"} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
-          <span className="text-[10px] font-bold uppercase tracking-wider">Projects</span>
+          <span className="text-[10px] uppercase tracking-wider">Projects</span>
         </button>
         <button
           onClick={() => setActiveTab('forum')}
-          className={`flex flex-col items-center justify-center p-2 min-h-[44px] min-w-[44px] rounded-xl transition-all ${activeTab === 'forum' ? 'text-[#524EEE] scale-110' : 'text-gray-400 hover:text-gray-600'}`}
+          className={`flex-1 flex flex-col items-center justify-center py-2 min-h-[48px] rounded-xl transition-all ${activeTab === 'forum' ? 'text-[#524EEE] scale-105 font-bold' : 'text-gray-400 hover:text-gray-600'}`}
         >
           <svg className="w-6 h-6 mb-1" fill={activeTab === 'forum' ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={activeTab === 'forum' ? "1.5" : "2"} d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" /></svg>
-          <span className="text-[10px] font-bold uppercase tracking-wider">Forum</span>
+          <span className="text-[10px] uppercase tracking-wider">Forum</span>
         </button>
         {(user?.role === 'ADMIN' || user?.role === 'SUPERADMIN') && (
           <button
             onClick={() => setActiveTab('admin')}
-            className={`flex flex-col items-center justify-center p-2 min-h-[44px] min-w-[44px] rounded-xl transition-all ${activeTab === 'admin' ? 'text-[#524EEE] scale-110' : 'text-gray-400 hover:text-gray-600'}`}
+            className={`flex-1 flex flex-col items-center justify-center py-2 min-h-[48px] rounded-xl transition-all ${activeTab === 'admin' ? 'text-[#524EEE] scale-105 font-bold' : 'text-gray-400 hover:text-gray-600'}`}
           >
             <svg className="w-6 h-6 mb-1" fill={activeTab === 'admin' ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={activeTab === 'admin' ? "1.5" : "2"} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
-            <span className="text-[10px] font-bold uppercase tracking-wider">Admin</span>
+            <span className="text-[10px] uppercase tracking-wider">Admin</span>
           </button>
         )}
       </nav>

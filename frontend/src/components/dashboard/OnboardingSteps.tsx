@@ -173,8 +173,8 @@ export default function OnboardingSteps({
 
   if (step === 1 && otpSent && !otpSuccess) {
     return (
-      <div className="min-h-screen flex flex-col items-center pt-24 bg-[#F8FAFC] px-4 w-full box-border">
-        <div className="bg-white rounded-[32px] premium-shadow hairline-border-projects p-6 sm:p-10 w-full max-w-[480px] mb-8">
+      <div className="min-h-screen flex flex-col items-center pt-16 sm:pt-24 bg-[#F8FAFC] px-4 w-full box-border">
+        <div className="bg-white rounded-[32px] premium-shadow hairline-border-projects p-4 sm:p-10 w-full max-w-[480px] mb-8">
           <div className="flex justify-center mb-6">
             <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center">
               <svg className="w-8 h-8 text-[#524EEE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -182,28 +182,28 @@ export default function OnboardingSteps({
               </svg>
             </div>
           </div>
-          <h1 className="text-[26px] font-bold text-center mb-2 text-[#111827]">Check your email</h1>
-          <p className="text-[#6B7280] text-center mb-2 text-[15px]">We sent a 6-digit code to</p>
-          <p className="text-[#524EEE] font-bold text-center mb-8 text-[15px]">{email}</p>
+          <h1 className="text-xl sm:text-[26px] font-bold text-center mb-2 text-[#111827]">Check your email</h1>
+          <p className="text-[#6B7280] text-center mb-2 text-sm sm:text-[15px]">We sent a 6-digit code to</p>
+          <p className="text-[#524EEE] font-bold text-center mb-6 sm:mb-8 text-sm sm:text-[15px]">{email}</p>
           <form onSubmit={handleOTPVerify} className="flex flex-col gap-5">
             <input
               type="text"
               inputMode="numeric"
               maxLength={6}
               placeholder="000000"
-              className="w-full p-4 rounded-xl border border-gray-200 bg-white text-[#111827] text-center text-3xl font-bold tracking-[0.5em] outline-none focus:border-[#524EEE] focus:ring-2 focus:ring-[#524EEE]/10 transition-all"
+              className="w-full p-3 sm:p-4 rounded-xl border border-gray-200 bg-white text-[#111827] text-center text-xl sm:text-2xl md:text-3xl font-bold tracking-[0.15em] sm:tracking-[0.4em] md:tracking-[0.5em] outline-none focus:border-[#524EEE] focus:ring-2 focus:ring-[#524EEE]/10 transition-all"
               value={otp}
               onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
               required
             />
             {otpError && <div className="p-4 bg-red-50 border border-red-100 rounded-2xl text-red-600 text-sm font-medium text-center">{otpError}</div>}
             {otpSuccess && <div className="p-4 bg-green-50 border border-green-100 rounded-2xl text-green-600 text-sm font-medium text-center">✅ Verified! Redirecting...</div>}
-            <button type="submit" disabled={isSubmitting || otp.length < 6} className="auth-button mt-2">
+            <button type="submit" disabled={isSubmitting || otp.length < 6} className="auth-button mt-2 min-h-[44px]">
               {isSubmitting ? "Verifying..." : "Verify Email"}
               {!isSubmitting && <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>}
             </button>
           </form>
-          <button onClick={() => setOtpSent(false)} className="mt-6 w-full text-center text-sm text-gray-500 hover:text-[#524EEE] transition-colors">
+          <button onClick={() => setOtpSent(false)} className="mt-6 w-full text-center text-sm text-gray-500 hover:text-[#524EEE] transition-colors min-h-[44px] flex items-center justify-center">
             ← Back
           </button>
         </div>
@@ -213,8 +213,8 @@ export default function OnboardingSteps({
 
   if (step === 1) {
     return (
-      <div className="min-h-screen flex flex-col items-center pt-24 bg-[#F8FAFC] px-4 w-full box-border">
-        <div className="flex items-center gap-2 mb-12">
+      <div className="min-h-screen flex flex-col items-center pt-16 sm:pt-24 bg-[#F8FAFC] px-4 w-full box-border">
+        <div className="flex items-center gap-2 mb-8 sm:mb-12">
           <div className="w-2.5 h-2.5 rounded-full bg-[#524EEE]"></div>
           <div className="w-8 h-[2px] bg-gray-200"></div>
           <div className="w-2.5 h-2.5 rounded-full bg-gray-200"></div>
@@ -222,17 +222,17 @@ export default function OnboardingSteps({
           <div className="w-2.5 h-2.5 rounded-full bg-gray-200"></div>
         </div>
 
-        <div className="bg-white rounded-[32px] premium-shadow hairline-border-projects p-6 sm:p-10 w-full max-w-[480px] mb-8">
-          <div className="flex justify-center mb-8">
+        <div className="bg-white rounded-[32px] premium-shadow hairline-border-projects p-4 sm:p-10 w-full max-w-[480px] mb-8">
+          <div className="flex justify-center mb-6 sm:mb-8">
             <div className="w-[60px] h-[60px] flex items-center justify-center">
               <img src="/baap-logo.jpg" alt="Baap Logo" className="w-full h-full object-contain" />
             </div>
           </div>
 
-          <h1 className="text-[30px] font-bold text-center mb-2 text-[#111827]">
+          <h1 className="text-2xl sm:text-[30px] font-bold text-center mb-2 text-[#111827]">
             {isForgotPassword ? "Reset Password" : (isSignUp ? "Create an Account" : "Welcome Back")}
           </h1>
-          <p className="text-[#6B7280] text-center mb-10 text-[15px]">
+          <p className="text-[#6B7280] text-center mb-8 sm:mb-10 text-sm sm:text-[15px]">
             {isForgotPassword ? "Enter your email to receive a password reset link" : (isSignUp ? "Join the BaapCollab community today" : "Sign in to your college network")}
           </p>
 
@@ -383,8 +383,8 @@ export default function OnboardingSteps({
 
   if (step === 2) {
     return (
-      <div className="min-h-screen flex flex-col items-center pt-24 bg-[#F8FAFC] px-4 w-full box-border">
-        <div className="flex items-center gap-2 mb-12">
+      <div className="min-h-screen flex flex-col items-center pt-16 sm:pt-24 bg-[#F8FAFC] px-4 w-full box-border">
+        <div className="flex items-center gap-2 mb-8 sm:mb-12">
           <div className="w-2.5 h-2.5 rounded-full bg-[#524EEE]"></div>
           <div className="w-8 h-[2px] bg-[#524EEE]"></div>
           <div className="w-2.5 h-2.5 rounded-full bg-[#524EEE]"></div>
@@ -392,7 +392,7 @@ export default function OnboardingSteps({
           <div className="w-2.5 h-2.5 rounded-full bg-gray-200"></div>
         </div>
 
-        <div className="bg-white rounded-3xl premium-shadow hairline-border-projects p-6 sm:p-8 w-full max-w-[480px] mb-8 text-center">
+        <div className="bg-white rounded-3xl premium-shadow hairline-border-projects p-4 sm:p-8 w-full max-w-[480px] mb-8 text-center">
           <div className="flex justify-center mb-6">
             <div className="w-[60px] h-[60px] rounded-[16px] bg-indigo-50 flex items-center justify-center text-[#524EEE] shadow-sm">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -401,8 +401,8 @@ export default function OnboardingSteps({
             </div>
           </div>
 
-          <h1 className="text-[28px] font-semibold text-center mb-2 text-[#111827]">Institution Verification</h1>
-          <p className="text-center text-[#6B7280] mb-8 text-[15px]">Select your college from the official Baap list</p>
+          <h1 className="text-2xl sm:text-[28px] font-semibold text-center mb-2 text-[#111827]">Institution Verification</h1>
+          <p className="text-center text-sm sm:text-[15px] text-[#6B7280] mb-8">Select your college from the official Baap list</p>
 
           <form onSubmit={handleBranchSubmit} className="flex flex-col gap-6 text-left">
             <div className="flex flex-col gap-2">
@@ -412,7 +412,7 @@ export default function OnboardingSteps({
               <div className="relative">
                 <select
                   id="branch-manual"
-                  className={`w-full p-4 rounded-xl border ${validationError ? 'border-red-300 bg-red-50/20' : 'border-gray-200'} bg-white text-gray-700 outline-none focus:border-[#524EEE] transition-all appearance-none cursor-pointer`}
+                  className={`w-full p-4 pr-12 rounded-xl border ${validationError ? 'border-red-300 bg-red-50/20' : 'border-gray-200'} bg-white text-gray-700 outline-none focus:border-[#524EEE] transition-all appearance-none cursor-pointer`}
                   value={manualCollegeName}
                   onChange={(e) => setManualCollegeName(e.target.value)}
                   disabled={isChecking}
@@ -466,8 +466,8 @@ export default function OnboardingSteps({
 
   if (step === 3) {
     return (
-      <div className="min-h-screen flex flex-col items-center pt-16 bg-[#F8FAFC] px-4 w-full box-border">
-        <div className="flex items-center gap-2 mb-12">
+      <div className="min-h-screen flex flex-col items-center pt-12 sm:pt-16 bg-[#F8FAFC] px-4 w-full box-border">
+        <div className="flex items-center gap-2 mb-8 sm:mb-12">
           <div className="w-2.5 h-2.5 rounded-full bg-[#524EEE]"></div>
           <div className="w-8 h-[2px] bg-[#524EEE]"></div>
           <div className="w-2.5 h-2.5 rounded-full bg-[#524EEE]"></div>
@@ -475,19 +475,19 @@ export default function OnboardingSteps({
           <div className="w-2.5 h-2.5 rounded-full bg-[#524EEE]"></div>
         </div>
 
-        <div className="flex justify-center mb-6">
-          <div className="w-[80px] h-[80px] rounded-[24px] bg-indigo-50 flex items-center justify-center text-[#524EEE] shadow-md border border-indigo-100">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <div className="flex justify-center mb-4 sm:mb-6">
+          <div className="w-[70px] h-[70px] sm:w-[80px] sm:h-[80px] rounded-[20px] sm:rounded-[24px] bg-indigo-50 flex items-center justify-center text-[#524EEE] shadow-md border border-indigo-100">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 sm:h-10 sm:w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path d="M12 14l9-5-9-5-9 5 9 5z" />
               <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
             </svg>
           </div>
         </div>
 
-        <h1 className="text-[32px] font-semibold text-center mb-2 text-[#111827]">Complete Your Profile</h1>
-        <p className="text-center text-[#6B7280] mb-8 text-[16px]">Final Step: Let the network know who you are</p>
+        <h1 className="text-2xl sm:text-[32px] font-semibold text-center mb-2 text-[#111827]">Complete Your Profile</h1>
+        <p className="text-center text-sm sm:text-[16px] text-[#6B7280] mb-8">Final Step: Let the network know who you are</p>
 
-        <form onSubmit={handleProfileComplete} className="w-full max-w-[600px] px-4 flex flex-col gap-6">
+        <form onSubmit={handleProfileComplete} className="w-full max-w-[600px] px-2 sm:px-4 flex flex-col gap-5 sm:gap-6">
           {/* Avatar Upload UI */}
           <div className="flex flex-col items-center mb-4">
             <div 
@@ -668,19 +668,19 @@ export default function OnboardingSteps({
               {validationError}
             </div>
           )}
-          <div className="flex gap-4 mt-4 pb-12">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-4 pb-12">
             <button 
               type="button" 
               onClick={() => setStep(2)} 
               disabled={isChecking}
-              className="flex-1 py-4 bg-white border border-gray-200 text-[#111827] font-medium rounded-xl hover:bg-gray-50 transition-colors disabled:opacity-50"
+              className="w-full sm:flex-1 py-3.5 sm:py-4 bg-white border border-gray-200 text-[#111827] font-medium rounded-xl hover:bg-gray-50 transition-colors disabled:opacity-50 text-sm sm:text-base min-h-[44px] flex items-center justify-center"
             >
               Back to Institute
             </button>
             <button 
               type="submit" 
               disabled={isChecking}
-              className="flex-1 py-4 bg-[#524EEE] hover:bg-[#433fd1] text-white font-bold rounded-xl transition-colors flex items-center justify-center gap-2 shadow-lg shadow-indigo-100 disabled:opacity-70 disabled:cursor-wait"
+              className="w-full sm:flex-1 py-3.5 sm:py-4 bg-[#524EEE] hover:bg-[#433fd1] text-white font-bold rounded-xl transition-colors flex items-center justify-center gap-2 shadow-lg shadow-indigo-100 disabled:opacity-70 disabled:cursor-wait text-sm sm:text-base min-h-[44px]"
             >
               {isChecking ? (
                 <>

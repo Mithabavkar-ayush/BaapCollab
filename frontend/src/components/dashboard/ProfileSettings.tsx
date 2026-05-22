@@ -38,7 +38,7 @@ export default function ProfileSettings({
             </div>
 
             {/* Identity Card */}
-            <div className="bg-white rounded-3xl premium-shadow premium-hover p-6 md:p-8 flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-6 text-center md:text-left">
+            <div className="bg-white rounded-3xl premium-shadow premium-hover p-4 sm:p-6 md:p-8 flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-6 text-center md:text-left">
                 <div 
                     className="relative w-20 h-20 md:w-24 md:h-24 shrink-0 rounded-full bg-indigo-50 flex items-center justify-center text-[#524EEE] text-2xl md:text-3xl font-bold shadow-inner overflow-hidden border-4 border-white cursor-pointer group"
                     onClick={() => fileInputRef.current?.click()}
@@ -119,7 +119,7 @@ export default function ProfileSettings({
             </div>
 
             {/* College Information */}
-            <div className="bg-white rounded-3xl premium-shadow premium-hover p-6 md:p-8">
+            <div className="bg-white rounded-3xl premium-shadow premium-hover p-4 sm:p-6 md:p-8">
                 <div className="flex items-center gap-3 mb-6">
                     <div className="p-2 bg-zinc-50 rounded-lg">🏢</div>
                     <h3 className="font-bold text-gray-900">College Information</h3>
@@ -131,7 +131,7 @@ export default function ProfileSettings({
             </div>
 
             {/* Personal Information Form */}
-            <div className="bg-white rounded-3xl premium-shadow premium-hover p-6 md:p-8">
+            <div className="bg-white rounded-3xl premium-shadow premium-hover p-4 sm:p-6 md:p-8">
                 <div className="flex items-center gap-3 mb-8">
                     <div className="p-2 bg-zinc-50 rounded-lg">👤</div>
                     <div>
@@ -174,7 +174,7 @@ export default function ProfileSettings({
                         setToast({ message: "Connection error.", type: "error" });
                     }
                 }} className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8">
                         <div className="space-y-2">
                             <label className="text-sm font-bold text-gray-700 premium-spacing">Department</label>
                             <input
@@ -219,7 +219,7 @@ export default function ProfileSettings({
                         />
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 border-t border-gray-50 mt-10">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8 pt-8 border-t border-gray-50 mt-10">
                         <div className="space-y-2">
                             <label className="text-sm font-bold text-gray-700 flex items-center gap-2 premium-spacing">
                                 <svg className="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" /></svg>
@@ -250,7 +250,7 @@ export default function ProfileSettings({
 
                     <button
                         type="submit"
-                        className="px-8 py-4 bg-[#524EEE] hover:bg-[#433fd1] hover:shadow-xl hover:shadow-indigo-100/50 text-white font-bold rounded-xl shadow-lg shadow-indigo-100 transition-all flex items-center gap-2"
+                        className="px-8 min-h-[48px] bg-[#524EEE] hover:bg-[#433fd1] hover:shadow-xl hover:shadow-indigo-100/50 text-white font-bold rounded-xl shadow-lg shadow-indigo-100 transition-all flex items-center justify-center gap-2 w-full sm:w-auto"
                     >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
                         Save Changes

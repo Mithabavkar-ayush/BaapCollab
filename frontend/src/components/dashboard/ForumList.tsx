@@ -50,7 +50,7 @@ function Avatar({ picture, profile_pic_url, name, size = 40, authorId }: { pictu
 function DeleteModal({ onConfirm, onCancel, isDeleting }: { onConfirm: () => void; onCancel: () => void; isDeleting: boolean }) {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center overlay-fade" style={{ background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(4px)' }}>
-            <div className="modal-slow-fade bg-white rounded-3xl p-8 max-w-sm w-full mx-4 shadow-2xl">
+            <div className="modal-slow-fade bg-white rounded-3xl p-5 sm:p-8 max-w-[calc(100%-2rem)] sm:max-w-sm w-full mx-4 shadow-2xl">
                 <div className="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center mb-5 mx-auto">
                     <svg className="w-7 h-7 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -61,14 +61,14 @@ function DeleteModal({ onConfirm, onCancel, isDeleting }: { onConfirm: () => voi
                 <div className="flex gap-3">
                     <button
                         onClick={onCancel}
-                        className="flex-1 py-3 rounded-2xl border border-gray-200 text-gray-700 font-bold text-sm hover:bg-gray-50 transition-all"
+                        className="flex-1 min-h-[44px] flex items-center justify-center rounded-2xl border border-gray-200 text-gray-700 font-bold text-sm hover:bg-gray-50 transition-all"
                     >
                         Cancel
                     </button>
                     <button
                         onClick={onConfirm}
                         disabled={isDeleting}
-                        className="flex-1 py-3 rounded-2xl bg-red-500 text-white font-bold text-sm hover:bg-red-600 transition-all disabled:opacity-60"
+                        className="flex-1 min-h-[44px] flex items-center justify-center rounded-2xl bg-red-500 text-white font-bold text-sm hover:bg-red-600 transition-all disabled:opacity-60"
                     >
                         {isDeleting ? "Deleting…" : "Delete"}
                     </button>
@@ -351,8 +351,8 @@ function PostCard({
 
             <div className="forum-card overflow-hidden">
                 {/* Card Header */}
-                <div className="px-6 pt-5 pb-4">
-                    <div className="flex items-start gap-4">
+                <div className="px-4 sm:px-6 pt-4 sm:pt-5 pb-3 sm:pb-4">
+                    <div className="flex items-start gap-3 sm:gap-4">
                         <Avatar picture={post.author_picture} profile_pic_url={post.profile_pic_url} name={post.author_name} size={44} authorId={post.author_id} />
                         <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 flex-wrap mb-0.5">
@@ -379,14 +379,14 @@ function PostCard({
                 </div>
 
                 {/* Action Bar */}
-                <div className="px-6 pb-4 flex items-center gap-4">
+                <div className="px-4 sm:px-6 pb-3 sm:pb-4 flex items-center gap-4">
                     <button
                         onClick={handleToggle}
                         className={`flex items-center gap-2 px-4 py-2 min-h-[44px] rounded-2xl text-sm font-bold transition-all ${expanded
                             ? "bg-[#10B981] text-white shadow-sm"
                             : "bg-zinc-50 text-zinc-600 hover:bg-emerald-50 hover:text-emerald-600 ultra-slim-border-hover"
                             }`}
-                    >
+                     >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                         </svg>
@@ -401,7 +401,7 @@ function PostCard({
 
                 {/* Threaded Comment Section */}
                 {expanded && (
-                    <div className="px-6 pb-5 border-t border-gray-50">
+                    <div className="px-4 sm:px-6 pb-4 sm:pb-5 border-t border-gray-50">
                         <div className="pt-4 thread-guide-line">
                             {loadingComments ? (
                                 <div className="flex items-center gap-2 py-3 text-gray-400 text-sm">
@@ -416,14 +416,14 @@ function PostCard({
                                         <div key={c.id} className="flex items-start gap-3 group">
                                             <Avatar picture={c.author_picture} profile_pic_url={c.profile_pic_url} name={c.author_name} size={32} authorId={c.author_id} />
                                             <div className="flex-1 min-w-0">
-                                                <div className="flex items-center justify-between gap-2 mb-1">
-                                                    <div className="flex items-center gap-2">
+                                                <div className="flex flex-wrap items-center justify-between gap-2 mb-1">
+                                                    <div className="flex flex-wrap items-center gap-1 sm:gap-2">
                                                         <Link href={`/profile/${c.author_id}`} className="font-bold text-[13px] text-[#111827] cursor-pointer hover:text-emerald-600 transition-colors">{c.author_name || "Student"}</Link>
                                                         {/* Edit Icon for own comments */}
                                                         {String(c.author_id) === String(loggedInUser?.id) && editingId !== c.id && (
                                                             <button
                                                                 onClick={() => { setEditingId(c.id); setEditContent(c.content); }}
-                                                                className="opacity-0 group-hover:opacity-100 p-2 min-h-[44px] min-w-[44px] flex items-center justify-center -ml-2 text-gray-400 hover:text-[#10B981] transition-all"
+                                                                className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 p-2 min-h-[44px] min-w-[44px] flex items-center justify-center -ml-2 text-gray-400 hover:text-[#10B981] transition-all"
                                                                 title="Edit assist"
                                                             >
                                                                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -435,7 +435,7 @@ function PostCard({
                                                         {(String(c.author_id) === String(loggedInUser?.id) || isOwner) && editingId !== c.id && (
                                                             <button
                                                                 onClick={() => handleDeleteComment(c.id)}
-                                                                className="opacity-0 group-hover:opacity-100 p-2 min-h-[44px] min-w-[44px] flex items-center justify-center text-gray-400 hover:text-red-500 transition-all ml-1"
+                                                                className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 p-2 min-h-[44px] min-w-[44px] flex items-center justify-center text-gray-400 hover:text-red-500 transition-all ml-1"
                                                                 title="Delete assist"
                                                             >
                                                                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -444,11 +444,11 @@ function PostCard({
                                                             </button>
                                                         )}
                                                     </div>
-
+ 
                                                     {/* Upvote UI Logic */}
                                                     {String(c.author_id) === String(post.author_id) ? (
                                                         /* 1. Strip upvote option for Topic Owner's messages */
-                                                        <div className="w-16 h-8" /> /* Invisible spacer for consistent alignment */
+                                                        null
                                                     ) : isOwner ? (
                                                         /* 2. Plain text for Author viewing Helper messages */
                                                         <div className="flex items-center gap-1.5 px-2 py-1 text-gray-400 select-none">
@@ -461,7 +461,7 @@ function PostCard({
                                                         String(c.author_id) !== String(loggedInUser?.id) && (
                                                             <button
                                                                 onClick={() => handleToggleUpvote(c.id)}
-                                                                className={`flex items-center gap-1.5 px-2 py-1 rounded-full transition-all duration-200 active:scale-95 ${c.user_has_upvoted
+                                                                className={`flex items-center gap-1.5 px-3 min-h-[44px] rounded-full transition-all duration-200 active:scale-95 ${c.user_has_upvoted
                                                                     ? "text-[#10B981] bg-emerald-50"
                                                                     : "text-gray-400 hover:text-gray-600 hover:bg-gray-100"
                                                                     }`}
@@ -532,7 +532,7 @@ function PostCard({
 
                             {/* Comment Input - Submission Lock */}
                             {token && !userAlreadyAssisted && (
-                                <div className="mt-4 flex items-start gap-3">
+                                <div className="mt-4 flex items-start gap-2.5 sm:gap-3">
                                     <Avatar picture={loggedInUser?.picture} profile_pic_url={loggedInUser?.profile_pic_url} name={loggedInUser?.name} size={32} />
                                     <div className="flex-1 flex gap-2">
                                         <input
@@ -541,12 +541,12 @@ function PostCard({
                                             onChange={e => setCommentInput(e.target.value)}
                                             onKeyDown={e => e.key === "Enter" && !submitting && handleSubmitComment()}
                                             placeholder="Write an assist…"
-                                            className="w-full flex-1 px-4 py-2.5 min-h-[44px] rounded-2xl text-sm bg-zinc-50 hairline-mint placeholder-gray-400 ultra-slim-border"
+                                            className="w-full flex-1 px-3 sm:px-4 py-2.5 min-h-[44px] rounded-2xl text-sm bg-zinc-50 hairline-mint placeholder-gray-400 ultra-slim-border"
                                         />
                                         <button
                                             onClick={handleSubmitComment}
                                             disabled={submitting || !commentInput.trim()}
-                                            className="px-4 py-2.5 min-h-[44px] bg-[#10B981] text-white rounded-2xl text-sm font-bold hover:opacity-90 transition-all disabled:opacity-50"
+                                            className="px-3 sm:px-4 py-2.5 min-h-[44px] bg-[#10B981] text-white rounded-2xl text-sm font-bold hover:opacity-90 transition-all disabled:opacity-50"
                                         >
                                             {submitting ? "…" : "Post"}
                                         </button>
@@ -568,8 +568,8 @@ function PostCard({
 
             {/* Undo Delete Snackbar */}
             {undoVisible && (
-                <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[80] animate-in slide-in-from-bottom-4 fade-in duration-300">
-                    <div className="flex items-center gap-4 px-5 py-3.5 bg-gray-900 text-white rounded-2xl shadow-2xl border border-white/10">
+                <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[80] animate-in slide-in-from-bottom-4 fade-in duration-300 w-[calc(100%-2rem)] max-w-sm px-1">
+                    <div className="flex items-center justify-between gap-4 px-4 sm:px-5 py-3.5 bg-gray-900 text-white rounded-2xl shadow-2xl border border-white/10">
                         <div className="flex items-center gap-2">
                             <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -604,11 +604,11 @@ export default function ForumList({
     return (
         <div className="animate-in fade-in duration-500">
             {/* Nav Bar */}
-            <div className="flex items-center justify-between mb-5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
                 <h2 className="text-[20px] font-bold text-[#111827] premium-heading">Community Forum</h2>
                 <button
                     onClick={() => { setModalType('discussion'); setShowCreateModal(true); }}
-                    className="px-4 md:px-5 py-2.5 min-h-[44px] bg-[#10B981] text-white rounded-2xl text-sm font-bold shadow-sm hover:opacity-90 transition-opacity flex items-center gap-2"
+                    className="px-4 md:px-5 py-2.5 min-h-[44px] bg-[#10B981] text-white rounded-2xl text-sm font-bold shadow-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2 w-full sm:w-auto"
                 >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 4v16m8-8H4" />

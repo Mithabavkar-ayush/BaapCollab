@@ -57,7 +57,7 @@ export default function WaitingRoom() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-[#F8FAFC]">
-      <div className="bg-white rounded-3xl premium-shadow hairline-border-projects p-8 md:p-12 w-full max-w-[540px] text-center">
+      <div className="bg-white rounded-3xl premium-shadow hairline-border-projects p-5 sm:p-8 md:p-12 w-full max-w-[calc(100%-2rem)] sm:max-w-[540px] mx-4 text-center">
         <div className="flex justify-center mb-8">
           <div className="w-20 h-20 rounded-[28px] bg-indigo-50 flex items-center justify-center text-[#524EEE] shadow-inner border border-indigo-100/50">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -66,25 +66,25 @@ export default function WaitingRoom() {
           </div>
         </div>
 
-        <h1 className="text-[32px] font-bold text-gray-900 mb-4 tracking-tight">Verification in Progress</h1>
-        <p className="text-gray-500 text-lg mb-8 leading-relaxed">
+        <h1 className="text-2xl sm:text-[32px] font-bold text-gray-900 mb-4 tracking-tight">Verification in Progress</h1>
+        <p className="text-gray-500 text-base sm:text-lg mb-8 leading-relaxed">
           Thanks for joining <span className="font-bold text-[#524EEE]">BaapCollab</span>! We've sent a notification to the administrator to verify your institution status.
         </p>
 
-        <div className="bg-gray-50 rounded-2xl p-6 mb-8 text-left border border-gray-100">
+        <div className="bg-gray-50 rounded-2xl p-5 sm:p-6 mb-8 text-left border border-gray-100">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-2 h-2 rounded-full bg-amber-400"></div>
-            <span className="text-sm font-bold text-gray-600 uppercase tracking-widest">Status: Pending Approval</span>
+            <span className="text-xs sm:text-sm font-bold text-gray-600 uppercase tracking-widest">Status: Pending Approval</span>
           </div>
-          <p className="text-sm text-gray-500">
-            You will be automatically redirected to the dashboard once your request is approved. You'll also receive an email at <span className="font-medium text-gray-900">{user?.email}</span>.
+          <p className="text-xs sm:text-sm text-gray-500">
+            You will be automatically redirected to the dashboard once your request is approved. You'll also receive an email at <span className="font-medium text-gray-900 break-all">{user?.email}</span>.
           </p>
         </div>
 
         <div className="flex flex-col gap-4">
           <button
             onClick={checkStatus}
-            className="w-full py-4 bg-[#524EEE] hover:bg-[#433fd1] text-white font-bold rounded-xl transition-all flex items-center justify-center gap-3 shadow-lg shadow-indigo-100"
+            className="w-full py-3.5 sm:py-4 min-h-[44px] bg-[#524EEE] hover:bg-[#433fd1] text-white font-bold rounded-xl transition-all flex items-center justify-center gap-3 shadow-lg shadow-indigo-100"
           >
             <span>Refresh Status</span>
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -62,11 +62,11 @@ export default function CreatePostModal({
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm">
-            <div className="bg-white p-8 rounded-[32px] max-w-md w-full shadow-2xl border border-gray-100 animate-in zoom-in duration-300">
+            <div className="bg-white p-5 sm:p-8 rounded-[32px] max-w-[calc(100%-2rem)] sm:max-w-md w-full mx-4 shadow-2xl border border-gray-100 animate-in zoom-in duration-300">
                 <h2 className="text-xl font-bold mb-4 text-[#111827]">Create {modalType === 'project' ? 'Project' : 'Discussion'}</h2>
                 <div className="space-y-4">
                     <input
-                        className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 outline-none focus:border-indigo-500 transition-all placeholder:text-gray-400"
+                        className="w-full p-4 min-h-[44px] bg-gray-50 border border-gray-200 rounded-xl text-gray-900 outline-none focus:border-indigo-500 transition-all placeholder:text-gray-400"
                         placeholder="Title"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
@@ -79,10 +79,10 @@ export default function CreatePostModal({
                         onChange={(e) => setContent(e.target.value)}
                         disabled={isPosting}
                     ></textarea>
-                    <div className="flex justify-end gap-4 pt-4">
+                    <div className="flex justify-end gap-3 pt-4">
                         <button
                             onClick={() => setShowCreateModal(false)}
-                            className="text-gray-500 font-medium hover:text-gray-900 transition-colors"
+                            className="px-4 min-h-[44px] flex items-center justify-center text-gray-500 font-medium hover:text-gray-900 bg-gray-50 hover:bg-gray-100 rounded-xl transition-all"
                             disabled={isPosting}
                         >
                             Cancel
@@ -90,7 +90,7 @@ export default function CreatePostModal({
                         <button
                             onClick={handlePost}
                             disabled={isPosting || !title.trim() || !content.trim()}
-                            className="bg-[#524EEE] text-white px-8 py-3 rounded-xl font-bold hover:bg-[#433fd1] transition-all disabled:opacity-50"
+                            className="bg-[#524EEE] text-white px-6 min-h-[44px] flex items-center justify-center rounded-xl font-bold hover:bg-[#433fd1] transition-all disabled:opacity-50"
                         >
                             {isPosting ? 'Posting...' : 'Post'}
                         </button>

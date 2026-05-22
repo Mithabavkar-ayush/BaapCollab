@@ -128,8 +128,8 @@ export default function DashboardHome({
     return (
         <div className="animate-in fade-in duration-500">
             <div className="mb-10 flex flex-col md:flex-row gap-6 md:items-start">
-                <div className="flex-1">
-                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#111827] mb-1 flex flex-wrap gap-x-2">
+                <div className="flex-1 w-full">
+                    <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#111827] mb-1 flex flex-wrap gap-x-2">
                         <span className="animate-welcome-part">Welcome back,</span>
                         <span className="animate-welcome-part delay-400">
                             {user?.name ? user.name.split(' ')[0] : 'Student'}
@@ -138,11 +138,11 @@ export default function DashboardHome({
                             {user?.name && user.name.split(' ').length > 1 ? user.name.split(' ').slice(1).join(' ') + '!' : '!'}
                         </span>
                     </h1>
-                    <p className="text-[#6B7280] text-sm md:text-base mb-8">{userBranchName} • {user?.department || 'Member'}</p>
+                    <p className="text-[#6B7280] text-xs sm:text-sm md:text-base mb-8">{userBranchName} • {user?.department || 'Member'}</p>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                         {/* Identity Card */}
-                        <div className="bg-white rounded-3xl premium-shadow hairline-border-projects p-6 md:p-8 flex items-center gap-4 md:gap-6">
+                        <div className="bg-white rounded-3xl premium-shadow hairline-border-projects p-4 sm:p-6 md:p-8 flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-4 md:gap-6">
                             <div className="w-16 h-16 md:w-20 md:h-20 shrink-0 rounded-full bg-indigo-50 flex items-center justify-center text-[#524EEE] text-xl md:text-2xl font-bold shadow-inner overflow-hidden border-4 border-white">
                                 {user?.profile_pic_url && !imgError ? (
                                     <img
@@ -156,15 +156,15 @@ export default function DashboardHome({
                                     initials
                                 )}
                             </div>
-                            <div>
-                                <h2 className="text-xl md:text-2xl premium-heading text-[#111827] mb-1">{user?.name || "Baap Student"}</h2>
-                                <p className="text-gray-500 text-sm mb-4 premium-spacing">{user?.email}</p>
-                                <div className="flex items-center gap-3">
-                                    <span className="flex items-center gap-1.5 px-3 py-1 bg-gray-50 border border-gray-100 rounded-md text-[11px] font-bold text-gray-600 uppercase">
+                            <div className="flex-1 min-w-0">
+                                <h2 className="text-xl md:text-2xl premium-heading text-[#111827] mb-1 truncate">{user?.name || "Baap Student"}</h2>
+                                <p className="text-gray-500 text-xs sm:text-sm mb-4 premium-spacing break-all">{user?.email}</p>
+                                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5">
+                                    <span className="flex items-center gap-1.5 px-2.5 py-1 bg-gray-50 border border-gray-100 rounded-md text-[10px] sm:text-[11px] font-bold text-gray-600 uppercase">
                                         <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
                                         {user?.role || "Student"}
                                     </span>
-                                    <span className="flex items-center gap-1.5 px-3 py-1 bg-emerald-50 border border-emerald-100 rounded-md text-[11px] font-bold text-emerald-600 uppercase">
+                                    <span className="flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 border border-emerald-100 rounded-md text-[10px] sm:text-[11px] font-bold text-emerald-600 uppercase">
                                         <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" /></svg>
                                         verified
                                     </span>
@@ -173,14 +173,14 @@ export default function DashboardHome({
                         </div>
 
                         {/* College Information Card */}
-                        <div className="bg-white rounded-3xl premium-shadow hairline-border-projects p-6 md:p-8">
-                            <div className="flex items-center gap-3 mb-6">
-                                <div className="p-2 bg-indigo-50 rounded-xl text-xl">🏢</div>
+                        <div className="bg-white rounded-3xl premium-shadow hairline-border-projects p-4 sm:p-6 md:p-8 flex flex-col justify-center">
+                            <div className="flex items-center gap-3 mb-4 sm:mb-6">
+                                <div className="p-2 bg-indigo-50 rounded-xl text-lg sm:text-xl">🏢</div>
                                 <h3 className="premium-heading text-gray-900 text-sm">College Information</h3>
                             </div>
-                            <div className="p-5 bg-indigo-50/50 rounded-2xl border border-indigo-100/50">
-                                <p className="font-bold text-[#111827] text-[17px] mb-1 line-clamp-1">{userBranchName}</p>
-                                <p className="text-[11px] text-indigo-500 font-bold uppercase tracking-widest">Baap Partner Institution</p>
+                            <div className="p-4 sm:p-5 bg-indigo-50/50 rounded-2xl border border-indigo-100/50">
+                                <p className="font-bold text-[#111827] text-base sm:text-[17px] mb-1 line-clamp-2">{userBranchName}</p>
+                                <p className="text-[10px] text-indigo-500 font-bold uppercase tracking-widest">Baap Partner Institution</p>
                             </div>
                         </div>
                     </div>
@@ -189,16 +189,16 @@ export default function DashboardHome({
 
             {isSuper && (
                 <div className="mb-10 animate-in slide-in-from-top-4 duration-500">
-                    <div className="bg-white rounded-3xl border-2 border-indigo-100/50 p-8 shadow-xl shadow-indigo-100/20">
+                    <div className="bg-white rounded-3xl border-2 border-indigo-100/50 p-4 sm:p-6 md:p-8 shadow-xl shadow-indigo-100/20">
                         <div className="flex items-center gap-3 mb-6">
-                            <div className="p-2.5 bg-indigo-50 rounded-xl text-xl">🛡️</div>
+                            <div className="p-2.5 bg-indigo-50 rounded-xl text-lg sm:text-xl">🛡️</div>
                             <div>
-                                <h3 className="text-lg font-bold text-[#111827]">Manage User Roles</h3>
+                                <h3 className="text-base sm:text-lg font-bold text-[#111827]">Manage User Roles</h3>
                                 <p className="text-xs text-gray-500 font-medium">Promote or demote members of the community</p>
                             </div>
                         </div>
                         
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-stretch md:items-end">
                             <div className="md:col-span-1 space-y-1.5 relative" ref={dropdownRef}>
                                 <label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest px-1">Select User</label>
                                 <div className="relative">
@@ -212,7 +212,7 @@ export default function DashboardHome({
                                             if (selectedUserId) setSelectedUserId("");
                                         }}
                                         onFocus={() => setIsDropdownOpen(true)}
-                                        className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:ring-2 focus:ring-indigo-500/20 focus:bg-white transition-all text-sm font-medium"
+                                        className="w-full px-4 sm:px-5 py-3.5 sm:py-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:ring-2 focus:ring-indigo-500/20 focus:bg-white transition-all text-sm font-medium"
                                     />
                                     {isDropdownOpen && (
                                         <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-100 rounded-2xl shadow-xl z-50 max-h-60 overflow-y-auto overflow-x-hidden animate-in fade-in slide-in-from-top-2 duration-200">
@@ -224,10 +224,10 @@ export default function DashboardHome({
                                                         setSearchQuery(u.name || "");
                                                         setIsDropdownOpen(false);
                                                     }}
-                                                    className="w-full text-left px-5 py-3 hover:bg-indigo-50 transition-colors border-b border-gray-50 last:border-0"
+                                                    className="w-full text-left px-4 sm:px-5 py-3 hover:bg-indigo-50 transition-colors border-b border-gray-50 last:border-0"
                                                 >
-                                                    <p className="text-sm font-semibold text-gray-900 truncate">
-                                                        {u.name ? u.name : <span className="text-gray-400 italic">Pending Setup</span>} — <span className="text-gray-500 font-normal">{u.email}</span> ( {u.role} )
+                                                    <p className="text-xs sm:text-sm font-semibold text-gray-900 truncate">
+                                                        {u.name ? u.name : <span className="text-gray-400 italic">Pending Setup</span>} — <span className="text-gray-500 font-normal">{u.email}</span>
                                                     </p>
                                                     <p className="text-[10px] font-bold text-indigo-500 uppercase tracking-wider mt-0.5">
                                                         {u.role}
@@ -247,7 +247,7 @@ export default function DashboardHome({
                                 <select 
                                     value={selectedRole}
                                     onChange={(e) => setSelectedRole(e.target.value)}
-                                    className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:ring-2 focus:ring-indigo-500/20 focus:bg-white transition-all text-sm font-medium"
+                                    className="w-full px-4 sm:px-5 py-3.5 sm:py-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:ring-2 focus:ring-indigo-500/20 focus:bg-white transition-all text-sm font-medium cursor-pointer"
                                 >
                                     <option value="ADMIN">ADMIN</option>
                                     <option value="STUDENT">STUDENT</option>
@@ -256,7 +256,7 @@ export default function DashboardHome({
                             <button 
                                 onClick={handleRoleUpdate}
                                 disabled={!selectedUserId || isSubmitting}
-                                className="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-bold rounded-2xl shadow-lg shadow-indigo-200 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                                className="w-full py-3.5 sm:py-4 min-h-[44px] bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-bold rounded-2xl shadow-lg shadow-indigo-200 transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center"
                             >
                                 {isSubmitting ? "Updating..." : (selectedRole === "ADMIN" ? "Promote to Admin" : "Demote to Student")}
                             </button>
@@ -268,27 +268,27 @@ export default function DashboardHome({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 <button
                     onClick={() => { setModalType('project'); setShowCreateModal(true); }}
-                    className="flex items-center gap-4 md:gap-6 p-6 md:p-8 rounded-3xl hairline-border-projects bg-white hover:border-[#524EEE] premium-shadow premium-hover transition-all group text-left"
+                    className="flex items-center gap-3 sm:gap-4 md:gap-6 p-4 sm:p-6 md:p-8 rounded-3xl hairline-border-projects bg-white hover:border-[#524EEE] premium-shadow premium-hover transition-all group text-left"
                 >
-                    <div className="w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-2xl bg-[#524EEE] text-white flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg shadow-indigo-100">
-                        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 4v16m8-8H4"></path></svg>
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 shrink-0 rounded-2xl bg-[#524EEE] text-white flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg shadow-indigo-100">
+                        <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 4v16m8-8H4"></path></svg>
                     </div>
                     <div>
-                        <h3 className="premium-heading text-[#111827] text-lg mb-1">Create New Project</h3>
-                        <p className="text-gray-500 text-sm premium-spacing">Start collaborating with others</p>
+                        <h3 className="premium-heading text-[#111827] text-base sm:text-lg mb-1">Create New Project</h3>
+                        <p className="text-gray-500 text-xs sm:text-sm premium-spacing">Start collaborating with others</p>
                     </div>
                 </button>
 
                 <button
                     onClick={() => { setModalType('discussion'); setShowCreateModal(true); }}
-                    className="flex items-center gap-4 md:gap-6 p-6 md:p-8 rounded-3xl hairline-border-helper bg-white hover:border-[#10B981] premium-shadow premium-hover transition-all group text-left"
+                    className="flex items-center gap-3 sm:gap-4 md:gap-6 p-4 sm:p-6 md:p-8 rounded-3xl hairline-border-helper bg-white hover:border-[#10B981] premium-shadow premium-hover transition-all group text-left"
                 >
-                    <div className="w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-2xl bg-[#10B981] text-white flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg shadow-emerald-100">
-                        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 shrink-0 rounded-2xl bg-[#10B981] text-white flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg shadow-emerald-100">
+                        <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
                     </div>
                     <div>
-                        <h3 className="premium-heading text-[#111827] text-lg mb-1">Start Discussion</h3>
-                        <p className="text-gray-500 text-sm premium-spacing">Share knowledge with the community</p>
+                        <h3 className="premium-heading text-[#111827] text-base sm:text-lg mb-1">Start Discussion</h3>
+                        <p className="text-gray-500 text-xs sm:text-sm premium-spacing">Share knowledge with the community</p>
                     </div>
                 </button>
             </div>
@@ -296,20 +296,20 @@ export default function DashboardHome({
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch w-full">
                 {/* Position 1: Recent Projects */}
                 <div className="bg-white rounded-3xl premium-shadow hairline-border-projects hover:border-[#6366F1] premium-hover overflow-hidden h-full flex flex-col">
-                    <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-gray-50/30">
-                        <h2 className="text-lg premium-heading text-[#111827]">Recent Projects</h2>
-                        <button onClick={() => setActiveTab('projects')} className="text-sm text-[#524EEE] font-bold hover:underline transition-all">View all</button>
+                    <div className="px-5 sm:px-6 py-4 sm:py-5 border-b border-gray-100 flex items-center justify-between bg-gray-50/30">
+                        <h2 className="text-base sm:text-lg premium-heading text-[#111827]">Recent Projects</h2>
+                        <button onClick={() => setActiveTab('projects')} className="text-xs sm:text-sm text-[#524EEE] font-bold hover:underline transition-all">View all</button>
                     </div>
                     <div className="divide-y divide-gray-100 flex-1">
                         {lfmPosts.length > 0 ? lfmPosts.map((post: any) => (
-                            <div
+                             <div
                                 key={post.id}
                                 onClick={() => setActiveTab('projects')}
-                                className="p-6 hover:bg-gray-50/50 transition-all cursor-pointer group"
+                                className="p-4 sm:p-6 hover:bg-gray-50/50 transition-all cursor-pointer group"
                             >
-                                <div className="flex items-start justify-between gap-3 mb-2">
-                                    <h3 className="premium-heading text-lg text-[#111827] group-hover:text-[#6366F1] group-hover:underline transition-colors truncate min-w-0 flex-1">{post.title}</h3>
-                                    <span className="shrink-0 mt-1 whitespace-nowrap text-[10px] font-bold text-gray-400 uppercase tracking-widest bg-gray-50 px-2 py-1 rounded-md">
+                                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-2">
+                                    <h3 className="premium-heading text-base sm:text-lg text-[#111827] group-hover:text-[#6366F1] group-hover:underline transition-colors truncate min-w-0 flex-1">{post.title}</h3>
+                                    <span className="shrink-0 mt-1 sm:mt-0.5 whitespace-nowrap text-[9px] sm:text-[10px] font-bold text-gray-400 uppercase tracking-widest bg-gray-50 px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md self-start sm:self-auto">
                                         {(() => {
                                             if (!post.created_at) return 'Recently';
                                             const date = new Date(post.created_at);
@@ -318,7 +318,7 @@ export default function DashboardHome({
                                         })()}
                                     </span>
                                 </div>
-                                <p className="text-[#6B7280] text-sm line-clamp-2 premium-spacing leading-relaxed">{post.content}</p>
+                                <p className="text-[#6B7280] text-xs sm:text-sm line-clamp-2 premium-spacing leading-relaxed">{post.content}</p>
                             </div>
                         )) : (
                             <div className="p-10 flex h-full items-center justify-center text-center text-gray-400 font-medium">No projects yet.</div>
@@ -339,9 +339,9 @@ export default function DashboardHome({
                                 onClick={() => setActiveTab('forum')}
                                 className="p-6 hover:bg-gray-50/50 transition-all cursor-pointer group"
                             >
-                                <div className="flex items-start justify-between gap-3 mb-1">
-                                    <h3 className="premium-heading text-lg text-[#111827] group-hover:text-[#10B981] group-hover:underline transition-colors truncate min-w-0 flex-1">{post.title}</h3>
-                                    <span className="shrink-0 mt-1 whitespace-nowrap text-[10px] font-bold text-gray-400 uppercase tracking-widest bg-gray-50 px-2 py-1 rounded-md">
+                                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-2">
+                                    <h3 className="premium-heading text-base sm:text-lg text-[#111827] group-hover:text-[#10B981] group-hover:underline transition-colors truncate min-w-0 flex-1">{post.title}</h3>
+                                    <span className="shrink-0 mt-1 sm:mt-0.5 whitespace-nowrap text-[9px] sm:text-[10px] font-bold text-gray-400 uppercase tracking-widest bg-gray-50 px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md self-start sm:self-auto">
                                         {(() => {
                                             if (!post.created_at) return 'Recently';
                                             const date = new Date(post.created_at);

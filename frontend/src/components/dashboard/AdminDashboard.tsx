@@ -232,7 +232,7 @@ export default function AdminDashboard({ user, token, setToast, latestWsApproval
   }
 
   return (
-    <div className="bg-white rounded-3xl p-6 md:p-10 shadow-sm border border-gray-100">
+    <div className="bg-white rounded-3xl p-4 sm:p-6 md:p-10 shadow-sm border border-gray-100">
       <div className="flex items-center justify-between mb-2">
         <div>
           <h2 className="text-2xl font-black tracking-tight text-gray-900">Admin Panel</h2>
@@ -253,7 +253,7 @@ export default function AdminDashboard({ user, token, setToast, latestWsApproval
           
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {usersList.filter(u => !u.is_approved && !u.rejection_handled && !u.is_banned && !resolvedUsers[u.id]).map(u => (
-              <div key={u.id} className="bg-amber-50/50 border border-amber-100 rounded-2xl p-5 hover:shadow-md transition-all">
+              <div key={u.id} className="bg-amber-50/50 border border-amber-100 rounded-2xl p-4 sm:p-5 hover:shadow-md transition-all">
                 <div className="flex justify-between items-start mb-3">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 overflow-hidden shrink-0 border border-amber-200">
@@ -284,13 +284,13 @@ export default function AdminDashboard({ user, token, setToast, latestWsApproval
                 <div className="flex gap-2">
                   <button 
                     onClick={() => handleApprove(u.id, true)}
-                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2 rounded-xl transition-colors"
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold min-h-[44px] flex items-center justify-center rounded-xl transition-colors"
                   >
                     Approve
                   </button>
                   <button 
                     onClick={() => handleApprove(u.id, false)}
-                    className="flex-1 bg-white border border-red-200 text-red-600 hover:bg-red-50 text-xs font-bold py-2 rounded-xl transition-colors"
+                    className="flex-1 bg-white border border-red-200 text-red-600 hover:bg-red-50 text-xs font-bold min-h-[44px] flex items-center justify-center rounded-xl transition-colors"
                   >
                     Reject
                   </button>
@@ -310,7 +310,7 @@ export default function AdminDashboard({ user, token, setToast, latestWsApproval
         </span>
       </div>
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto custom-scrollbar pb-3">
         <table className="w-full border-collapse min-w-[800px]">
           <thead>
             <tr className="border-b border-gray-100 text-left">
@@ -363,27 +363,27 @@ export default function AdminDashboard({ user, token, setToast, latestWsApproval
                   {isSuper && (
                     <td className="py-4 px-3 text-right">
                         <div className="flex items-center justify-end gap-1.5">
-                            {/* Ban Toggle */}
-                            <button
-                                disabled={restrictAdminTarget}
-                                onClick={() => handleBanToggle(u.id, u.is_banned)}
-                                className={`text-[9px] font-black uppercase tracking-wider px-2 py-1.5 rounded-lg transition-colors disabled:opacity-30 ${u.is_banned ? "bg-gray-800 text-white hover:bg-black" : "bg-red-50 text-red-600 hover:bg-red-100"}`}
-                            >
-                                {u.is_banned ? "Unban" : "Ban"}
-                            </button>
-
-                            {/* Suspend Toggle */}
-                            {!u.is_banned && (
-                                u.is_suspended ? (
-                                <button disabled={restrictAdminTarget} onClick={() => handleUnsuspend(u.id)} className="text-[9px] bg-orange-100 text-orange-700 font-black uppercase tracking-wider px-2 py-1.5 rounded-lg disabled:opacity-30 hover:bg-orange-200">
-                                    Lift
-                                </button>
-                                ) : (
-                                <button disabled={restrictAdminTarget} onClick={() => setSuspendModal({ isOpen: true, targetId: u.id })} className="text-[9px] bg-orange-50 text-orange-600 font-black uppercase tracking-wider px-2 py-1.5 rounded-lg disabled:opacity-30 hover:bg-orange-100">
-                                    Susp.
-                                </button>
-                                )
-                            )}
+                             {/* Ban Toggle */}
+                             <button
+                                 disabled={restrictAdminTarget}
+                                 onClick={() => handleBanToggle(u.id, u.is_banned)}
+                                 className={`text-[10px] font-black uppercase tracking-wider px-3 min-h-[44px] flex items-center justify-center rounded-xl transition-colors disabled:opacity-30 ${u.is_banned ? "bg-gray-800 text-white hover:bg-black" : "bg-red-50 text-red-600 hover:bg-red-100"}`}
+                             >
+                                 {u.is_banned ? "Unban" : "Ban"}
+                             </button>
+ 
+                             {/* Suspend Toggle */}
+                             {!u.is_banned && (
+                                 u.is_suspended ? (
+                                 <button disabled={restrictAdminTarget} onClick={() => handleUnsuspend(u.id)} className="text-[10px] bg-orange-100 text-orange-700 font-black uppercase tracking-wider px-3 min-h-[44px] flex items-center justify-center rounded-xl disabled:opacity-30 hover:bg-orange-200">
+                                     Lift
+                                 </button>
+                                 ) : (
+                                 <button disabled={restrictAdminTarget} onClick={() => setSuspendModal({ isOpen: true, targetId: u.id })} className="text-[10px] bg-orange-50 text-orange-600 font-black uppercase tracking-wider px-3 min-h-[44px] flex items-center justify-center rounded-xl disabled:opacity-30 hover:bg-orange-100">
+                                     Susp.
+                                 </button>
+                                 )
+                             )}
                         </div>
                     </td>
                   )}

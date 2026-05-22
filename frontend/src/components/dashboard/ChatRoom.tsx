@@ -288,7 +288,7 @@ export default function ChatRoom({ loggedInUser, token, isOpen, onClose }: ChatR
                                             }}
                                             disabled={slowModeSeconds > 0}
                                             placeholder={slowModeSeconds > 0 ? "Slow mode active..." : "Type your message..."}
-                                            className={`w-full min-h-[48px] max-h-32 px-4 py-3.5 bg-white/80 border ${slowModeSeconds > 0 ? 'border-orange-200 bg-orange-50/30 text-orange-700' : 'border-gray-200 focus:border-[#524EEE]'} rounded-2xl text-[15px] focus:outline-none focus:ring-4 focus:ring-[#524EEE]/10 transition-all resize-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden`}
+                                            className={`w-full min-h-[48px] max-h-32 px-4 py-3.5 ${slowModeSeconds > 0 ? 'pr-24' : ''} bg-white/80 border ${slowModeSeconds > 0 ? 'border-orange-200 bg-orange-50/30 text-orange-700' : 'border-gray-200 focus:border-[#524EEE]'} rounded-2xl text-[15px] focus:outline-none focus:ring-4 focus:ring-[#524EEE]/10 transition-all resize-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden`}
                                             rows={1}
                                             style={{ height: input ? 'auto' : '48px' }}
                                         />
